@@ -13,6 +13,6 @@
     <input id=expression value="x^2">
 </form>
 <json-viewer be-observant='{
-    "object": {"observe": "form", "on": "is-reformable-fetch-complete", "vfe": "detail"}
+    "object": {"observe": "form", "on": "reformable:fetch-complete", "vfe": "detail"}
 }'></json-viewer>
 ```
