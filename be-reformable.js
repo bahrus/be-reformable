@@ -7,10 +7,11 @@ export class BeReformableController {
     // }
     onAutoSubmit({ proxy }) {
         proxy.addEventListener('input', this.handleInput);
+        this.handleInput();
     }
-    handleInput = (e) => {
-        console.log('iah');
-        console.log(this.proxy.elements);
+    handleInput = () => {
+        if (!this.proxy.checkValidity())
+            return;
         let url = this.proxy.action;
         if (this.baseLink !== undefined) {
             url = self[this.baseLink].href;

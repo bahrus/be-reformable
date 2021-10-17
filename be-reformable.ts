@@ -9,11 +9,11 @@ export class BeReformableController implements BeReformableActions{
     // }
     onAutoSubmit({proxy}: this){
         proxy.addEventListener('input', this.handleInput);
+        this.handleInput();
     }
 
-    handleInput = (e: Event) => {
-        console.log('iah');
-        console.log(this.proxy.elements);
+    handleInput = () => {
+        if(!this.proxy.checkValidity()) return;
         let url = this.proxy.action;
         if(this.baseLink !== undefined){
             url = (<any>self)[this.baseLink].href;
@@ -43,6 +43,8 @@ export class BeReformableController implements BeReformableActions{
         }
 
     }
+
+
 
     async doFetch({url, reqInit, as, proxy}: this){
         const resp = await fetch(url, reqInit);
