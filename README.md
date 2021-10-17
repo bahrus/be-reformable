@@ -4,6 +4,8 @@ be-reformable is a web component that progressively enhances the built-in form e
 
 ## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
 
+<a href="https://nodei.co/npm/be-reformable/"><img src="https://nodei.co/npm/be-reformable.png"></a>
+
 ## Syntax example
 
 Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
