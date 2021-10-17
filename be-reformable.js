@@ -24,7 +24,7 @@ export class BeReformableController {
                     url += token;
                 }
                 else {
-                    url += elements[token].value;
+                    url += encodeURIComponent(elements[token].value);
                 }
                 idx++;
             }
@@ -51,7 +51,10 @@ export class BeReformableController {
         else {
             fetchResult = await resp.text();
         }
-        proxy.fetchResult = fetchResult;
+        return {
+            fetchResult
+        };
+        //proxy.fetchResult = fetchResult;
     }
     sendFetchResultToTarget({ fetchResult, proxy }) {
         const target = proxy.target;

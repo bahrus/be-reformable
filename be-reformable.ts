@@ -25,7 +25,7 @@ export class BeReformableController implements BeReformableActions{
                 if(idx % 2 === 0){
                     url += token;
                 }else{
-                    url += (<any>elements[token as any as number]).value;
+                    url += encodeURIComponent((<any>elements[token as any as number]).value);
                 }
                 idx++;
             }
@@ -54,7 +54,10 @@ export class BeReformableController implements BeReformableActions{
         }else{
             fetchResult = await resp.text();
         }
-        proxy.fetchResult = fetchResult;
+        return {
+            fetchResult
+        }
+        //proxy.fetchResult = fetchResult;
     }
 
     sendFetchResultToTarget({fetchResult, proxy}: this){
@@ -99,6 +102,7 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
             },
             doFetch:{
                 ifAllOf: ['url', 'reqInit', 'as'],
+
                 async: true,
             },
             sendFetchResultToTarget: {

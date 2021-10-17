@@ -23,8 +23,8 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "trans-render": "0.0.419",
-    "be-decorated": "0.0.14"
+    "trans-render": "0.0.420",
+    "be-decorated": "0.0.18"
   },
   "devDependencies": {
     "xtal-test": "0.0.51",
