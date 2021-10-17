@@ -27,6 +27,7 @@ export class BeReformableController implements BeReformableActions{
                 }else{
                     url += (<any>elements[token as any as number]).value;
                 }
+                idx++;
             }
         }
         this.proxy.url = url;
@@ -51,7 +52,8 @@ export class BeReformableController implements BeReformableActions{
         }else{
             fetchResult = await resp.text();
         }
-        return {fetchResult};
+        proxy.fetchResult = fetchResult;
+        //return {fetchResult};
     }
 
     sendFetchResultToTarget({fetchResult, proxy}: this){
@@ -84,7 +86,7 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
         propDefaults:{
             upgrade: 'form',
             ifWantsToBe: 'reformable',
-            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit'],
+            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             as: 'json'
         },

@@ -25,6 +25,7 @@ export class BeReformableController {
                 else {
                     url += elements[token].value;
                 }
+                idx++;
             }
         }
         this.proxy.url = url;
@@ -49,7 +50,8 @@ export class BeReformableController {
         else {
             fetchResult = await resp.text();
         }
-        return { fetchResult };
+        proxy.fetchResult = fetchResult;
+        //return {fetchResult};
     }
     sendFetchResultToTarget({ fetchResult, proxy }) {
         const target = proxy.target;
@@ -79,7 +81,7 @@ define({
         propDefaults: {
             upgrade: 'form',
             ifWantsToBe: 'reformable',
-            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit'],
+            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             as: 'json'
         },
