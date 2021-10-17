@@ -7,7 +7,7 @@
     "path": ["api/v2/", "operation", "/", "expression"],
     "autoSubmit": true
 }'
-target="json-viewer[-object]"
+    target="json-viewer[-object]"
 >
     <label for=operation>Operation:</label>
     <input id=operation value=integrate>
