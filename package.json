@@ -1,8 +1,27 @@
 {
   "name": "be-reformable",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "decorate",
+    "behavior",
+    "directive"
+  ],
+  "description": "be-reformable is a web component that progressively enhances the built-in form element",
+  "main": "be-reformable.js",
+  "module": "be-reformable.js",
+  "exports": {
+    ".": "./be-reformable.js",
+    "./be-reformable.js": "./be-reformable.js"
+  },
+  "files": [
+    "be*.*",
+    "types.d.ts"
+  ],
+  "types": "types.d.ts",
   "dependencies": {
     "be-decorated": "0.0.14"
   },

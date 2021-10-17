@@ -1,5 +1,9 @@
 # be-reformable
 
+be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" approach.
+
+
+
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
 <form be-reformable='{
