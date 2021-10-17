@@ -25,6 +25,11 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
             upgrade: 'form',
             ifWantsToBe: 'reformable',
             virtualProps: ['autoSubmit', 'baseLink', 'path']
+        },
+        actions:{
+            onAutoSubmit:{
+                ifAllOf: ['autoSubmit']
+            }
         }
     },
     complexPropDefaults:{
