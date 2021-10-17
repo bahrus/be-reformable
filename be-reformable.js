@@ -83,7 +83,9 @@ define({
             ifWantsToBe: 'reformable',
             virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
-            as: 'json'
+            proxyPropDefaults: {
+                as: 'json'
+            }
         },
         actions: {
             onAutoSubmit: {
