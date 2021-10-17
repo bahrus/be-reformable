@@ -1,13 +1,19 @@
 import { define } from 'be-decorated/be-decorated.js';
 export class BeReformableController {
-    // intro(proxy: HTMLFormElement & BeReformableVirtualProps){
+    // target: HTMLFormElement | undefined;
+    // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
+    //     this.target = target
     // }
     onAutoSubmit({}) {
         this.proxy.addEventListener('input', this.handleInput);
     }
     handleInput = (e) => {
         console.log('iah');
+        console.log(this.proxy.elements);
     };
+    finale(proxy) {
+        this.proxy.removeEventListener('input', this.handleInput);
+    }
 }
 const tagName = 'be-reformable';
 define({

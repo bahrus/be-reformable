@@ -2,8 +2,9 @@ import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
 
 export class BeReformableController implements BeReformableActions{
-    // intro(proxy: HTMLFormElement & BeReformableVirtualProps){
-
+    // target: HTMLFormElement | undefined;
+    // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
+    //     this.target = target
     // }
     onAutoSubmit({}: this){
         this.proxy.addEventListener('input', this.handleInput);
@@ -11,6 +12,11 @@ export class BeReformableController implements BeReformableActions{
 
     handleInput = (e: Event) => {
         console.log('iah');
+        console.log(this.proxy.elements);
+    }
+
+    finale(proxy: HTMLFormElement & BeReformableVirtualProps){
+        this.proxy.removeEventListener('input', this.handleInput);
     }
 }
 

@@ -9,6 +9,7 @@ export interface BeReformableProps extends BeReformableVirtualProps{
 }
 
 export interface BeReformableActions{
-    //intro(proxy: HTMLFormElement & BeReformableVirtualProps): void;
+    //intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement): void;
+    finale(proxy: HTMLFormElement & BeReformableVirtualProps): void;
     onAutoSubmit(self: this): void;
 }
