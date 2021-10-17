@@ -55,7 +55,6 @@ export class BeReformableController implements BeReformableActions{
             fetchResult = await resp.text();
         }
         proxy.fetchResult = fetchResult;
-        //return {fetchResult};
     }
 
     sendFetchResultToTarget({fetchResult, proxy}: this){

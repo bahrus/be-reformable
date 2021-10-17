@@ -52,7 +52,6 @@ export class BeReformableController {
             fetchResult = await resp.text();
         }
         proxy.fetchResult = fetchResult;
-        //return {fetchResult};
     }
     sendFetchResultToTarget({ fetchResult, proxy }) {
         const target = proxy.target;
