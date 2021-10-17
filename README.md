@@ -2,6 +2,8 @@
 
 be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" approach.
 
+## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
+
 ## Syntax example
 
 Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
@@ -42,6 +44,33 @@ The attribute be-reformable can be replaced with data-be-reformable.
 ## Editing JSON-in-HTML
 
 A web-friendly [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.
+
+## Import Maps
+
+The following import map is needed for non-bundling environments:
+
+```html
+<script type=importmap>
+    {
+        "imports": {
+            "trans-render/": "../node_modules/trans-render/",
+            "xtal-element/": "../node_modules/xtal-element/",
+            "be-decorated/": "../node_modules/be-decorated/"
+        }
+    }
+</script>
+```
+
+## Viewing Locally
+
+To view this element locally:
+
+1.  Install git, npm
+2.  Clone or fork this git repo.
+3.  Open a terminal from the folder created in step 2.
+4.  Run npm install
+5.  Run npm run serve
+6.  Open http://localhost:3030/demo/dev
 
 
 
