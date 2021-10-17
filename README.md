@@ -29,3 +29,13 @@ Another optional parameter not shown above is "reqInit" which allows for specify
 
 [TODO]  Support POST with body
 
+## Staying Kosher
+
+The attribute be-reformable can be replaced with data-be-reformable.
+
+## Editing JSON-in-HTML
+
+A web-friendly [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.
+
+
+
