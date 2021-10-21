@@ -91,9 +91,6 @@ export class BeReformableController {
             const propPath = lispToCamel(rawPath);
             targetElement[propPath] = fetchResult;
         }
-        else {
-            throw 'NI'; //Not implemented
-        }
     }
     finale(proxy) {
         this.proxy.removeEventListener('input', this.handleInput);

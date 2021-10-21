@@ -93,8 +93,6 @@ export class BeReformableController implements BeReformableActions{
             const rawPath =  target.substring(lastPos + 2, target.length - 1);
             const propPath = lispToCamel(rawPath);
             (<any>targetElement)[propPath] = fetchResult;
-        }else{
-            throw 'NI'; //Not implemented
         }
     }
 
