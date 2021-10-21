@@ -29,9 +29,15 @@ export class BeReformableController implements BeReformableActions{
 
     handleInput = () => {
         if(!this.proxy.checkValidity()) return;
-        let url = this.proxy.action;
+        let url = this.urlVal;
         if(this.baseLink !== undefined){
             url = (<any>self)[this.baseLink].href;
+        }else if(url === undefined){
+            url = this.proxy.action;
+            if(url === location.href){
+                //just default value -- assume not intentional
+                return;
+            }
         }
         if(this.path !== undefined){
             let idx = 0;
