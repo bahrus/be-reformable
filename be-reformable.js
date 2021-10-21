@@ -1,5 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
+import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -8,6 +9,20 @@ export class BeReformableController {
     onAutoSubmit({ proxy }) {
         proxy.addEventListener('input', this.handleInput);
         this.handleInput();
+    }
+    onUrl({ url, proxy }) {
+        if (typeof url === 'string') {
+            this.urlVal = url;
+        }
+        else {
+            //observing object
+            const elementToObserve = getElementToObserve(proxy, url);
+            if (elementToObserve === null) {
+                console.warn({ msg: '404', url });
+                return;
+            }
+            addListener(elementToObserve, url, 'urlVal', proxy);
+        }
     }
     handleInput = () => {
         if (!this.proxy.checkValidity())
@@ -42,8 +57,8 @@ export class BeReformableController {
             }
         }
     };
-    async doFetch({ url, reqInit, as, proxy }) {
-        const resp = await fetch(url, reqInit);
+    async doFetch({ urlVal, reqInit, as, proxy }) {
+        const resp = await fetch(urlVal, reqInit);
         let fetchResult;
         if (as === 'json') {
             fetchResult = await resp.json();
@@ -84,7 +99,7 @@ define({
         propDefaults: {
             upgrade: 'form',
             ifWantsToBe: 'reformable',
-            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit', 'as', 'fetchResult'],
+            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             proxyPropDefaults: {
                 as: 'json'
@@ -95,11 +110,14 @@ define({
                 ifAllOf: ['autoSubmit']
             },
             doFetch: {
-                ifAllOf: ['url', 'reqInit', 'as'],
+                ifAllOf: ['urlVal', 'reqInit', 'as'],
                 async: true,
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']
+            },
+            onUrl: {
+                ifAllOf: ['url']
             }
         }
     },

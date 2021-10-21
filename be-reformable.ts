@@ -1,6 +1,7 @@
 import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
-import {lispToCamel} from 'trans-render/lib/lispToCamel.js'
+import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
+import {getElementToObserve, addListener} from 'be-observant/be-observant.js';
 
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
@@ -10,6 +11,20 @@ export class BeReformableController implements BeReformableActions{
     onAutoSubmit({proxy}: this){
         proxy.addEventListener('input', this.handleInput);
         this.handleInput();
+    }
+
+    onUrl({url, proxy}: this){
+        if(typeof url === 'string'){
+            this.urlVal = url;
+        }else{
+            //observing object
+            const elementToObserve = getElementToObserve(proxy, url);
+            if(elementToObserve === null){
+                console.warn({msg:'404', url});
+                return;
+            }
+            addListener(elementToObserve, url, 'urlVal', proxy);
+        }
     }
 
     handleInput = () => {
@@ -46,8 +61,8 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({url, reqInit, as, proxy}: this){
-        const resp = await fetch(url, reqInit);
+    async doFetch({urlVal, reqInit, as, proxy}: this){
+        const resp = await fetch(urlVal, reqInit);
         let fetchResult: any;
         if(as === 'json'){
             fetchResult = await resp.json();
@@ -90,7 +105,7 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
         propDefaults:{
             upgrade: 'form',
             ifWantsToBe: 'reformable',
-            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'reqInit', 'as', 'fetchResult'],
+            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             proxyPropDefaults:{
                 as: 'json'
@@ -101,12 +116,14 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
                 ifAllOf: ['autoSubmit']
             },
             doFetch:{
-                ifAllOf: ['url', 'reqInit', 'as'],
-
+                ifAllOf: ['urlVal', 'reqInit', 'as'],
                 async: true,
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']
+            },
+            onUrl:{
+                ifAllOf: ['url']
             }
         }
     },
