@@ -35,6 +35,17 @@ export class BeReformableController {
     handleInput = () => {
         if (!this.proxy.checkValidity())
             return;
+        const method = this.proxy.method;
+        if (method) {
+            if (this.proxy.reqInit !== undefined) {
+                this.proxy.reqInit.method = method;
+            }
+            else {
+                this.proxy.reqInit = {
+                    method
+                };
+            }
+        }
         let url = this.urlVal;
         if (this.baseLink !== undefined) {
             url = self[this.baseLink].href;
@@ -60,17 +71,6 @@ export class BeReformableController {
             }
         }
         this.proxy.url = url;
-        const method = this.proxy.method;
-        if (method) {
-            if (this.proxy.reqInit !== undefined) {
-                this.proxy.reqInit.method = method;
-            }
-            else {
-                this.proxy.reqInit = {
-                    method
-                };
-            }
-        }
     };
     async doFetch({ urlVal, reqInit, as, proxy }) {
         const resp = await fetch(urlVal, reqInit);
