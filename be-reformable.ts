@@ -18,14 +18,14 @@ export class BeReformableController implements BeReformableActions{
             this.urlVal = url;
         }else{
             //observing object
-            const {on, vft, valFromTarget, valFromEvent, vfe, skipInit, onSet} = url;
-            const valFT = vft || valFromTarget;
+            // const {on, vft, valFromTarget, valFromEvent, vfe, skipInit, onSet} = url;
+            // const valFT = vft || valFromTarget;
             const elementToObserve = getElementToObserve(proxy, url);
-            if(elementToObserve === null) throw '404';
-            const valFE = vfe || valFromEvent;
-            if(valFT !== undefined && !skipInit){
-                setProp(valFT, valFE, 'urlVal', elementToObserve, url, proxy);
-            }
+            // if(elementToObserve === null) throw '404';
+            // const valFE = vfe || valFromEvent;
+            // if(valFT !== undefined && !skipInit){
+            //     setProp(valFT, valFE, 'urlVal', elementToObserve, url, proxy);
+            // }
             if(elementToObserve === null){
                 console.warn({msg:'404', url});
                 return;

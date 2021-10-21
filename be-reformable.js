@@ -1,6 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
-import { getElementToObserve, addListener, setProp } from 'be-observant/be-observant.js';
+import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -16,15 +16,14 @@ export class BeReformableController {
         }
         else {
             //observing object
-            const { on, vft, valFromTarget, valFromEvent, vfe, skipInit, onSet } = url;
-            const valFT = vft || valFromTarget;
+            // const {on, vft, valFromTarget, valFromEvent, vfe, skipInit, onSet} = url;
+            // const valFT = vft || valFromTarget;
             const elementToObserve = getElementToObserve(proxy, url);
-            if (elementToObserve === null)
-                throw '404';
-            const valFE = vfe || valFromEvent;
-            if (valFT !== undefined && !skipInit) {
-                setProp(valFT, valFE, 'urlVal', elementToObserve, url, proxy);
-            }
+            // if(elementToObserve === null) throw '404';
+            // const valFE = vfe || valFromEvent;
+            // if(valFT !== undefined && !skipInit){
+            //     setProp(valFT, valFE, 'urlVal', elementToObserve, url, proxy);
+            // }
             if (elementToObserve === null) {
                 console.warn({ msg: '404', url });
                 return;
