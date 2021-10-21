@@ -25,7 +25,7 @@
   "dependencies": {
     "trans-render": "0.0.420",
     "be-decorated": "0.0.18",
-    "be-observant": "0.0.21"
+    "be-observant": "0.0.22"
   },
   "devDependencies": {
     "xtal-test": "0.0.51",
