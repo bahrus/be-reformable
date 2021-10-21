@@ -100,12 +100,14 @@ export class BeReformableController {
     }
 }
 const tagName = 'be-reformable';
-define({
+const ifWantsToBe = 'reformable';
+const upgrade = 'form';
+export const controllerConfig = {
     config: {
         tagName,
         propDefaults: {
-            upgrade: 'form',
-            ifWantsToBe: 'reformable',
+            upgrade,
+            ifWantsToBe,
             virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             proxyPropDefaults: {
@@ -131,5 +133,18 @@ define({
     complexPropDefaults: {
         controller: BeReformableController
     }
-});
-document.head.appendChild(document.createElement(tagName));
+};
+define(controllerConfig);
+const beHive = document.querySelector('be-hive');
+if (beHive !== null) {
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        });
+    });
+}
+else {
+    document.head.appendChild(document.createElement(tagName));
+}

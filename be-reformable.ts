@@ -2,6 +2,7 @@ import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
 import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
 import {getElementToObserve, addListener, setProp} from 'be-observant/be-observant.js';
+import {DefineArgs} from 'trans-render/lib/types';
 
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
@@ -106,12 +107,16 @@ export interface BeReformableController extends BeReformableProps{}
 
 const tagName = 'be-reformable'; 
 
-define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActions>, BeReformableActions>({
+const ifWantsToBe = 'reformable';
+
+const upgrade = 'form';
+
+export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActions>, BeReformableActions> = {
     config:{
         tagName,
         propDefaults:{
-            upgrade: 'form',
-            ifWantsToBe: 'reformable',
+            upgrade,
+            ifWantsToBe,
             virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'],
             finale: 'finale',
             proxyPropDefaults:{
@@ -137,7 +142,20 @@ define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActio
     complexPropDefaults:{
         controller: BeReformableController
     }
-});
+};
 
-document.head.appendChild(document.createElement(tagName));
+define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActions>, BeReformableActions>(controllerConfig);
+
+const beHive = document.querySelector('be-hive') as any;
+if(beHive !== null){
+    customElements.whenDefined(beHive.localName).then(() => {
+        beHive.register({
+            ifWantsToBe,
+            upgrade,
+            localName: tagName,
+        })
+    })
+}else{
+    document.head.appendChild(document.createElement(tagName));
+}
 
