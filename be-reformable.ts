@@ -1,8 +1,10 @@
 import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
 import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
-import {getElementToObserve, addListener, setProp} from 'be-observant/be-observant.js';
+import {getElementToObserve} from 'be-observant/getElementToObserve.js';
+import {addListener} from 'be-observant/addListener.js';
 import {DefineArgs} from 'trans-render/lib/types';
+import {register} from 'be-hive/register.js';
 
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
@@ -16,7 +18,7 @@ export class BeReformableController implements BeReformableActions{
 
     onUrl({url, proxy}: this){
         if(typeof url === 'string'){
-            this.urlVal = url;
+            proxy.urlVal = url;
         }else{
             //observing object
             const elementToObserve = getElementToObserve(proxy, url);
@@ -144,16 +146,5 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
 
 define<BeReformableProps & BeDecoratedProps<BeReformableProps, BeReformableActions>, BeReformableActions>(controllerConfig);
 
-const beHive = document.querySelector('be-hive') as any;
-if(beHive !== null){
-    customElements.whenDefined(beHive.localName).then(() => {
-        beHive.register({
-            ifWantsToBe,
-            upgrade,
-            localName: tagName,
-        })
-    })
-}else{
-    document.head.appendChild(document.createElement(tagName));
-}
+register(ifWantsToBe, upgrade, tagName);
 

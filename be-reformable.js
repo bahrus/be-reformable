@@ -1,6 +1,8 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
-import { getElementToObserve, addListener } from 'be-observant/be-observant.js';
+import { getElementToObserve } from 'be-observant/getElementToObserve.js';
+import { addListener } from 'be-observant/addListener.js';
+import { register } from 'be-hive/register.js';
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -12,7 +14,7 @@ export class BeReformableController {
     }
     onUrl({ url, proxy }) {
         if (typeof url === 'string') {
-            this.urlVal = url;
+            proxy.urlVal = url;
         }
         else {
             //observing object
@@ -132,16 +134,4 @@ export const controllerConfig = {
     }
 };
 define(controllerConfig);
-const beHive = document.querySelector('be-hive');
-if (beHive !== null) {
-    customElements.whenDefined(beHive.localName).then(() => {
-        beHive.register({
-            ifWantsToBe,
-            upgrade,
-            localName: tagName,
-        });
-    });
-}
-else {
-    document.head.appendChild(document.createElement(tagName));
-}
+register(ifWantsToBe, upgrade, tagName);
