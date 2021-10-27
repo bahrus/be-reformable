@@ -1,7 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
-import { getElementToObserve } from 'be-observant/getElementToObserve.js';
-import { addListener } from 'be-observant/addListener.js';
+import { hookUp } from 'be-observant/addListener.js';
 import { register } from 'be-hive/register.js';
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
@@ -13,18 +12,7 @@ export class BeReformableController {
         this.handleInput();
     }
     onUrl({ url, proxy }) {
-        if (typeof url === 'string') {
-            proxy.urlVal = url;
-        }
-        else {
-            //observing object
-            const elementToObserve = getElementToObserve(proxy, url);
-            if (elementToObserve === null) {
-                console.warn({ msg: '404', url });
-                return;
-            }
-            addListener(elementToObserve, url, 'urlVal', proxy);
-        }
+        hookUp(url, proxy, 'urlVal');
     }
     handleInput = () => {
         if (!this.proxy.checkValidity())
@@ -64,7 +52,7 @@ export class BeReformableController {
                 idx++;
             }
         }
-        this.proxy.url = url;
+        this.proxy.urlVal = url;
     };
     async doFetch({ urlVal, reqInit, as, proxy }) {
         const resp = await fetch(urlVal, reqInit);
