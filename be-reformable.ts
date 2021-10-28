@@ -1,7 +1,7 @@
 import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
 import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
-import {hookUp} from 'be-observant/addListener.js';
+import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 

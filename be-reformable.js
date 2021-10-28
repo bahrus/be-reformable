@@ -1,6 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
-import { hookUp } from 'be-observant/addListener.js';
+import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
