@@ -2,6 +2,7 @@ import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
 import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -88,14 +89,14 @@ export class BeReformableController {
 }
 const tagName = 'be-reformable';
 const ifWantsToBe = 'reformable';
-const upgrade = 'form';
+export const upgrade = 'form';
 export const controllerConfig = {
     config: {
         tagName,
         propDefaults: {
             upgrade,
             ifWantsToBe,
-            virtualProps: ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'],
+            virtualProps,
             finale: 'finale',
             proxyPropDefaults: {
                 as: 'json'

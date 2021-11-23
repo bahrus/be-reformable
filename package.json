@@ -23,16 +23,16 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "trans-render": "0.0.427",
-    "be-decorated": "0.0.36",
-    "be-observant": "0.0.48",
-    "be-hive": "0.0.8",
-    "xtal-element": "0.0.452"
+    "trans-render": "0.0.431",
+    "be-decorated": "0.0.44",
+    "be-observant": "0.0.60",
+    "be-hive": "0.0.10",
+    "xtal-element": "0.0.453"
   },
   "devDependencies": {
-    "xtal-test": "0.0.51",
+    "xtal-test": "0.0.52",
     "@skypack/package-check": "0.2.2",
-    "@custom-elements-manifest/analyzer": "0.5.6",
+    "@custom-elements-manifest/analyzer": "0.5.7",
     "@power-elements/json-viewer": "2.1.1"
   },
   "scripts": {
