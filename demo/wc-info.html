@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form style="display:flex;flex-direction:column" action="https://cf-sw.bahrus.workers.dev/" be-reformable='{
+        "as": "text",
+        "autoSubmit": true
+    }'
+        target="div[-innerHTML]"
+    >
+        <label for="href">href</label>
+        <input type="text" id="href" size="100" name="href" value="https://cdn.skypack.dev/xtal-editor/custom-elements.json">
+        <label for="stylesheet">stylesheet</label>
+        <input type="text" id="stylesheet" size="100" name="stylesheet" value="https://cdn.skypack.dev/wc-info/simple-ce-style.css">
+        <label for="embedded">embedded</label>
+        <input type="text" id="embedded" name="embedded" value="true">
+        <button type="submit">Submit</button>
+    </form>
+    <div -innerHTML></div>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "be-observant/": "../node_modules/be-observant/",
+                "on-to-me/": "../node_modules/on-to-me/",
+                "be-hive/": "../node_modules/be-hive/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-reformable.js';
+    </script>
+</body>
+</html>
