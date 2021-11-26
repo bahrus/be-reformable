@@ -13,13 +13,8 @@
     }'
         target="div[-innerHTML]"
     >
-        <label for="href">href</label>
-        <input type="text" id="href" size="100" name="href" value="https://cdn.skypack.dev/xtal-editor/custom-elements.json">
-        <label for="stylesheet">stylesheet</label>
-        <input type="text" id="stylesheet" size="100" name="stylesheet" value="https://cdn.skypack.dev/wc-info/simple-ce-style.css">
-        <label for="embedded">embedded</label>
-        <input type="text" id="embedded" name="embedded" value="true">
-        <button type="submit">Submit</button>
+        <input type=hidden name=href value=https://cdn.skypack.dev/xtal-editor/custom-elements.json>
+        <input type=hidden name=embedded value=true>
     </form>
     <div -innerHTML></div>
     <script type=importmap>
