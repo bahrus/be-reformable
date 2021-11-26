@@ -42,19 +42,27 @@ export class BeReformableController implements BeReformableActions{
                 return;
             }
         }
+        const queryObj: any = {};
+        const elements = this.proxy.elements;
+        for(const input of elements){
+            const inputT = input as HTMLInputElement;
+            if(inputT.name){
+                queryObj[inputT.name] = inputT.value;
+            }
+        }
         if(this.path !== undefined){
             let idx = 0;
-            const elements = this.proxy.elements;
             for(const token of this.path){
                 if(idx % 2 === 0){
                     url += token;
                 }else{
                     url += encodeURIComponent((<any>elements[token as any as number]).value);
+                    delete queryObj[token];
                 }
                 idx++;
             }
         }
-        this.proxy.urlVal = url;
+        this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
 
 
     }

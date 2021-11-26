@@ -40,20 +40,28 @@ export class BeReformableController {
                 return;
             }
         }
+        const queryObj = {};
+        const elements = this.proxy.elements;
+        for (const input of elements) {
+            const inputT = input;
+            if (inputT.name) {
+                queryObj[inputT.name] = inputT.value;
+            }
+        }
         if (this.path !== undefined) {
             let idx = 0;
-            const elements = this.proxy.elements;
             for (const token of this.path) {
                 if (idx % 2 === 0) {
                     url += token;
                 }
                 else {
                     url += encodeURIComponent(elements[token].value);
+                    delete queryObj[token];
                 }
                 idx++;
             }
         }
-        this.proxy.urlVal = url;
+        this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
     };
     async doFetch({ urlVal, reqInit, as, proxy }) {
         const resp = await fetch(urlVal, reqInit);
