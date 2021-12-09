@@ -32,7 +32,7 @@ export class BeReformableController implements BeReformableActions{
                 };
             }
         }
-        let url = this.urlVal;
+        let url = this.proxy.action || this.urlVal;
         if(this.baseLink !== undefined){
             url = (<any>self)[this.baseLink].href;
         }else if(url === undefined){

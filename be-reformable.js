@@ -29,7 +29,7 @@ export class BeReformableController {
                 };
             }
         }
-        let url = this.urlVal;
+        let url = this.proxy.action || this.urlVal;
         if (this.baseLink !== undefined) {
             url = self[this.baseLink].href;
         }
