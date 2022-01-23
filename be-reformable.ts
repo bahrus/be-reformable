@@ -5,6 +5,7 @@ import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 import { getProp } from 'trans-render/lib/getProp.js';
+import { unsubscribe } from 'trans-render/lib/subscribe.js';
 
 export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
@@ -107,6 +108,7 @@ export class BeReformableController implements BeReformableActions{
 
     finale(proxy: HTMLFormElement & BeReformableVirtualProps){
         this.proxy.removeEventListener('input', this.handleInput);
+        unsubscribe(proxy);
     }
 }
 

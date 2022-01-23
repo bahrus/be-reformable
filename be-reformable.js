@@ -3,6 +3,7 @@ import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
 import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
 import { getProp } from 'trans-render/lib/getProp.js';
+import { unsubscribe } from 'trans-render/lib/subscribe.js';
 export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
@@ -104,6 +105,7 @@ export class BeReformableController {
     }
     finale(proxy) {
         this.proxy.removeEventListener('input', this.handleInput);
+        unsubscribe(proxy);
     }
 }
 const tagName = 'be-reformable';
