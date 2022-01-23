@@ -2,7 +2,8 @@ import { define } from 'be-decorated/be-decorated.js';
 import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
 import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey'];
+import { getProp } from 'trans-render/lib/getProp.js';
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -63,7 +64,7 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
     };
-    async doFetch({ urlVal, init, as, proxy }) {
+    async doFetch({ urlVal, init, as, proxy, fetchResultPath }) {
         const resp = await fetch(urlVal, init);
         let fetchResult;
         if (as === 'json') {
@@ -71,6 +72,9 @@ export class BeReformableController {
         }
         else {
             fetchResult = await resp.text();
+        }
+        if (fetchResultPath !== undefined) {
+            fetchResult = getProp(fetchResult, fetchResultPath);
         }
         return {
             fetchResult

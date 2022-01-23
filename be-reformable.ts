@@ -4,8 +4,9 @@ import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
 import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
+import { getProp } from 'trans-render/lib/getProp.js';
 
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey'] as (keyof BeReformableVirtualProps)[];
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -69,7 +70,7 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, init, as, proxy}: this){
+    async doFetch({urlVal, init, as, proxy, fetchResultPath}: this){
         const resp = await fetch(urlVal!, init);
         let fetchResult: any;
         if(as === 'json'){
@@ -77,9 +78,12 @@ export class BeReformableController implements BeReformableActions{
         }else{
             fetchResult = await resp.text();
         }
+        if(fetchResultPath !== undefined){
+            fetchResult = getProp(fetchResult, fetchResultPath);
+        }
         return {
             fetchResult
-        }
+        };
     }
 
     sendFetchResultToTarget({fetchResult, propKey, proxy}: this){

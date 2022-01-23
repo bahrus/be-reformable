@@ -11,6 +11,7 @@ export interface BeReformableVirtualProps{
     urlVal?: string,
     init?: RequestInit,
     propKey?: string,
+    fetchResultPath?: string[],
     as?: 'text' | 'json',
     fetchResult?: any,
 }
