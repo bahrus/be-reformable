@@ -24,10 +24,10 @@ export class BeReformableController implements BeReformableActions{
         if(!this.proxy.checkValidity()) return;
         const method = this.proxy.method;
         if(method){
-            if(this.proxy.reqInit !== undefined){
-                this.proxy.reqInit.method = method;
+            if(this.proxy.init !== undefined){
+                this.proxy.init.method = method;
             }else{
-                this.proxy.reqInit = {
+                this.proxy.init = {
                     method
                 };
             }
@@ -69,8 +69,8 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, reqInit, as, proxy}: this){
-        const resp = await fetch(urlVal, reqInit);
+    async doFetch({urlVal, init, as, proxy}: this){
+        const resp = await fetch(urlVal!, init);
         let fetchResult: any;
         if(as === 'json'){
             fetchResult = await resp.json();
@@ -80,10 +80,9 @@ export class BeReformableController implements BeReformableActions{
         return {
             fetchResult
         }
-        //proxy.fetchResult = fetchResult;
     }
 
-    sendFetchResultToTarget({fetchResult, proxy}: this){
+    sendFetchResultToTarget({fetchResult, propKey, proxy}: this){
         const target = proxy.target;
         if(target){
             const targetElement = (proxy.getRootNode() as DocumentFragment).querySelector(target);
@@ -93,6 +92,12 @@ export class BeReformableController implements BeReformableActions{
             const rawPath =  target.substring(lastPos + 2, target.length - 1);
             const propPath = lispToCamel(rawPath);
             (<any>targetElement)[propPath] = fetchResult;
+        }
+        if(propKey !== undefined){
+            let container = proxy.closest('[itemscope]') as any;
+            if(container === null) container = (<any>proxy.getRootNode()).host;
+            if(container === undefined) throw '404';
+            container[propKey] = fetchResult;
         }
     }
 
@@ -126,7 +131,7 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
                 ifAllOf: ['autoSubmit']
             },
             doFetch:{
-                ifAllOf: ['urlVal', 'reqInit', 'as'],
+                ifAllOf: ['urlVal', 'init', 'as'],
                 async: true,
             },
             sendFetchResultToTarget: {

@@ -20,11 +20,11 @@ export class BeReformableController {
             return;
         const method = this.proxy.method;
         if (method) {
-            if (this.proxy.reqInit !== undefined) {
-                this.proxy.reqInit.method = method;
+            if (this.proxy.init !== undefined) {
+                this.proxy.init.method = method;
             }
             else {
-                this.proxy.reqInit = {
+                this.proxy.init = {
                     method
                 };
             }
@@ -63,8 +63,8 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
     };
-    async doFetch({ urlVal, reqInit, as, proxy }) {
-        const resp = await fetch(urlVal, reqInit);
+    async doFetch({ urlVal, init, as, proxy }) {
+        const resp = await fetch(urlVal, init);
         let fetchResult;
         if (as === 'json') {
             fetchResult = await resp.json();
@@ -75,9 +75,8 @@ export class BeReformableController {
         return {
             fetchResult
         };
-        //proxy.fetchResult = fetchResult;
     }
-    sendFetchResultToTarget({ fetchResult, proxy }) {
+    sendFetchResultToTarget({ fetchResult, propKey, proxy }) {
         const target = proxy.target;
         if (target) {
             const targetElement = proxy.getRootNode().querySelector(target);
@@ -89,6 +88,14 @@ export class BeReformableController {
             const rawPath = target.substring(lastPos + 2, target.length - 1);
             const propPath = lispToCamel(rawPath);
             targetElement[propPath] = fetchResult;
+        }
+        if (propKey !== undefined) {
+            let container = proxy.closest('[itemscope]');
+            if (container === null)
+                container = proxy.getRootNode().host;
+            if (container === undefined)
+                throw '404';
+            container[propKey] = fetchResult;
         }
     }
     finale(proxy) {
@@ -115,7 +122,7 @@ export const controllerConfig = {
                 ifAllOf: ['autoSubmit']
             },
             doFetch: {
-                ifAllOf: ['urlVal', 'reqInit', 'as'],
+                ifAllOf: ['urlVal', 'init', 'as'],
                 async: true,
             },
             sendFetchResultToTarget: {

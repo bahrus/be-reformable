@@ -1,15 +1,16 @@
 import {IObserve} from 'be-observant/types'; 
 export interface BeReformableVirtualProps{
-    baseLink: string,
-    /** This parto the url derives from the form elements */
-    path: string | string[],
-    autoSubmit: boolean,
+    baseLink?: string,
+    /** This part of the url derives from the form elements */
+    path?: string | string[],
+    autoSubmit?: boolean,
     /**
      * This part of the url can come from external binding, like from the host
      */
-    url: string | string[] | IObserve,
-    urlVal: string,
-    reqInit: RequestInit,
+    url?: string | string[] | IObserve,
+    urlVal?: string,
+    init: RequestInit,
+    propKey: string,
     as: 'text' | 'json',
     fetchResult: any,
 }
