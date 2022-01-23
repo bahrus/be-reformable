@@ -5,7 +5,7 @@ import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'reqInit', 'as', 'fetchResult'] as (keyof BeReformableVirtualProps)[];
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult'] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){

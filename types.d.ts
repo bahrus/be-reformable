@@ -9,10 +9,10 @@ export interface BeReformableVirtualProps{
      */
     url?: string | string[] | IObserve,
     urlVal?: string,
-    init: RequestInit,
-    propKey: string,
-    as: 'text' | 'json',
-    fetchResult: any,
+    init?: RequestInit,
+    propKey?: string,
+    as?: 'text' | 'json',
+    fetchResult?: any,
 }
 export interface BeReformableProps extends BeReformableVirtualProps{
     proxy: HTMLFormElement & BeReformableVirtualProps;
