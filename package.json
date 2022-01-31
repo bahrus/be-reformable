@@ -18,19 +18,18 @@
     "./be-reformable.js": "./be-reformable.js"
   },
   "files": [
-    "be*.*",
-    "types.d.ts"
+    "*.*"
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "trans-render": "0.0.448",
-    "be-decorated": "0.0.65",
-    "be-observant": "0.0.83",
-    "be-hive": "0.0.20",
-    "xtal-element": "0.0.462"
+    "trans-render": "0.0.453",
+    "be-decorated": "0.0.72",
+    "be-observant": "0.0.89",
+    "be-hive": "0.0.21",
+    "xtal-element": "0.0.463"
   },
   "devDependencies": {
-    "xtal-test": "0.0.54",
+    "xtal-test": "0.0.55",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.5.7",
     "@power-elements/json-viewer": "2.1.1"
