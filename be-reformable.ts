@@ -1,11 +1,7 @@
 import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
-//import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
-import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
-import { getProp } from 'trans-render/lib/getProp.js';
-import { unsubscribe } from 'trans-render/lib/subscribe.js';
 
 export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
@@ -18,7 +14,8 @@ export class BeReformableController implements BeReformableActions{
         this.handleInput();
     }
 
-    onUrl({url, proxy}: this){
+    async onUrl({url, proxy}: this){
+        const {hookUp} = await import('be-observant/hookUp.js');
         hookUp(url, proxy, 'urlVal');
     }
 
@@ -80,6 +77,7 @@ export class BeReformableController implements BeReformableActions{
             fetchResult = await resp.text();
         }
         if(fetchResultPath !== undefined){
+            const {getProp} = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
         }
         return {
@@ -107,8 +105,9 @@ export class BeReformableController implements BeReformableActions{
         }
     }
 
-    finale(proxy: HTMLFormElement & BeReformableVirtualProps){
+    async finale(proxy: HTMLFormElement & BeReformableVirtualProps){
         this.proxy.removeEventListener('input', this.handleInput);
+        const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
 }

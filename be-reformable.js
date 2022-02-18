@@ -1,9 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
-//import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
-import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
-import { getProp } from 'trans-render/lib/getProp.js';
-import { unsubscribe } from 'trans-render/lib/subscribe.js';
 export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
@@ -14,7 +10,8 @@ export class BeReformableController {
         proxy.addEventListener('input', this.handleInput);
         this.handleInput();
     }
-    onUrl({ url, proxy }) {
+    async onUrl({ url, proxy }) {
+        const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(url, proxy, 'urlVal');
     }
     handleInput = () => {
@@ -75,6 +72,7 @@ export class BeReformableController {
             fetchResult = await resp.text();
         }
         if (fetchResultPath !== undefined) {
+            const { getProp } = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
         }
         return {
@@ -104,8 +102,9 @@ export class BeReformableController {
             container[propKey] = fetchResult;
         }
     }
-    finale(proxy) {
+    async finale(proxy) {
         this.proxy.removeEventListener('input', this.handleInput);
+        const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
 }
