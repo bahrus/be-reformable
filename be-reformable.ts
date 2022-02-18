@@ -1,6 +1,6 @@
 import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
 import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from './types';
-import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
+//import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
 import {hookUp} from 'be-observant/hookUp.js';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
@@ -87,7 +87,7 @@ export class BeReformableController implements BeReformableActions{
         };
     }
 
-    sendFetchResultToTarget({fetchResult, propKey, proxy}: this){
+    async sendFetchResultToTarget({fetchResult, propKey, proxy}: this){
         const target = proxy.target;
         if(target){
             const targetElement = (proxy.getRootNode() as DocumentFragment).querySelector(target);
@@ -95,6 +95,7 @@ export class BeReformableController implements BeReformableActions{
             const lastPos = target.lastIndexOf('[');
             if(lastPos === -1) throw 'NI'; //Not implemented
             const rawPath =  target.substring(lastPos + 2, target.length - 1);
+            const {lispToCamel} = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
             (<any>targetElement)[propPath] = fetchResult;
         }
@@ -138,7 +139,6 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             },
             doFetch:{
                 ifAllOf: ['urlVal', 'init', 'as'],
-                async: true,
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']

@@ -1,5 +1,5 @@
 import { define } from 'be-decorated/be-decorated.js';
-import { lispToCamel } from 'trans-render/lib/lispToCamel.js';
+//import {lispToCamel} from 'trans-render/lib/lispToCamel.js';
 import { hookUp } from 'be-observant/hookUp.js';
 import { register } from 'be-hive/register.js';
 import { getProp } from 'trans-render/lib/getProp.js';
@@ -81,7 +81,7 @@ export class BeReformableController {
             fetchResult
         };
     }
-    sendFetchResultToTarget({ fetchResult, propKey, proxy }) {
+    async sendFetchResultToTarget({ fetchResult, propKey, proxy }) {
         const target = proxy.target;
         if (target) {
             const targetElement = proxy.getRootNode().querySelector(target);
@@ -91,6 +91,7 @@ export class BeReformableController {
             if (lastPos === -1)
                 throw 'NI'; //Not implemented
             const rawPath = target.substring(lastPos + 2, target.length - 1);
+            const { lispToCamel } = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
             targetElement[propPath] = fetchResult;
         }
@@ -129,7 +130,6 @@ export const controllerConfig = {
             },
             doFetch: {
                 ifAllOf: ['urlVal', 'init', 'as'],
-                async: true,
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']
