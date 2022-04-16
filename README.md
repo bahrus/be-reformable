@@ -37,6 +37,49 @@ The "as" property defaults to json, so isn't actually needed to be specified.  T
 
 Another optional parameter not shown above is "reqInit" which allows for specifying details about the fetch request.
 
+## Another example
+
+The following markup scores 100% from Lighthouse:
+
+```html
+<form>
+    <label for='url'>URL:</label>
+    <input id='url' type='url' required>
+</form>
+<template be-switched='{
+    "if": {
+        "observe": "form",
+        "on": "input",
+        "vft": "querySelector|input.checkValidity|"
+    }
+}'>
+    <form be-reformable='{
+        "autoSubmit": true,
+        "url": {
+            "observe": "form",
+            "on": "input",
+            "vft": "querySelector|input.value"
+        },
+        "as": "json"
+    }'
+    target='xtal-editor[-input-obj]'></form>
+    <xtal-editor -input-obj></xtal-editor>
+    <script type='module' crossorigin='anonymous'>
+        import 'https://esm.run/xtal-editor@0.0.162';
+        import 'https://esm.run/be-reformable@0.0.39';
+    </script>
+</template>
+<script type=module crossorigin='anonymous'>
+    import 'https://esm.run/be-switched@0.0.68';
+</script>
+```
+
+What this does:  
+
+1.  Until a url is entered, the only JS loaded is for be-switched.  Be-switched enables the teamplate to not load until the input is valid.
+2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
+3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
+
 [TODO]  Support POST with body
 
 ## Staying Kosher
