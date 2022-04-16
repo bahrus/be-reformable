@@ -22,11 +22,11 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "trans-render": "0.0.527",
-    "be-decorated": "0.0.109",
-    "be-observant": "0.0.119",
-    "be-hive": "0.0.42",
-    "xtal-element": "0.0.490"
+    "trans-render": "0.0.528",
+    "be-decorated": "0.0.110",
+    "be-observant": "0.0.121",
+    "be-hive": "0.0.43",
+    "xtal-element": "0.0.491"
   },
   "devDependencies": {
     "xtal-test": "0.0.56",
