@@ -1,6 +1,6 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'];
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath', 'initVal'];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -134,7 +134,7 @@ export const controllerConfig = {
                 ifAllOf: ['autoSubmit']
             },
             doFetch: {
-                ifAllOf: ['urlVal', 'init', 'as'],
+                ifAllOf: ['urlVal', 'initVal', 'as'],
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']

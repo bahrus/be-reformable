@@ -3,7 +3,7 @@ import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from '
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath'] as (keyof BeReformableVirtualProps)[];
+export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath', 'initVal'] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
@@ -143,7 +143,7 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
                 ifAllOf: ['autoSubmit']
             },
             doFetch:{
-                ifAllOf: ['urlVal', 'init', 'as'],
+                ifAllOf: ['urlVal', 'initVal', 'as'],
             },
             sendFetchResultToTarget: {
                 ifAllOf: ['fetchResult']
