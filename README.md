@@ -35,7 +35,7 @@ The "as" property defaults to json, so isn't actually needed to be specified.  T
 
 "base-link" is optional, but allows for easy management of common base API URL's across the application.  The link tag should probably go in the head tag of index.html (typically).
 
-Another optional parameter not shown above is "reqInit" which allows for specifying details about the fetch request.
+Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
 
 ## Another example
 
@@ -76,7 +76,7 @@ The following markup scores 100% from Lighthouse:
 
 What this does:  
 
-1.  Until a url is entered, the only JS loaded is for be-switched.  Be-switched enables the teamplate to not load until the input is valid.
+1.  Until a url is entered, the only JS loaded is for be-switched.  Be-switched enables the template to not load until the input is valid.
 2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
 3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
 

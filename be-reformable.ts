@@ -19,14 +19,19 @@ export class BeReformableController implements BeReformableActions{
         hookUp(url, proxy, 'urlVal');
     }
 
+    async onInit({init, proxy}: this){
+        const {hookUp} = await import('be-observant/hookUp.js');
+        hookUp(init, proxy, 'initVal');
+    }
+
     handleInput = () => {
         if(!this.proxy.checkValidity()) return;
         const method = this.proxy.method;
         if(method){
-            if(this.proxy.init !== undefined){
-                this.proxy.init.method = method;
+            if(this.proxy.initVal !== undefined){
+                this.proxy.initVal.method = method;
             }else{
-                this.proxy.init = {
+                this.proxy.initVal = {
                     method
                 };
             }
@@ -69,8 +74,8 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, init, as, proxy, fetchResultPath}: this){
-        const resp = await fetch(urlVal!, init);
+    async doFetch({urlVal, initVal, as, proxy, fetchResultPath}: this){
+        const resp = await fetch(urlVal!, initVal);
         let fetchResult: any;
         if(as === 'json'){
             fetchResult = await resp.json();
