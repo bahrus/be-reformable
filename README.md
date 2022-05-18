@@ -1,6 +1,6 @@
 # be-reformable
 
-be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" approach.
+be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" extension.
 
 ## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
 
