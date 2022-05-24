@@ -84,6 +84,10 @@ What this does:
 2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
 3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
 
+## Support for header coming from linked form [TODO]
+
+
+
 ## Support for cancelling previous calls [TODO]
 
 ## Support for debouncing [TODO]
@@ -108,7 +112,9 @@ The following import map is needed for non-bundling environments:
         "imports": {
             "trans-render/": "../node_modules/trans-render/",
             "xtal-element/": "../node_modules/xtal-element/",
-            "be-decorated/": "../node_modules/be-decorated/"
+            "be-decorated/": "../node_modules/be-decorated/",
+            "be-observant/": "../node_modules/be-observant/",
+            "be-hive/": "../node_modules/be-hive/"
         }
     }
 </script>

@@ -7,6 +7,35 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+    <form be-reformable='{
+        "baseLink": "newton-microservice",
+        "path": ["api/v2/", "operation", "/", "expression"],
+        "autoSubmit": true,
+        "debug": true
+    }'
+    target="json-viewer[-object]"
+    >
+    <label for=operation>Operation:</label>
+    <input id=operation value=integrate>
+    <label for=expression>Expression:</label>
+    <input id=expression value="x^2">
+    </form>
+    <json-viewer -object></json-viewer>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "be-observant/": "../node_modules/be-observant/",
+                "be-hive/": "../node_modules/be-hive/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-reformable.js';
+        import '@power-elements/json-viewer/json-viewer.js';
+    </script>
 </body>
 </html>
