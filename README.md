@@ -31,7 +31,7 @@ Let's see how we can use be-reformable, to work with the [newton advanced math m
 </noscript>
 ```
 
-If target isn't found, or isn't specified, the form will apply the underlying submit mechanism [TODO].
+If target isn't found, or isn't specified, the form will apply the underlying submit mechanism.
 
 The "path" value is an "interpolation from a distance" expression -- it alternates between hardcoded strings, and names of input elements it expects to find in oForm.elements.
 
