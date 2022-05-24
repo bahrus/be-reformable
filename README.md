@@ -26,8 +26,12 @@ Let's see how we can use be-reformable, to work with the [newton advanced math m
     <input id=expression value="x^2">
 </form>
 <json-viewer -object></json-viewer>
-<iframe name="json-viewer[-object]"><!-- backup if no JS --></iframe>
+<noscript>
+<iframe name="json-viewer[-object]"></iframe>
+</noscript>
 ```
+
+If target isn't found, or isn't specified, the form will apply the underlying submit mechanism [TODO].
 
 The "path" value is an "interpolation from a distance" expression -- it alternates between hardcoded strings, and names of input elements it expects to find in oForm.elements.
 
