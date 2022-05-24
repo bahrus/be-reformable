@@ -78,6 +78,7 @@ export class BeReformableController implements BeReformableActions{
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();
+            return;
         }
         const resp = await fetch(urlVal!, initVal);
         let fetchResult: any;
