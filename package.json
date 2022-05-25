@@ -10,6 +10,7 @@
     "behavior",
     "directive"
   ],
+  "type": "module",
   "description": "be-reformable is a web component that progressively enhances the built-in form element",
   "main": "be-reformable.js",
   "module": "be-reformable.js",

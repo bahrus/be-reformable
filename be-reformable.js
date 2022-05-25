@@ -1,13 +1,19 @@
 import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath', 'initVal'];
+export const virtualProps = [
+    'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal'
+];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
     //     this.target = target
     // }
-    onAutoSubmit({ proxy }) {
-        proxy.addEventListener('input', this.handleInput);
+    onAutoSubmit({ proxy, autoSubmitOn }) {
+        const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
+        for (const key of on) {
+            proxy.addEventListener(key, this.handleInput);
+        }
         this.handleInput();
     }
     async onUrl({ url, proxy }) {
@@ -17,6 +23,8 @@ export class BeReformableController {
     async onInit({ init, proxy }) {
         const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(init, proxy, 'initVal');
+    }
+    async onHeaderFormSelector({ headerFormSelector, proxy }) {
     }
     handleInput = () => {
         if (!this.proxy.checkValidity())
@@ -114,7 +122,11 @@ export class BeReformableController {
         }
     }
     async finale(proxy) {
-        this.proxy.removeEventListener('input', this.handleInput);
+        const { autoSubmitOn } = proxy;
+        const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
+        for (const key of on) {
+            proxy.removeEventListener(key, this.handleInput);
+        }
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
@@ -131,7 +143,8 @@ export const controllerConfig = {
             virtualProps,
             finale: 'finale',
             proxyPropDefaults: {
-                as: 'json'
+                as: 'json',
+                autoSubmitOn: 'input',
             }
         },
         actions: {

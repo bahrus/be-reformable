@@ -3,14 +3,20 @@ import {BeReformableProps, BeReformableVirtualProps, BeReformableActions} from '
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 
-export const virtualProps = ['autoSubmit', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 'fetchResult', 'propKey', 'fetchResultPath', 'initVal'] as (keyof BeReformableVirtualProps)[];
+export const virtualProps = [
+    'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal'
+] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
     // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
     //     this.target = target
     // }
-    onAutoSubmit({proxy}: this){
-        proxy.addEventListener('input', this.handleInput);
+    onAutoSubmit({proxy, autoSubmitOn}: this){
+        const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
+        for(const key of on){
+            proxy.addEventListener(key, this.handleInput);
+        }
         this.handleInput();
     }
 
@@ -22,6 +28,9 @@ export class BeReformableController implements BeReformableActions{
     async onInit({init, proxy}: this){
         const {hookUp} = await import('be-observant/hookUp.js');
         hookUp(init, proxy, 'initVal');
+    }
+
+    async onHeaderFormSelector({headerFormSelector, proxy}: this){
     }
 
     handleInput = () => {
@@ -117,7 +126,11 @@ export class BeReformableController implements BeReformableActions{
     }
 
     async finale(proxy: HTMLFormElement & BeReformableVirtualProps){
-        this.proxy.removeEventListener('input', this.handleInput);
+        const {autoSubmitOn} = proxy;
+        const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
+        for(const key of on){
+            proxy.removeEventListener(key, this.handleInput);
+        }
         const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
@@ -140,7 +153,8 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             virtualProps,
             finale: 'finale',
             proxyPropDefaults:{
-                as: 'json'
+                as: 'json',
+                autoSubmitOn: 'input',
             }
         },
         actions:{
