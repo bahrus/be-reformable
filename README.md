@@ -99,6 +99,10 @@ What this does:
 }'>
 ```
 
+### Make header form participate in autoSubmit
+
+Set "headerFormSubmitOn": "input" for example.  Can also be an array of events to monitor for.
+
 ## Support for cancelling previous calls [TODO]
 
 ## Support for debouncing [TODO]
