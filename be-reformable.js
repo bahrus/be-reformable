@@ -92,9 +92,6 @@ export class BeReformableController {
                     initVal = {};
                 }
                 const headers = { ...initVal.headers };
-                // const formData = new FormData(headerForm);
-                // const search = new URLSearchParams(formData as any as string);
-                // debugger;
                 for (const input of elements) {
                     const inputT = input;
                     if (inputT.name) {
@@ -144,15 +141,28 @@ export class BeReformableController {
         }
     }
     async finale(proxy) {
-        const { autoSubmitOn } = proxy;
-        const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
-        for (const key of on) {
-            proxy.removeEventListener(key, this.handleInput);
+        const { autoSubmitOn, headerFormSubmitOn } = proxy;
+        if (autoSubmitOn !== undefined) {
+            const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
+            for (const key of on) {
+                proxy.removeEventListener(key, this.handleInput);
+            }
+        }
+        if (headerFormSubmitOn !== undefined) {
+            const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
+            for (const key of on) {
+                proxy.removeEventListener(key, this.handleInput);
+            }
         }
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
-    onHeaderFormSelector(self) {
+    async onHeaderFormSubmitOn({ headerFormSubmitOn, proxy }) {
+        const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
+        for (const key of on) {
+            proxy.addEventListener(key, this.handleInput);
+        }
+        this.handleInput();
     }
 }
 const tagName = 'be-reformable';
