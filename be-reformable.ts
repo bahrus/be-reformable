@@ -94,6 +94,9 @@ export class BeReformableController implements BeReformableActions{
                 const elements = headerForm.elements;
                 if(initVal === undefined){ initVal = {}; }
                 const headers = {...initVal.headers} as any;
+                // const formData = new FormData(headerForm);
+                // const search = new URLSearchParams(formData as any as string);
+                // debugger;
                 for(const input of elements){
                     const inputT = input as HTMLInputElement;
                     if(inputT.name){
