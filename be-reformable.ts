@@ -5,7 +5,7 @@ import {register} from 'be-hive/register.js';
 
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
-    'fetchResult', 'propKey', 'fetchResultPath', 'initVal'
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector',
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     // target: HTMLFormElement | undefined;
@@ -28,9 +28,6 @@ export class BeReformableController implements BeReformableActions{
     async onInit({init, proxy}: this){
         const {hookUp} = await import('be-observant/hookUp.js');
         hookUp(init, proxy, 'initVal');
-    }
-
-    async onHeaderFormSelector({headerFormSelector, proxy}: this){
     }
 
     handleInput = () => {
@@ -83,11 +80,26 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, initVal, as, proxy, fetchResultPath}: this){
+    async doFetch({urlVal, initVal, as, proxy, fetchResultPath, headerFormSelector}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();
             return;
+        }
+        if(headerFormSelector){
+            const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
+            if(headerForm !== null){
+                const elements = headerForm.elements;
+                if(initVal === undefined){ initVal = {}; }
+                const headers = {...initVal.headers} as any;
+                for(const input of elements){
+                    const inputT = input as HTMLInputElement;
+                    if(inputT.name){
+                        headers[inputT.name] = inputT.value;
+                    }
+                }
+                initVal.headers = headers;
+            }
         }
         const resp = await fetch(urlVal!, initVal);
         let fetchResult: any;

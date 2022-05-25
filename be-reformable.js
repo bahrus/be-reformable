@@ -2,7 +2,7 @@ import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
-    'fetchResult', 'propKey', 'fetchResultPath', 'initVal'
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector',
 ];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
@@ -23,8 +23,6 @@ export class BeReformableController {
     async onInit({ init, proxy }) {
         const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(init, proxy, 'initVal');
-    }
-    async onHeaderFormSelector({ headerFormSelector, proxy }) {
     }
     handleInput = () => {
         if (!this.proxy.checkValidity())
@@ -76,11 +74,28 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
     };
-    async doFetch({ urlVal, initVal, as, proxy, fetchResultPath }) {
+    async doFetch({ urlVal, initVal, as, proxy, fetchResultPath, headerFormSelector }) {
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
             return;
+        }
+        if (headerFormSelector) {
+            const headerForm = proxy.getRootNode().querySelector(headerFormSelector);
+            if (headerForm !== null) {
+                const elements = headerForm.elements;
+                if (initVal === undefined) {
+                    initVal = {};
+                }
+                const headers = { ...initVal.headers };
+                for (const input of elements) {
+                    const inputT = input;
+                    if (inputT.name) {
+                        headers[inputT.name] = inputT.value;
+                    }
+                }
+                initVal.headers = headers;
+            }
         }
         const resp = await fetch(urlVal, initVal);
         let fetchResult;

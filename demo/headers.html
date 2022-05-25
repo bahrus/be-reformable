@@ -7,6 +7,33 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <form class='headers'>
+        <input name='header1' value='headerValue1' type='hidden'>
+    </form>
+    <form be-reformable='{
+        "autoSubmit": true,
+        "as": "html",
+        "headerFormSelector": ".headers"
+    }'
+    action=https://corslet.bahrus.workers.dev/
+    target=template[-innerHTML]>
+        <label for=href>href</label>
+        <input required name=href>
+    </form>
+    <template -innerHTML></template>
+    <script type=importmap>
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "be-observant/": "../node_modules/be-observant/",
+                "be-hive/": "../node_modules/be-hive/"
+            }
+        }
+    </script>
+    <script type=module>
+        import '../be-reformable.js';
+    </script>
 </body>
 </html>

@@ -84,7 +84,7 @@ What this does:
 2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
 3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
 
-## Support for headers coming from linked form [TODO]
+## Support for headers coming from linked form
 
 
 ```html

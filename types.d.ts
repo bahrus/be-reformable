@@ -40,7 +40,6 @@ export interface BeReformableActions{
     onAutoSubmit(self: this): void;
     onUrl(self: this): void;
     onInit(self: this): void;
-    onHeaderFormSelector(self: this): void;
     doFetch(self: this): void;
     sendFetchResultToTarget(self: this): void;
     finale(proxy: HTMLFormElement & BeReformableVirtualProps): void;
