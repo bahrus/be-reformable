@@ -27,6 +27,8 @@ export interface BeReformableEndUserProps{
     urlVal?: string,
 
     headerFormSelector?: string,
+
+    headerFormSubmitOn?: string | string[],
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{
     fetchResult?: any,
@@ -43,4 +45,5 @@ export interface BeReformableActions{
     doFetch(self: this): void;
     sendFetchResultToTarget(self: this): void;
     finale(proxy: HTMLFormElement & BeReformableVirtualProps): void;
+    onHeaderFormSubmitOn(self: this): void;
 }

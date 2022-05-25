@@ -82,6 +82,10 @@ export class BeReformableController {
         }
         if (headerFormSelector) {
             const headerForm = proxy.getRootNode().querySelector(headerFormSelector);
+            if (headerForm === null)
+                throw '404';
+            if (!headerForm.checkValidity())
+                return;
             if (headerForm !== null) {
                 const elements = headerForm.elements;
                 if (initVal === undefined) {
@@ -145,6 +149,8 @@ export class BeReformableController {
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
+    onHeaderFormSelector(self) {
+    }
 }
 const tagName = 'be-reformable';
 const ifWantsToBe = 'reformable';
@@ -163,18 +169,13 @@ export const controllerConfig = {
             }
         },
         actions: {
-            onAutoSubmit: {
-                ifAllOf: ['autoSubmit']
-            },
+            onAutoSubmit: 'autoSubmit',
             doFetch: {
                 ifAllOf: ['urlVal', 'initVal', 'as'],
             },
-            sendFetchResultToTarget: {
-                ifAllOf: ['fetchResult']
-            },
-            onUrl: {
-                ifAllOf: ['url']
-            }
+            sendFetchResultToTarget: 'fetchResult',
+            onUrl: 'url',
+            onHeaderFormSubmitOn: 'headerFormSubmitOn'
         }
     },
     complexPropDefaults: {

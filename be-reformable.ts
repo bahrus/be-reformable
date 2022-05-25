@@ -88,6 +88,8 @@ export class BeReformableController implements BeReformableActions{
         }
         if(headerFormSelector){
             const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
+            if(headerForm === null) throw '404';
+            if(!headerForm.checkValidity()) return;
             if(headerForm !== null){
                 const elements = headerForm.elements;
                 if(initVal === undefined){ initVal = {}; }
@@ -146,6 +148,10 @@ export class BeReformableController implements BeReformableActions{
         const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
+
+    onHeaderFormSelector(self: this): void {
+        
+    }
 }
 
 export interface BeReformableController extends BeReformableProps{}
@@ -170,18 +176,13 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             }
         },
         actions:{
-            onAutoSubmit:{
-                ifAllOf: ['autoSubmit']
-            },
+            onAutoSubmit:'autoSubmit',
             doFetch:{
                 ifAllOf: ['urlVal', 'initVal', 'as'],
             },
-            sendFetchResultToTarget: {
-                ifAllOf: ['fetchResult']
-            },
-            onUrl:{
-                ifAllOf: ['url']
-            }
+            sendFetchResultToTarget:'fetchResult',
+            onUrl:'url',
+            onHeaderFormSubmitOn: 'headerFormSubmitOn'
         }
     },
     complexPropDefaults:{
