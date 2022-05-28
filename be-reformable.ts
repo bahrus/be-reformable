@@ -86,8 +86,10 @@ export class BeReformableController implements BeReformableActions{
             proxy.submit();
             return;
         }
+        console.log({headerFormSelector});
         if(headerFormSelector){
             const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
+            console.log({headerForm});
             if(headerForm === null) throw '404';
             if(!headerForm.checkValidity()) return;
             if(headerForm !== null){
@@ -101,6 +103,7 @@ export class BeReformableController implements BeReformableActions{
                     }
                 }
                 initVal.headers = headers;
+                console.log({initVal});
             }
         }
         const resp = await fetch(urlVal!, initVal);
