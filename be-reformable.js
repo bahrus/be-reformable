@@ -2,7 +2,7 @@ import { define } from 'be-decorated/be-decorated.js';
 import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
-    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector',
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn'
 ];
 export class BeReformableController {
     // target: HTMLFormElement | undefined;
