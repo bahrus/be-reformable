@@ -80,10 +80,8 @@ export class BeReformableController {
             proxy.submit();
             return;
         }
-        console.log({ headerFormSelector });
         if (headerFormSelector) {
             const headerForm = proxy.getRootNode().querySelector(headerFormSelector);
-            console.log({ headerForm });
             if (headerForm === null)
                 throw '404';
             if (!headerForm.checkValidity())
@@ -106,7 +104,8 @@ export class BeReformableController {
         }
         const resp = await fetch(urlVal, initVal);
         let fetchResult;
-        if (as === 'json') {
+        const contentTypeHeader = resp.headers.get('content-type');
+        if (contentTypeHeader !== null && contentTypeHeader.indexOf('json') > -1) {
             fetchResult = await resp.json();
         }
         else {
@@ -180,14 +179,13 @@ export const controllerConfig = {
             virtualProps,
             finale: 'finale',
             proxyPropDefaults: {
-                as: 'json',
                 autoSubmitOn: 'input',
             }
         },
         actions: {
             onAutoSubmit: 'autoSubmit',
             doFetch: {
-                ifAllOf: ['urlVal', 'initVal', 'as'],
+                ifAllOf: ['urlVal', 'initVal'],
             },
             sendFetchResultToTarget: 'fetchResult',
             onUrl: 'url',

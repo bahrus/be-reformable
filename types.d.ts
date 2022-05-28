@@ -13,7 +13,6 @@ export interface BeReformableEndUserProps{
     
     init?: string | IObserve,
     
-    as?: 'text' | 'json',
     /**
      * dot delimited path to a sub object in the fetch result
      */

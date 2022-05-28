@@ -16,7 +16,6 @@ Let's see how we can use be-reformable, to work with the [newton advanced math m
     "base-link": "newton-microservice",
     "path": ["api/v2/", "operation", "/", "expression"],
     "autoSubmit": true,
-    "as": "json"
 }'
     target="json-viewer[-object]"
 >
@@ -35,7 +34,7 @@ If target isn't found, or isn't specified, the form will apply the underlying su
 
 The "path" value is an "interpolation from a distance" expression -- it alternates between hardcoded strings, and names of input elements it expects to find in oForm.elements.
 
-The "as" property defaults to json, so isn't actually needed to be specified.  The other option is "text", if the desire is to set the innerHTML of a target element.
+be-reformable examines the content-type header of the response, and parses to json when "json" is found in that string.
 
 "base-link" is optional, but allows for easy management of common base API URL's across the application.  The link tag should probably go in the head tag of index.html (typically).
 
