@@ -80,7 +80,7 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, initVal, as, proxy, fetchResultPath, headerFormSelector}: this){
+    async doFetch({urlVal, initVal, proxy, fetchResultPath, headerFormSelector}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();

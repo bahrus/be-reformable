@@ -74,7 +74,7 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
     };
-    async doFetch({ urlVal, initVal, as, proxy, fetchResultPath, headerFormSelector }) {
+    async doFetch({ urlVal, initVal, proxy, fetchResultPath, headerFormSelector }) {
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
