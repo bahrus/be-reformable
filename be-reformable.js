@@ -159,10 +159,13 @@ export class BeReformableController {
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
-    async onHeaderFormSubmitOn({ headerFormSubmitOn, proxy }) {
+    async onHeaderFormSubmitOn({ headerFormSubmitOn, proxy, headerFormSelector }) {
         const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
+        const headerForm = proxy.getRootNode().querySelector(headerFormSelector);
+        if (headerForm === null)
+            throw '404';
         for (const key of on) {
-            proxy.addEventListener(key, this.handleInput);
+            headerForm.addEventListener(key, this.handleInput);
         }
         this.handleInput();
     }
@@ -189,7 +192,9 @@ export const controllerConfig = {
             },
             sendFetchResultToTarget: 'fetchResult',
             onUrl: 'url',
-            onHeaderFormSubmitOn: 'headerFormSubmitOn'
+            onHeaderFormSubmitOn: {
+                ifAllOf: ['headerFormSubmitOn', 'headerFormSelector'],
+            }
         }
     },
     complexPropDefaults: {

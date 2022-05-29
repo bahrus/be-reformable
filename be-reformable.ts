@@ -160,10 +160,12 @@ export class BeReformableController implements BeReformableActions{
         unsubscribe(proxy);
     }
 
-    async onHeaderFormSubmitOn({headerFormSubmitOn, proxy}: this) {
+    async onHeaderFormSubmitOn({headerFormSubmitOn, proxy, headerFormSelector}: this) {
         const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
+        const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector!) as HTMLFormElement;
+        if(headerForm === null) throw '404';
         for(const key of on){
-            proxy.addEventListener(key, this.handleInput);
+            headerForm.addEventListener(key, this.handleInput);
         }
         this.handleInput();
     }
@@ -196,7 +198,9 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             },
             sendFetchResultToTarget:'fetchResult',
             onUrl:'url',
-            onHeaderFormSubmitOn: 'headerFormSubmitOn'
+            onHeaderFormSubmitOn: {
+                ifAllOf: ['headerFormSubmitOn', 'headerFormSelector'],
+            }
         }
     },
     complexPropDefaults:{
