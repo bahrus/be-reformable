@@ -1,0 +1,67 @@
+
+
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+            @import "https://unpkg.com/open-props@1.3.16";
+            @import "https://unpkg.com/open-props@1.3.16/normalize.min.css";
+            @import "https://unpkg.com/open-props/buttons.min.css";
+            label {
+              display: block;
+            }
+            input {
+              width:calc(100vw - 150px);
+            }
+      </style>
+      <title>Sample Usage</title>
+    </head>
+    <body>
+      <h1>Sample Usage</h1>
+      <form id=usage><fieldset><legend>Headers</legend>
+  <label>baseProxy:
+  <input type='text' name='baseProxy' value='https://api.nasa.gov'>
+  </label>
+  <label>o2hConfigPath:
+  <input type='text' name='o2hConfigPath' value='https://unpkg.com/o2h-cw@0.0.0/src/o2hConfig.json'>
+  </label>
+  <label>Accept:
+  <input type='text' name='Accept' value='text/html'>
+  </label>
+  </fieldset></form>
+  
+      <form action=neo/rest/v1/feed target=[-innerHTML] be-reformable='{"headerFormSelector":"#usage","headerFormSubmitOn":"input", "autoSubmit": true}'>
+        <fieldset>
+          <legend>Sample Form -- <a href="https://api.nasa.gov/" target=_blank>Nasa API</a></legend>
+        
+          <label for=api-ley>API Key:</label>
+          <input name=api_key id=api_key value=SDaBXo5Jpx9S7h6r79ki7bxqVJZZKKnTcOn6WRNq>
+          <label for='start_date'>From:</label>
+          <input be-persistent type='date' id='start_date' name='start_date' required>
+          <label for='end_date'>To:</label>
+          <input required be-persistent be-observant='{
+              "min": {"observe": "#start_date",  "on": "input", "vft": "value"}
+          }' type='date' id='end_date' name='end_date'>
+        </fieldset>
+      </form>
+      <div -innerHTML id=target></div>
+      <script type="importmap">
+        {
+            "imports": {
+                "trans-render/": "../node_modules/trans-render/",
+                "xtal-element/": "../node_modules/xtal-element/",
+                "be-decorated/": "../node_modules/be-decorated/",
+                "be-observant/": "../node_modules/be-observant/",
+                "be-hive/": "../node_modules/be-hive/"
+            }
+        }
+        </script>
+      <script type="module">
+        import '../be-reformable.js';
+      </script>
+    </body>
+  </html>
+           
+        

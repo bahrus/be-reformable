@@ -8,16 +8,21 @@ export const virtualProps = [
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
-    // target: HTMLFormElement | undefined;
-    // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
-    //     this.target = target
-    // }
+
     onAutoSubmit({proxy, autoSubmitOn}: this){
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
         for(const key of on){
-            proxy.addEventListener(key, this.handleInput);
+            proxy.addEventListener(key, this.doFormAction);
         }
-        this.handleInput();
+        this.doFormAction();
+    }
+
+    onNotAutoSubmit({proxy, autoSubmit}: this): void {
+        if(autoSubmit) return;
+        proxy.addEventListener('submit', e => {
+            e.preventDefault();
+            this.doFormAction();
+        });
     }
 
     async onUrl({url, proxy}: this){
@@ -30,7 +35,7 @@ export class BeReformableController implements BeReformableActions{
         hookUp(init, proxy, 'initVal');
     }
 
-    handleInput = () => {
+    doFormAction = () => {
         if(!this.proxy.checkValidity()) return;
         const method = this.proxy.method;
         if(method){
@@ -146,13 +151,13 @@ export class BeReformableController implements BeReformableActions{
         if(autoSubmitOn !== undefined){
             const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
             for(const key of on){
-                proxy.removeEventListener(key, this.handleInput);
+                proxy.removeEventListener(key, this.doFormAction);
             }
         }
         if(headerFormSubmitOn !== undefined){
             const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
             for(const key of on){
-                proxy.removeEventListener(key, this.handleInput);
+                proxy.removeEventListener(key, this.doFormAction);
             }
         }
 
@@ -165,9 +170,9 @@ export class BeReformableController implements BeReformableActions{
         const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector!) as HTMLFormElement;
         if(headerForm === null) throw '404';
         for(const key of on){
-            headerForm.addEventListener(key, this.handleInput);
+            headerForm.addEventListener(key, this.doFormAction);
         }
-        this.handleInput();
+        this.doFormAction();
     }
 }
 
@@ -193,6 +198,9 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
         },
         actions:{
             onAutoSubmit:'autoSubmit',
+            onNotAutoSubmit: {
+              ifKeyIn: ['autoSubmit']  
+            },
             doFetch:{
                 ifAllOf: ['urlVal', 'initVal'],
             },

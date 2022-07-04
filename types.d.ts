@@ -45,4 +45,5 @@ export interface BeReformableActions{
     sendFetchResultToTarget(self: this): void;
     finale(proxy: HTMLFormElement & BeReformableVirtualProps): void;
     onHeaderFormSubmitOn(self: this): void;
+    onNotAutoSubmit(self: this): void;
 }

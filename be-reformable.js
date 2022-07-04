@@ -5,16 +5,20 @@ export const virtualProps = [
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn'
 ];
 export class BeReformableController {
-    // target: HTMLFormElement | undefined;
-    // intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement){
-    //     this.target = target
-    // }
     onAutoSubmit({ proxy, autoSubmitOn }) {
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
         for (const key of on) {
-            proxy.addEventListener(key, this.handleInput);
+            proxy.addEventListener(key, this.doFormAction);
         }
-        this.handleInput();
+        this.doFormAction();
+    }
+    onNotAutoSubmit({ proxy, autoSubmit }) {
+        if (autoSubmit)
+            return;
+        proxy.addEventListener('submit', e => {
+            e.preventDefault();
+            this.doFormAction();
+        });
     }
     async onUrl({ url, proxy }) {
         const { hookUp } = await import('be-observant/hookUp.js');
@@ -24,7 +28,7 @@ export class BeReformableController {
         const { hookUp } = await import('be-observant/hookUp.js');
         hookUp(init, proxy, 'initVal');
     }
-    handleInput = () => {
+    doFormAction = () => {
         if (!this.proxy.checkValidity())
             return;
         const method = this.proxy.method;
@@ -147,13 +151,13 @@ export class BeReformableController {
         if (autoSubmitOn !== undefined) {
             const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
             for (const key of on) {
-                proxy.removeEventListener(key, this.handleInput);
+                proxy.removeEventListener(key, this.doFormAction);
             }
         }
         if (headerFormSubmitOn !== undefined) {
             const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
             for (const key of on) {
-                proxy.removeEventListener(key, this.handleInput);
+                proxy.removeEventListener(key, this.doFormAction);
             }
         }
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
@@ -165,9 +169,9 @@ export class BeReformableController {
         if (headerForm === null)
             throw '404';
         for (const key of on) {
-            headerForm.addEventListener(key, this.handleInput);
+            headerForm.addEventListener(key, this.doFormAction);
         }
-        this.handleInput();
+        this.doFormAction();
     }
 }
 const tagName = 'be-reformable';
@@ -187,6 +191,9 @@ export const controllerConfig = {
         },
         actions: {
             onAutoSubmit: 'autoSubmit',
+            onNotAutoSubmit: {
+                ifKeyIn: ['autoSubmit']
+            },
             doFetch: {
                 ifAllOf: ['urlVal', 'initVal'],
             },
