@@ -6,7 +6,7 @@ be-reformable is a web component that progressively enhances the built-in form e
 
 <a href="https://nodei.co/npm/be-reformable/"><img src="https://nodei.co/npm/be-reformable.png"></a>
 
-## Syntax example - Using a Micro Service API
+## Example 1:  Path binding "from a distance"
 
 Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
 
@@ -39,6 +39,30 @@ be-reformable examines the content-type header of the response, and parses to js
 "base-link" is optional, but allows for easy management of common base API URL's across the application.  The link tag should probably go in the head tag of index.html (typically).
 
 Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
+
+## Example 2:  Path binding with explicit markup support [TODO]
+
+Sometimes it is useful to allow form elements to ?add themselves" to the path, just as form elements can add themselves to the query string.  This allows for dynamic form elements to be added.
+
+```html
+<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+<form be-reformable='{
+    "base-link": "newton-microservice",
+    "path": true,
+    "autoSubmit": true,
+}'
+    target="json-viewer[-object]"
+>
+    <label for=operation>Operation:</label>
+    <input data-path-idx=0 data-path-lhs="api/v2/" id=operation value=integrate>
+    <label for=expression>Expression:</label>
+    <input data-path-idx=1 data-path-lhs="/" id=expression value="x^2">
+</form>
+<json-viewer -object></json-viewer>
+<noscript>
+<iframe name="json-viewer[-object]"></iframe>
+</noscript>
+```
 
 ## Another example
 
