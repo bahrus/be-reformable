@@ -107,19 +107,16 @@ What this does:
 2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
 3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
 
-## Support for headers coming from linked form
+## Support for headers [TODO]
 
 
 ```html
-<form class=headers>
-    <input name=header1>
-    <input name=header2>
-</form>
-
-...
 <form be-reformable='{
-    "headerFormSelector": ".headers",
+    "headers": true,
 }'>
+    <input data-header-name=header1>
+    <input data-header-name=header2>
+</form>
 ```
 
 ### Make header form participate in autoSubmit
