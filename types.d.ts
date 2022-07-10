@@ -3,7 +3,7 @@ import {IObserve} from 'be-observant/types';
 export interface BeReformableEndUserProps{
     baseLink?: string,
     /** This part of the url derives from the form elements */
-    path?: string | string[],
+    path?: string[] | boolean,
     autoSubmit?: boolean,
     autoSubmitOn?: string | string[],
     /**

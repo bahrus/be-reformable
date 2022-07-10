@@ -65,15 +65,37 @@ export class BeReformableController {
         }
         if (this.path !== undefined) {
             let idx = 0;
-            for (const token of this.path) {
-                if (idx % 2 === 0) {
-                    url += token;
-                }
-                else {
-                    url += encodeURIComponent(elements[token].value);
-                    delete queryObj[token];
-                }
-                idx++;
+            switch (typeof this.path) {
+                case 'boolean':
+                    let pathElement = this.proxy.querySelector(`[data-path-idx="${idx}"]`);
+                    while (pathElement !== null) {
+                        const lhs = pathElement.dataset.pathLhs;
+                        if (lhs !== undefined) {
+                            url += lhs;
+                        }
+                        url += encodeURIComponent(pathElement.value); //TODO:  what about checkbox, etc
+                        const rhs = pathElement.dataset.pathRhs;
+                        if (rhs !== undefined) {
+                            url += rhs;
+                        }
+                        idx++;
+                        pathElement = this.proxy.querySelector(`[data-path-idx="${idx}"]`);
+                    }
+                    break;
+                case 'object':
+                    for (const token of this.path) {
+                        if (idx % 2 === 0) {
+                            url += token;
+                        }
+                        else {
+                            url += encodeURIComponent(elements[token].value);
+                            delete queryObj[token];
+                        }
+                        idx++;
+                    }
+                    break;
+                default:
+                    throw 'NI'; //not implemented
             }
         }
         this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
