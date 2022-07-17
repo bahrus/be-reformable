@@ -58,12 +58,18 @@ export class BeReformableController implements BeReformableActions{
                 return;
             }
         }
-        const queryObj: any = {};
+        const queryObj: {[key: string]: string[]} = {};
         const elements = this.proxy.elements;
         for(const input of elements){
             const inputT = input as HTMLInputElement;
-            if(inputT.name){
-                queryObj[inputT.name] = inputT.value;
+            const key = inputT.name;
+            const val = inputT.value;
+            if(key){
+                if(queryObj[key] === undefined){
+                    queryObj[key] = [val];
+                }else{
+                    queryObj[key].push(val);
+                }
             }
         }
         if(this.path !== undefined){
@@ -100,7 +106,14 @@ export class BeReformableController implements BeReformableActions{
                     throw 'NI';//not implemented
             }
         }
-        this.proxy.urlVal = url + '?' + new URLSearchParams(queryObj).toString();
+        const usp = new URLSearchParams();
+        for(const key in queryObj){
+            const vals = queryObj[key];
+            for(const val of vals){
+                usp.append(key, val);
+            }
+        }
+        this.proxy.urlVal = url + '?' + usp.toString();
 
 
     }

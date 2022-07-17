@@ -40,9 +40,9 @@ be-reformable examines the content-type header of the response, and parses to js
 
 Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
 
-## Example 2:  Path binding with explicit markup support [TODO]
+## Example 2:  Path binding with explicit markup support
 
-Sometimes it is useful to allow form elements to ?add themselves" to the path, just as form elements can add themselves to the query string.  This allows for dynamic form elements to be added.
+Sometimes it is useful to allow form elements to "add themselves" to the path, just as form elements can add themselves to the query string.  This allows for dynamic form elements to be added.
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
