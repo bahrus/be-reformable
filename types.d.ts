@@ -28,6 +28,10 @@ export interface BeReformableEndUserProps{
     headerFormSelector?: string,
 
     headerFormSubmitOn?: string | string[],
+
+    transformPlugins?: {[key: string]: boolean};
+
+    transform?: any;
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{
     fetchResult?: any,

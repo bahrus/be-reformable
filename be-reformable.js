@@ -159,7 +159,7 @@ export class BeReformableController {
             fetchResult
         };
     }
-    async sendFetchResultToTarget({ fetchResult, propKey, proxy }) {
+    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins }) {
         const target = proxy.target;
         if (target) {
             const targetElement = proxy.getRootNode().querySelector(target);
@@ -171,7 +171,18 @@ export class BeReformableController {
             const rawPath = target.substring(lastPos + 2, target.length - 1);
             const { lispToCamel } = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
-            targetElement[propPath] = fetchResult;
+            if (propPath && transform !== undefined) {
+                const { DTR } = await import('trans-render/lib/DTR.js');
+                const dp = new DOMParser();
+                const templ = dp.parseFromString(fetchResult, 'text/html');
+                DTR.transform(templ, {
+                    match: transform,
+                    plugins: { ...transformPlugins }
+                }, targetElement);
+            }
+            else {
+                targetElement[propPath] = fetchResult;
+            }
         }
         if (propKey !== undefined) {
             let container = proxy.closest('[itemscope]');
