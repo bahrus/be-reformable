@@ -178,6 +178,7 @@ export class BeReformableController {
                 const templ = dp.parseFromString(fetchResult, 'text/html');
                 DTR.transform(templ, {
                     match: transform,
+                    host: proxy,
                     plugins: { ...transformPlugins }
                 }, targetElement);
             }

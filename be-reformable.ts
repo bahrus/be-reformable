@@ -178,6 +178,7 @@ export class BeReformableController implements BeReformableActions{
                 const templ = dp.parseFromString(fetchResult, 'text/html');
                 DTR.transform(templ as any as DocumentFragment, {
                     match: transform,
+                    host: proxy,
                     plugins: {...transformPlugins}
                 }, targetElement)
             }else{
