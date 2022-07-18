@@ -175,12 +175,14 @@ export class BeReformableController implements BeReformableActions{
             if(propPath && transform !== undefined){
                 const {DTR} = await import('trans-render/lib/DTR.js');
                 const dp = new DOMParser();
-                const templ = dp.parseFromString(fetchResult, 'text/html');
-                DTR.transform(templ as any as DocumentFragment, {
+                const templ = dp.parseFromString(fetchResult, 'text/html').documentElement;
+                await DTR.transform(templ, {
                     match: transform,
                     host: proxy,
                     plugins: {...transformPlugins}
-                }, targetElement)
+                });
+                targetElement.innerHTML = '';
+                targetElement.appendChild(templ);
             }else{
                 (<any>targetElement)[propPath] = fetchResult;
             }

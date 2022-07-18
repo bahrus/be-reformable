@@ -10,39 +10,112 @@
         @import "https://unpkg.com/open-props/normalize.min.css";
         @import "https://unpkg.com/open-props/buttons.min.css";
         label{
-            display:block;
+            display:flex;
+            margin:10px;
+            align-items:center;
+        }
+        label>span {
+            width:200px;
+        }
+        form.main-form input {
+            width: calc(100vw - 120px);
+        }
+        h1, h2, p {
+            margin:5px;
         }
     </style>
 </head>
 <body>
+    <h1>o2h service usage</h1>
+    <h2>Introduction</h2>
+    <p>The o2h service aims to provide a codeless way of integrating any third-party RESTful service that returns JSON, but providing it in a format most amenable to the browser -- the service provides a canonical HTML transformation,
+        based on a combination of reflection on the data, combined with a (customizable) configuration
+    </p>
+    <p>
+        As we can use with the form below, there are two predefined parts of the url:
+        <ul>
+            <li>The proxy-to parameter.  This parameter goes after the domain name in the path.  Required.</li>
+            <li>
+                The optional "output config" parameter.  This can be any CDN-accessible path to a json configuration file, 
+                modeled after the <a href="https://unpkg.com/o2h-cw/src/o2hConfig.json" rel='noopener' target="_blank">default one.</a>
+            </li>
+        </ul>
+    </p>
+    <p>The sample form below provides buttons that enable adding/setting additional fields.</p>
+
     <form
+        class='main-form'
         action="https://o2h-cw.bahrus.workers.dev/"
-        target='[-innerHTML]'
+        target="[-innerHTML]"
         be-persistent='{
             "where":{
-                "idb": true
+                "idb": true,
+                "hash": true
             },
             "what":{
                 "innerHTML": {
                     "beBeatified": true
                 }
             },
+            "when": {
+                "input": true
+            },
             "persistOnUnload": true
         }' 
         be-reformable='{
             "autoSubmit": false,
-            "path": ["", "proxy-to"]
+            "path": ["", "proxy-to"],
+            "transform": {
+                "input": [{},{},{"a": ["b"]}]
+            }
         }'
         be-valued
     >
         <label>
-            Proxy to: 
-            <input required name='proxy-to' type='url'>
+            <span>Proxy to:</span> 
+            <input autofocus be-focused required name='proxy-to' type='url'>
         </label>
-        <label be-typed be-clonable be-delible></label>
+        <label>
+            <span>Output config:</span>
+            <input name="x38d47cd9-8a95-4037-9e71-d63f6416a6d5" value="https://unpkg.com/o2h-cw/src/o2hConfig.json">
+        </label>
+        <label be-typed='{
+            "beReformable": true
+        }' be-clonable be-delible><span>[Set name of first parameter]</span></label>
         <button type='submit'>Submit</button>
     </form> 
     <div -innerHTML></div>
+
+    <h2>Examples</h2>
+    <ul>
+        <li>
+            <a href="https://api.nasa.gov/" rel='noopener' target='_blank'>Nasa Neo:</a>
+            <div>
+                Sample Form: <a target='_blank' href="?api=nasa-neo#6ab07062-ae74-4b42-L2Zvcm0=eyJpbm5lckhUTUwiOiJcbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgPHNwYW4+UHJveHkgdG86PC9zcGFuPiBcbiAgICAgICAgICAgIDxpbnB1dCByZXF1aXJlZD1cIlwiIG5hbWU9XCJwcm94eS10b1wiIHR5cGU9XCJ1cmxcIiB2YWx1ZT1cImh0dHBzOi8vYXBpLm5hc2EuZ292L25lby9yZXN0L3YxL2ZlZWRcIj5cbiAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgPHNwYW4+T3V0cHV0IGNvbmZpZzo8L3NwYW4+XG4gICAgICAgICAgICA8aW5wdXQgbmFtZT1cIngzOGQ0N2NkOS04YTk1LTQwMzctOWU3MS1kNjNmNjQxNmE2ZDVcIiB2YWx1ZT1cImh0dHBzOi8vdW5wa2cuY29tL28yaC1jdy9zcmMvbzJoQ29uZmlnLmpzb25cIj5cbiAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgPGxhYmVsIGJlLXR5cGVkPVwie1xuICAgICAgICAgICAgJnF1b3Q7YmVSZWZvcm1hYmxlJnF1b3Q7OiB0cnVlXG4gICAgICAgIH1cIiBiZS1jbG9uYWJsZT1cIlwiIGJlLWRlbGlibGU9XCJcIj48c3Bhbj5zdGFydF9kYXRlOiA8L3NwYW4+PGlucHV0IHR5cGU9XCJkYXRlXCIgbmFtZT1cInN0YXJ0X2RhdGVcIiByZXF1aXJlZD1cIlwiIHZhbHVlPVwiMjAyMi0wNy0xMVwiPjxidXR0b24gYXJpYS1sYWJlbD1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0aXRsZT1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS10eXBlZC10cmlnZ2VyXCI+4pqZPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1jbG9uYWJsZS10cmlnZ2VyXCIgYXJpYS1sYWJlbD1cIkNsb25lIHRoaXMuXCIgdGl0bGU9XCJDbG9uZSB0aGlzLlwiPuKdjzwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtZGVsaWJsZS10cmlnZ2VyXCI+w5c8L2J1dHRvbj48L2xhYmVsPjxsYWJlbCBiZS10eXBlZD1cIntcbiAgICAgICAgICAgICZxdW90O2JlUmVmb3JtYWJsZSZxdW90OzogdHJ1ZVxuICAgICAgICB9XCIgYmUtY2xvbmFibGU9XCJcIiBiZS1kZWxpYmxlPVwiXCI+PHNwYW4+ZW5kX2RhdGU6IDwvc3Bhbj48aW5wdXQgdHlwZT1cImRhdGVcIiBuYW1lPVwiZW5kX2RhdGVcIiB2YWx1ZT1cIjIwMjItMDctMTFcIj48YnV0dG9uIGFyaWEtbGFiZWw9XCJDb25maWd1cmUgaW5wdXQuXCIgdGl0bGU9XCJDb25maWd1cmUgaW5wdXQuXCIgdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtdHlwZWQtdHJpZ2dlclwiPuKamTwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtY2xvbmFibGUtdHJpZ2dlclwiIGFyaWEtbGFiZWw9XCJDbG9uZSB0aGlzLlwiIHRpdGxlPVwiQ2xvbmUgdGhpcy5cIj7inY88L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWRlbGlibGUtdHJpZ2dlclwiPsOXPC9idXR0b24+PC9sYWJlbD48bGFiZWwgYmUtdHlwZWQ9XCJ7XG4gICAgICAgICAgICAmcXVvdDtiZVJlZm9ybWFibGUmcXVvdDs6IHRydWVcbiAgICAgICAgfVwiIGJlLWNsb25hYmxlPVwiXCIgYmUtZGVsaWJsZT1cIlwiPjxzcGFuPmFwaV9rZXk6IDwvc3Bhbj48aW5wdXQgdHlwZT1cInRleHRcIiBuYW1lPVwiYXBpX2tleVwiIHZhbHVlPVwiMjAyMi0wNy0xMVwiIHJlcXVpcmVkPVwiXCI+PGJ1dHRvbiBhcmlhLWxhYmVsPVwiQ29uZmlndXJlIGlucHV0LlwiIHRpdGxlPVwiQ29uZmlndXJlIGlucHV0LlwiIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLXR5cGVkLXRyaWdnZXJcIj7impk8L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWNsb25hYmxlLXRyaWdnZXJcIiBhcmlhLWxhYmVsPVwiQ2xvbmUgdGhpcy5cIiB0aXRsZT1cIkNsb25lIHRoaXMuXCI+4p2PPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1kZWxpYmxlLXRyaWdnZXJcIj7DlzwvYnV0dG9uPjwvbGFiZWw+XG4gICAgICAgIDxidXR0b24gdHlwZT1cInN1Ym1pdFwiPlN1Ym1pdDwvYnV0dG9uPlxuICAgICJ9-a323-3bbcd5758757">
+                    Nasa Neo
+                </a>
+            </div>
+        </li>
+        <li>
+            <a href=''>
+
+            </a>
+            <div>
+                Sample Form: <a target='_blank' href="?api=earth-imagery#6ab07062-ae74-4b42-L2Zvcm0=eyJpbm5lckhUTUwiOiJcbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgUHJveHkgdG86IFxuICAgICAgICAgICAgPGlucHV0IHJlcXVpcmVkPVwiXCIgbmFtZT1cInByb3h5LXRvXCIgdHlwZT1cInVybFwiIHZhbHVlPVwiaHR0cHM6Ly9hcGkubmFzYS5nb3YvcGxhbmV0YXJ5L2VhcnRoL2ltYWdlcnlcIj5cbiAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgT3V0cHV0IGNvbmZpZzpcbiAgICAgICAgICAgIDxpbnB1dCBuYW1lPVwieDM4ZDQ3Y2Q5LThhOTUtNDAzNy05ZTcxLWQ2M2Y2NDE2YTZkNVwiIHZhbHVlPVwiaHR0cHM6Ly91bnBrZy5jb20vbzJoLWN3L3NyYy9vMmhDb25maWcuanNvblwiPlxuICAgICAgICA8L2xhYmVsPlxuICAgICAgICA8bGFiZWwgYmUtdHlwZWQ9XCJcIiBiZS1jbG9uYWJsZT1cIlwiIGJlLWRlbGlibGU9XCJcIj5sYXQ6IDxpbnB1dCB0eXBlPVwidGV4dFwiIG5hbWU9XCJsYXRcIiByZXF1aXJlZD1cIlwiIHZhbHVlPVwiMS41XCI+PGJ1dHRvbiBhcmlhLWxhYmVsPVwiQ29uZmlndXJlIGlucHV0LlwiIHRpdGxlPVwiQ29uZmlndXJlIGlucHV0LlwiIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLXR5cGVkLXRyaWdnZXJcIj7impk8L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWNsb25hYmxlLXRyaWdnZXJcIiBhcmlhLWxhYmVsPVwiQ2xvbmUgdGhpcy5cIiB0aXRsZT1cIkNsb25lIHRoaXMuXCI+4p2PPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1kZWxpYmxlLXRyaWdnZXJcIj7DlzwvYnV0dG9uPjwvbGFiZWw+PGxhYmVsIGJlLXR5cGVkPVwiXCIgYmUtY2xvbmFibGU9XCJcIiBiZS1kZWxpYmxlPVwiXCI+bG9uOiA8aW5wdXQgdHlwZT1cInRleHRcIiBuYW1lPVwibG9uXCIgdmFsdWU9XCIxMDAuNzVcIiByZXF1aXJlZD1cIlwiPjxidXR0b24gYXJpYS1sYWJlbD1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0aXRsZT1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS10eXBlZC10cmlnZ2VyXCI+4pqZPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1jbG9uYWJsZS10cmlnZ2VyXCIgYXJpYS1sYWJlbD1cIkNsb25lIHRoaXMuXCIgdGl0bGU9XCJDbG9uZSB0aGlzLlwiPuKdjzwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtZGVsaWJsZS10cmlnZ2VyXCI+w5c8L2J1dHRvbj48L2xhYmVsPjxsYWJlbCBiZS10eXBlZD1cIlwiIGJlLWNsb25hYmxlPVwiXCIgYmUtZGVsaWJsZT1cIlwiPmRhdGU6IDxpbnB1dCB0eXBlPVwiZGF0ZVwiIG5hbWU9XCJkYXRlXCIgdmFsdWU9XCIyMDE0LTAyLTAxXCIgcmVxdWlyZWQ9XCJcIj48YnV0dG9uIGFyaWEtbGFiZWw9XCJDb25maWd1cmUgaW5wdXQuXCIgdGl0bGU9XCJDb25maWd1cmUgaW5wdXQuXCIgdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtdHlwZWQtdHJpZ2dlclwiPuKamTwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtY2xvbmFibGUtdHJpZ2dlclwiIGFyaWEtbGFiZWw9XCJDbG9uZSB0aGlzLlwiIHRpdGxlPVwiQ2xvbmUgdGhpcy5cIj7inY88L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWRlbGlibGUtdHJpZ2dlclwiPsOXPC9idXR0b24+PC9sYWJlbD48bGFiZWwgYmUtdHlwZWQ9XCJcIiBiZS1jbG9uYWJsZT1cIlwiIGJlLWRlbGlibGU9XCJcIj5hcGlfa2V5OiA8aW5wdXQgdHlwZT1cInRleHRcIiBuYW1lPVwiYXBpX2tleVwiIHZhbHVlPVwiMjAxNC0wMi0wMVwiIHJlcXVpcmVkPVwiXCI+PGJ1dHRvbiBhcmlhLWxhYmVsPVwiQ29uZmlndXJlIGlucHV0LlwiIHRpdGxlPVwiQ29uZmlndXJlIGlucHV0LlwiIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLXR5cGVkLXRyaWdnZXJcIj7impk8L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWNsb25hYmxlLXRyaWdnZXJcIiBhcmlhLWxhYmVsPVwiQ2xvbmUgdGhpcy5cIiB0aXRsZT1cIkNsb25lIHRoaXMuXCI+4p2PPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1kZWxpYmxlLXRyaWdnZXJcIj7DlzwvYnV0dG9uPjwvbGFiZWw+XG4gICAgICAgIDxidXR0b24gdHlwZT1cInN1Ym1pdFwiPlN1Ym1pdDwvYnV0dG9uPlxuICAgICJ9-a323-3bbcd5758757">
+                    Nasa Earth Images (currently down)
+                </a>
+            </div>
+        </li>
+        <li>
+            <a href="https://api.nasa.gov/" rel='noopener' target='_blank'>Nasa Mars Rover:</a>
+            <div>
+                Sample Form: <a target='_blank' href="?api=nasa-neo#6ab07062-ae74-4b42-L2Zvcm0=eyJpbm5lckhUTUwiOiJcbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgPHNwYW4+UHJveHkgdG86PC9zcGFuPiBcbiAgICAgICAgICAgIDxpbnB1dCByZXF1aXJlZD1cIlwiIG5hbWU9XCJwcm94eS10b1wiIHR5cGU9XCJ1cmxcIiB2YWx1ZT1cImh0dHBzOi8vYXBpLm5hc2EuZ292L25lby9yZXN0L3YxL2ZlZWRcIj5cbiAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgPGxhYmVsPlxuICAgICAgICAgICAgPHNwYW4+T3V0cHV0IGNvbmZpZzo8L3NwYW4+XG4gICAgICAgICAgICA8aW5wdXQgbmFtZT1cIngzOGQ0N2NkOS04YTk1LTQwMzctOWU3MS1kNjNmNjQxNmE2ZDVcIiB2YWx1ZT1cImh0dHBzOi8vdW5wa2cuY29tL28yaC1jdy9zcmMvbzJoQ29uZmlnLmpzb25cIj5cbiAgICAgICAgPC9sYWJlbD5cbiAgICAgICAgPGxhYmVsIGJlLXR5cGVkPVwie1xuICAgICAgICAgICAgJnF1b3Q7YmVSZWZvcm1hYmxlJnF1b3Q7OiB0cnVlXG4gICAgICAgIH1cIiBiZS1jbG9uYWJsZT1cIlwiIGJlLWRlbGlibGU9XCJcIj48c3Bhbj5zdGFydF9kYXRlOiA8L3NwYW4+PGlucHV0IHR5cGU9XCJkYXRlXCIgbmFtZT1cInN0YXJ0X2RhdGVcIiByZXF1aXJlZD1cIlwiIHZhbHVlPVwiMjAyMi0wNy0xMVwiPjxidXR0b24gYXJpYS1sYWJlbD1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0aXRsZT1cIkNvbmZpZ3VyZSBpbnB1dC5cIiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS10eXBlZC10cmlnZ2VyXCI+4pqZPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1jbG9uYWJsZS10cmlnZ2VyXCIgYXJpYS1sYWJlbD1cIkNsb25lIHRoaXMuXCIgdGl0bGU9XCJDbG9uZSB0aGlzLlwiPuKdjzwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtZGVsaWJsZS10cmlnZ2VyXCI+w5c8L2J1dHRvbj48L2xhYmVsPjxsYWJlbCBiZS10eXBlZD1cIntcbiAgICAgICAgICAgICZxdW90O2JlUmVmb3JtYWJsZSZxdW90OzogdHJ1ZVxuICAgICAgICB9XCIgYmUtY2xvbmFibGU9XCJcIiBiZS1kZWxpYmxlPVwiXCI+PHNwYW4+ZW5kX2RhdGU6IDwvc3Bhbj48aW5wdXQgdHlwZT1cImRhdGVcIiBuYW1lPVwiZW5kX2RhdGVcIiB2YWx1ZT1cIjIwMjItMDctMTFcIj48YnV0dG9uIGFyaWEtbGFiZWw9XCJDb25maWd1cmUgaW5wdXQuXCIgdGl0bGU9XCJDb25maWd1cmUgaW5wdXQuXCIgdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtdHlwZWQtdHJpZ2dlclwiPuKamTwvYnV0dG9uPjxidXR0b24gdHlwZT1cImJ1dHRvblwiIGNsYXNzPVwiYmUtY2xvbmFibGUtdHJpZ2dlclwiIGFyaWEtbGFiZWw9XCJDbG9uZSB0aGlzLlwiIHRpdGxlPVwiQ2xvbmUgdGhpcy5cIj7inY88L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWRlbGlibGUtdHJpZ2dlclwiPsOXPC9idXR0b24+PC9sYWJlbD48bGFiZWwgYmUtdHlwZWQ9XCJ7XG4gICAgICAgICAgICAmcXVvdDtiZVJlZm9ybWFibGUmcXVvdDs6IHRydWVcbiAgICAgICAgfVwiIGJlLWNsb25hYmxlPVwiXCIgYmUtZGVsaWJsZT1cIlwiPjxzcGFuPmFwaV9rZXk6IDwvc3Bhbj48aW5wdXQgdHlwZT1cInRleHRcIiBuYW1lPVwiYXBpX2tleVwiIHZhbHVlPVwiMjAyMi0wNy0xMVwiIHJlcXVpcmVkPVwiXCI+PGJ1dHRvbiBhcmlhLWxhYmVsPVwiQ29uZmlndXJlIGlucHV0LlwiIHRpdGxlPVwiQ29uZmlndXJlIGlucHV0LlwiIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLXR5cGVkLXRyaWdnZXJcIj7impk8L2J1dHRvbj48YnV0dG9uIHR5cGU9XCJidXR0b25cIiBjbGFzcz1cImJlLWNsb25hYmxlLXRyaWdnZXJcIiBhcmlhLWxhYmVsPVwiQ2xvbmUgdGhpcy5cIiB0aXRsZT1cIkNsb25lIHRoaXMuXCI+4p2PPC9idXR0b24+PGJ1dHRvbiB0eXBlPVwiYnV0dG9uXCIgY2xhc3M9XCJiZS1kZWxpYmxlLXRyaWdnZXJcIj7DlzwvYnV0dG9uPjwvbGFiZWw+XG4gICAgICAgIDxidXR0b24gdHlwZT1cInN1Ym1pdFwiPlN1Ym1pdDwvYnV0dG9uPlxuICAgICJ9-a323-3bbcd5758757">
+                    Nasa Mars Rover
+                </a>
+
+            </div>
+        </li>
+    </ul>
     <script type=importmap>
         {
             "imports": {
@@ -57,14 +130,14 @@
         }
         </script>
     <script type="module" crossorigin="anonymous" >
-        import "https://esm.run/be-persistent@0.0.21";
-        //import "../be-persistent.js";
-        import "https://esm.run/be-typed@0.0.4";
-        import "https://esm.run/be-clonable@0.0.5";
         import "https://esm.run/be-delible@0.0.6";
+        import "https://esm.run/be-duck-typed@0.0.1";
+        import "https://esm.run/be-focused@0.0.1";
+        import "https://esm.run/be-persistent@0.0.26";
         //import "https://esm.run/be-reformable@0.0.47";
-        import "../be-reformable.js"
-        import "https://esm.run/be-valued@0.0.1"
+        import "../be-reformable.js";
+        import "https://esm.run/be-typed@0.0.9";
+        import "https://esm.run/be-valued@0.0.1";
     </script>
 </body>
 </html>

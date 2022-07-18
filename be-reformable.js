@@ -175,12 +175,14 @@ export class BeReformableController {
             if (propPath && transform !== undefined) {
                 const { DTR } = await import('trans-render/lib/DTR.js');
                 const dp = new DOMParser();
-                const templ = dp.parseFromString(fetchResult, 'text/html');
-                DTR.transform(templ, {
+                const templ = dp.parseFromString(fetchResult, 'text/html').documentElement;
+                await DTR.transform(templ, {
                     match: transform,
                     host: proxy,
                     plugins: { ...transformPlugins }
-                }, targetElement);
+                });
+                targetElement.innerHTML = '';
+                targetElement.appendChild(templ);
             }
             else {
                 targetElement[propPath] = fetchResult;
