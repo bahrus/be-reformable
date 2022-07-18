@@ -5,7 +5,8 @@ import {register} from 'be-hive/register.js';
 
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
-    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn'
+    'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
+    'transform', 'transformPlugins'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
 
