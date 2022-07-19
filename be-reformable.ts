@@ -6,7 +6,7 @@ import {register} from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
 
@@ -121,12 +121,14 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, initVal, proxy, fetchResultPath, headerFormSelector}: this){
+    async doFetch({urlVal, initVal, proxy, fetchResultPath, headerFormSelector, getTargetElement, fetchInProgressCssClass}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();
             return;
         }
+        
+
         if(headerFormSelector){
             const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
             if(headerForm === null) throw '404';
@@ -145,6 +147,15 @@ export class BeReformableController implements BeReformableActions{
                 console.log({initVal});
             }
         }
+        let targetElement: null | Element = null;
+        if(fetchInProgressCssClass !== undefined){
+            targetElement = getTargetElement(this);
+            if(targetElement !== null){
+                targetElement.classList.add(fetchInProgressCssClass);
+            }
+        }
+        proxy.fetchInProgress = true;
+
         const resp = await fetch(urlVal!, initVal);
         let fetchResult: any;
         const contentTypeHeader = resp.headers.get('content-type');
@@ -153,6 +164,10 @@ export class BeReformableController implements BeReformableActions{
         }else{
             fetchResult = await resp.text();
         }
+        if(targetElement){
+            targetElement.classList.remove(fetchInProgressCssClass!);
+        }
+        proxy.fetchInProgress = false;
         if(fetchResultPath !== undefined){
             const {getProp} = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
@@ -162,10 +177,15 @@ export class BeReformableController implements BeReformableActions{
         };
     }
 
-    async sendFetchResultToTarget({fetchResult, propKey, proxy, transform, transformPlugins}: this){
+    getTargetElement({proxy}: this){
+        if(!proxy.target) return null;
+        return (proxy.getRootNode() as DocumentFragment).querySelector(proxy.target);
+    }
+
+    async sendFetchResultToTarget({fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement}: this){
         const target = proxy.target;
         if(target){
-            const targetElement = (proxy.getRootNode() as DocumentFragment).querySelector(target);
+            const targetElement = getTargetElement(this);
             if(targetElement === null) throw {target, msg: '404'};
             const lastPos = target.lastIndexOf('[');
             if(lastPos === -1) throw 'NI'; //Not implemented
@@ -244,7 +264,8 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             finale: 'finale',
             proxyPropDefaults:{
                 autoSubmitOn: 'input',
-            }
+            },
+            emitEvents: ['fetchInProgress']
         },
         actions:{
             onAutoSubmit:'autoSubmit',

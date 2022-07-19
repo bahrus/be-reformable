@@ -23,6 +23,10 @@ export interface BeReformableEndUserProps{
 
     initVal?: RequestInit,
 
+    fetchInProgress?: boolean;
+
+    fetchInProgressCssClass?: string;
+
     urlVal?: string,
 
     headerFormSelector?: string,

@@ -3,7 +3,7 @@ import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress'
 ];
 export class BeReformableController {
     onAutoSubmit({ proxy, autoSubmitOn }) {
@@ -115,7 +115,7 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + usp.toString();
     };
-    async doFetch({ urlVal, initVal, proxy, fetchResultPath, headerFormSelector }) {
+    async doFetch({ urlVal, initVal, proxy, fetchResultPath, headerFormSelector, getTargetElement, fetchInProgressCssClass }) {
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
@@ -143,6 +143,14 @@ export class BeReformableController {
                 console.log({ initVal });
             }
         }
+        let targetElement = null;
+        if (fetchInProgressCssClass !== undefined) {
+            targetElement = getTargetElement(this);
+            if (targetElement !== null) {
+                targetElement.classList.add(fetchInProgressCssClass);
+            }
+        }
+        proxy.fetchInProgress = true;
         const resp = await fetch(urlVal, initVal);
         let fetchResult;
         const contentTypeHeader = resp.headers.get('content-type');
@@ -152,6 +160,10 @@ export class BeReformableController {
         else {
             fetchResult = await resp.text();
         }
+        if (targetElement) {
+            targetElement.classList.remove(fetchInProgressCssClass);
+        }
+        proxy.fetchInProgress = false;
         if (fetchResultPath !== undefined) {
             const { getProp } = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
@@ -160,10 +172,15 @@ export class BeReformableController {
             fetchResult
         };
     }
-    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins }) {
+    getTargetElement({ proxy }) {
+        if (!proxy.target)
+            return null;
+        return proxy.getRootNode().querySelector(proxy.target);
+    }
+    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement }) {
         const target = proxy.target;
         if (target) {
-            const targetElement = proxy.getRootNode().querySelector(target);
+            const targetElement = getTargetElement(this);
             if (targetElement === null)
                 throw { target, msg: '404' };
             const lastPos = target.lastIndexOf('[');
@@ -238,7 +255,8 @@ export const controllerConfig = {
             finale: 'finale',
             proxyPropDefaults: {
                 autoSubmitOn: 'input',
-            }
+            },
+            emitEvents: ['fetchInProgress']
         },
         actions: {
             onAutoSubmit: 'autoSubmit',
