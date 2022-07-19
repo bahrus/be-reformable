@@ -175,7 +175,7 @@ export class BeReformableController {
             if (propPath && transform !== undefined) {
                 const { DTR } = await import('trans-render/lib/DTR.js');
                 const dp = new DOMParser();
-                const templ = dp.parseFromString(fetchResult, 'text/html').documentElement;
+                const templ = dp.parseFromString(fetchResult, 'text/html').querySelector('body')?.firstElementChild;
                 await DTR.transform(templ, {
                     match: transform,
                     host: proxy,
