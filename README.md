@@ -107,6 +107,38 @@ What this does:
 2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
 3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
 
+## Support for HTML output, with optional trans-render based transforms
+
+```html
+    <form
+        class='main-form'
+        action="https://o2h-cw.bahrus.workers.dev/"
+        target="[-innerHTML]" 
+        be-reformable='{
+            "autoSubmit": false,
+            "path": ["", "proxy-to"],
+            "transform": {
+                "input": [{},{},{"a": ["b"]}]
+            }
+        }'
+        be-valued
+    >
+        <label>
+            <span>Proxy to:</span> 
+            <input autofocus be-focused required name='proxy-to' type='url'>
+        </label>
+        <label>
+            <span>Output config:</span>
+            <input name="x38d47cd9-8a95-4037-9e71-d63f6416a6d5" value="https://unpkg.com/o2h-cw/src/o2hConfig.json">
+        </label>
+        <label be-typed='{
+            "beReformable": true
+        }' be-clonable be-delible><span>[Set name of first parameter]</span></label>
+        <button type='submit'>Submit</button>
+    </form> 
+    <div -innerHTML></div>
+```
+
 ## Support for headers [TODO]
 
 
