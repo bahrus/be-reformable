@@ -192,20 +192,21 @@ export class BeReformableController implements BeReformableActions{
             const rawPath =  target.substring(lastPos + 2, target.length - 1);
             const {lispToCamel} = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
+            const dp = new DOMParser() as any;
+            const templ = dp.parseFromString(fetchResult, 'text/html', {includeShadowRoots: true}); // DSD included).querySelector('body')?.firstElementChild as HTMLElement;
             if(propPath && transform !== undefined){
                 const {DTR} = await import('trans-render/lib/DTR.js');
-                const dp = new DOMParser();
-                const templ = dp.parseFromString(fetchResult, 'text/html').querySelector('body')?.firstElementChild as HTMLElement;
+                
+                
                 await DTR.transform(templ, {
                     match: transform,
                     host: proxy,
                     plugins: {...transformPlugins}
                 });
-                targetElement.innerHTML = '';
-                targetElement.appendChild(templ);
-            }else{
-                (<any>targetElement)[propPath] = fetchResult;
+                
             }
+            targetElement.innerHTML = '';
+            targetElement.appendChild(templ);
             if(dispatchFromTarget !== undefined){
                 targetElement.dispatchEvent(new CustomEvent(dispatchFromTarget, {
                     detail:{
