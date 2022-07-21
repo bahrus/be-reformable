@@ -35,6 +35,8 @@ export interface BeReformableEndUserProps{
 
     transformPlugins?: {[key: string]: boolean};
 
+    dispatchFromTarget?: string;
+
     transform?: any;
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{

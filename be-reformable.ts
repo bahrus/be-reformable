@@ -6,7 +6,7 @@ import {register} from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
 
@@ -182,7 +182,7 @@ export class BeReformableController implements BeReformableActions{
         return (proxy.getRootNode() as DocumentFragment).querySelector(proxy.target);
     }
 
-    async sendFetchResultToTarget({fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement}: this){
+    async sendFetchResultToTarget({fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement, dispatchFromTarget}: this){
         const target = proxy.target;
         if(target){
             const targetElement = getTargetElement(this);
@@ -205,6 +205,14 @@ export class BeReformableController implements BeReformableActions{
                 targetElement.appendChild(templ);
             }else{
                 (<any>targetElement)[propPath] = fetchResult;
+            }
+            if(dispatchFromTarget !== undefined){
+                targetElement.dispatchEvent(new CustomEvent(dispatchFromTarget, {
+                    detail:{
+                        propPath,
+                        fetchResult
+                    }
+                }));
             }
             
         }

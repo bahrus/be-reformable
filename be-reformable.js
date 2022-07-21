@@ -3,7 +3,7 @@ import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget'
 ];
 export class BeReformableController {
     onAutoSubmit({ proxy, autoSubmitOn }) {
@@ -177,7 +177,7 @@ export class BeReformableController {
             return null;
         return proxy.getRootNode().querySelector(proxy.target);
     }
-    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement }) {
+    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement, dispatchFromTarget }) {
         const target = proxy.target;
         if (target) {
             const targetElement = getTargetElement(this);
@@ -203,6 +203,14 @@ export class BeReformableController {
             }
             else {
                 targetElement[propPath] = fetchResult;
+            }
+            if (dispatchFromTarget !== undefined) {
+                targetElement.dispatchEvent(new CustomEvent(dispatchFromTarget, {
+                    detail: {
+                        propPath,
+                        fetchResult
+                    }
+                }));
             }
         }
         if (propKey !== undefined) {

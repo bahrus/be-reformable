@@ -139,7 +139,7 @@ What this does:
     <div -innerHTML></div>
 ```
 
-## Trigger event on target [TODO]
+## Trigger event on target [Untested]
 
 ## Support for headers [TODO]
 
