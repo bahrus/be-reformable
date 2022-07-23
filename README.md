@@ -145,7 +145,18 @@ What this does:
 
 ## Filter out input elements whose value matches default value [Untested]
 
-[TODO] Example
+
+```html
+<form be-reformable='{
+    "filterOutDefaultValues": true,
+}'>
+    <input name=prop1 value=defaultValue1 data-default=defaultValue1>
+    <input name=prop2 value=differentValue data-default=defaultValue2>
+</form>
+```
+
+prop1 parameter is not sent because value == dataset.default.
+
 
 ## Support for headers [Untested]
 

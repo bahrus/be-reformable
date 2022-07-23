@@ -77,7 +77,7 @@ export class BeReformableController implements BeReformableActions{
             const key = inputT.name;
             const val = inputT.value;
             if(this.filterOutDefaultValues){
-                if(val === inputT.defaultValue) continue;
+                if(val === inputT.dataset.default) continue;
             }
             if(headers){
                 const headerKey = inputT.dataset.headerName;
@@ -150,24 +150,6 @@ export class BeReformableController implements BeReformableActions{
         }
         
 
-        // if(headerFormSelector){
-        //     const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
-        //     if(headerForm === null) throw '404';
-        //     if(!headerForm.checkValidity()) return;
-        //     if(headerForm !== null){
-        //         const elements = headerForm.elements;
-        //         if(initVal === undefined){ initVal = {}; }
-        //         const headers = {...initVal.headers} as any;
-        //         for(const input of elements){
-        //             const inputT = input as HTMLInputElement;
-        //             if(inputT.name){
-        //                 headers[inputT.name] = inputT.value;
-        //             }
-        //         }
-        //         initVal.headers = headers;
-        //         console.log({initVal});
-        //     }
-        // }
         let targetElement: null | Element = null;
         if(fetchInProgressCssClass !== undefined){
             targetElement = getTargetElement(this);
@@ -217,8 +199,6 @@ export class BeReformableController implements BeReformableActions{
             const templ = dp.parseFromString(fetchResult, 'text/html', {includeShadowRoots: true}).querySelector('body')?.firstElementChild as HTMLElement;
             if(propPath && transform !== undefined){
                 const {DTR} = await import('trans-render/lib/DTR.js');
-                
-                
                 await DTR.transform(templ, {
                     match: transform,
                     host: proxy,
@@ -254,26 +234,12 @@ export class BeReformableController implements BeReformableActions{
                 proxy.removeEventListener(key, this.doFormAction);
             }
         }
-        // if(headerFormSubmitOn !== undefined){
-        //     const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
-        //     for(const key of on){
-        //         proxy.removeEventListener(key, this.doFormAction);
-        //     }
-        // }
+
 
         const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
 
-    // async onHeaderFormSubmitOn({headerFormSubmitOn, proxy, headerFormSelector}: this) {
-    //     const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
-    //     const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector!) as HTMLFormElement;
-    //     if(headerForm === null) throw '404';
-    //     for(const key of on){
-    //         headerForm.addEventListener(key, this.doFormAction);
-    //     }
-    //     this.doFormAction();
-    // }
 }
 
 export interface BeReformableController extends BeReformableProps{}
