@@ -141,7 +141,11 @@ What this does:
 
 ## Trigger event on target [Untested]
 
+[TODO] Example
+
 ## Filter out input elements whose value matches default value [Untested]
+
+[TODO] Example
 
 ## Support for headers [Untested]
 

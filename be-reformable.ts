@@ -254,26 +254,26 @@ export class BeReformableController implements BeReformableActions{
                 proxy.removeEventListener(key, this.doFormAction);
             }
         }
-        if(headerFormSubmitOn !== undefined){
-            const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
-            for(const key of on){
-                proxy.removeEventListener(key, this.doFormAction);
-            }
-        }
+        // if(headerFormSubmitOn !== undefined){
+        //     const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
+        //     for(const key of on){
+        //         proxy.removeEventListener(key, this.doFormAction);
+        //     }
+        // }
 
         const {unsubscribe} = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
 
-    async onHeaderFormSubmitOn({headerFormSubmitOn, proxy, headerFormSelector}: this) {
-        const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
-        const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector!) as HTMLFormElement;
-        if(headerForm === null) throw '404';
-        for(const key of on){
-            headerForm.addEventListener(key, this.doFormAction);
-        }
-        this.doFormAction();
-    }
+    // async onHeaderFormSubmitOn({headerFormSubmitOn, proxy, headerFormSelector}: this) {
+    //     const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
+    //     const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector!) as HTMLFormElement;
+    //     if(headerForm === null) throw '404';
+    //     for(const key of on){
+    //         headerForm.addEventListener(key, this.doFormAction);
+    //     }
+    //     this.doFormAction();
+    // }
 }
 
 export interface BeReformableController extends BeReformableProps{}
@@ -307,9 +307,7 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             },
             sendFetchResultToTarget:'fetchResult',
             onUrl:'url',
-            onHeaderFormSubmitOn: {
-                ifAllOf: ['headerFormSubmitOn', 'headerFormSelector'],
-            }
+
         }
     },
     complexPropDefaults:{

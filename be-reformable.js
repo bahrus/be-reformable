@@ -244,24 +244,14 @@ export class BeReformableController {
                 proxy.removeEventListener(key, this.doFormAction);
             }
         }
-        if (headerFormSubmitOn !== undefined) {
-            const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
-            for (const key of on) {
-                proxy.removeEventListener(key, this.doFormAction);
-            }
-        }
+        // if(headerFormSubmitOn !== undefined){
+        //     const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn!] : headerFormSubmitOn!;
+        //     for(const key of on){
+        //         proxy.removeEventListener(key, this.doFormAction);
+        //     }
+        // }
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
-    }
-    async onHeaderFormSubmitOn({ headerFormSubmitOn, proxy, headerFormSelector }) {
-        const on = typeof headerFormSubmitOn === 'string' ? [headerFormSubmitOn] : headerFormSubmitOn;
-        const headerForm = proxy.getRootNode().querySelector(headerFormSelector);
-        if (headerForm === null)
-            throw '404';
-        for (const key of on) {
-            headerForm.addEventListener(key, this.doFormAction);
-        }
-        this.doFormAction();
     }
 }
 const tagName = 'be-reformable';
@@ -290,9 +280,6 @@ export const controllerConfig = {
             },
             sendFetchResultToTarget: 'fetchResult',
             onUrl: 'url',
-            onHeaderFormSubmitOn: {
-                ifAllOf: ['headerFormSubmitOn', 'headerFormSelector'],
-            }
         }
     },
     complexPropDefaults: {
