@@ -73,7 +73,7 @@ export class BeReformableController {
             const key = inputT.name;
             const val = inputT.value;
             if (this.filterOutDefaultValues) {
-                if (val === inputT.dataset.default)
+                if (val === inputT.defaultValue)
                     continue;
             }
             if (headers) {

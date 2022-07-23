@@ -150,12 +150,12 @@ What this does:
 <form be-reformable='{
     "filterOutDefaultValues": true,
 }'>
-    <input name=prop1 value=defaultValue1 data-default=defaultValue1>
-    <input name=prop2 value=differentValue data-default=defaultValue2>
+    <input name=prop1 value=defaultValue1>
+    <input name=prop2 value=differentValue>
 </form>
 ```
 
-prop1 parameter is not sent because value == dataset.default.
+If prop1 isn't modified from the original value, the parameter is not sent.
 
 
 ## Support for headers [Untested]

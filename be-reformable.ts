@@ -77,7 +77,7 @@ export class BeReformableController implements BeReformableActions{
             const key = inputT.name;
             const val = inputT.value;
             if(this.filterOutDefaultValues){
-                if(val === inputT.dataset.default) continue;
+                if(val === inputT.defaultValue) continue;
             }
             if(headers){
                 const headerKey = inputT.dataset.headerName;
