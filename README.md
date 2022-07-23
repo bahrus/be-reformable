@@ -150,7 +150,7 @@ What this does:
 <form be-reformable='{
     "filterOutDefaultValues": true,
 }'>
-    <input name=prop1 value=defaultValue1>
+    <input data-optional=true name=prop1 value=defaultValue1>
     <input name=prop2 value=differentValue>
 </form>
 ```
