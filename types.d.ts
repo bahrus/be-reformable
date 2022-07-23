@@ -29,9 +29,9 @@ export interface BeReformableEndUserProps{
 
     urlVal?: string,
 
-    headerFormSelector?: string,
+    //headerFormSelector?: string,
 
-    headerFormSubmitOn?: string | string[],
+    //headerFormSubmitOn?: string | string[],
 
     transformPlugins?: {[key: string]: boolean};
 
@@ -40,6 +40,8 @@ export interface BeReformableEndUserProps{
     transform?: any;
 
     filterOutDefaultValues?: any;
+
+    headers?: boolean;
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{
     fetchResult?: any,

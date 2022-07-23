@@ -6,7 +6,7 @@ import {register} from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
 
@@ -38,6 +38,17 @@ export class BeReformableController implements BeReformableActions{
 
     doFormAction = () => {
         if(!this.proxy.checkValidity()) return;
+        let headers: {[key: string]: string} = {};
+        if(this.headers){
+            let {initVal} = this.proxy;
+            if(initVal === undefined){ 
+                initVal = {};
+                this.proxy.initVal = initVal; 
+            }
+            initVal.headers = headers;
+            //if(initVal.headers) headers = {...initVal.headers};
+        }
+                
         const method = this.proxy.method;
         if(method){
             if(this.proxy.initVal !== undefined){
@@ -65,6 +76,16 @@ export class BeReformableController implements BeReformableActions{
             const inputT = input as HTMLInputElement;
             const key = inputT.name;
             const val = inputT.value;
+            if(this.filterOutDefaultValues){
+                if(val === inputT.defaultValue) continue;
+            }
+            if(headers){
+                const headerKey = inputT.dataset.headerName;
+                if(headerKey !== undefined){
+                    headers[headerKey] = val;
+                    continue;
+                } 
+            }
             if(key){
                 if(queryObj[key] === undefined){
                     queryObj[key] = [val];
@@ -121,7 +142,7 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, initVal, proxy, fetchResultPath, headerFormSelector, getTargetElement, fetchInProgressCssClass}: this){
+    async doFetch({urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();
@@ -129,24 +150,24 @@ export class BeReformableController implements BeReformableActions{
         }
         
 
-        if(headerFormSelector){
-            const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
-            if(headerForm === null) throw '404';
-            if(!headerForm.checkValidity()) return;
-            if(headerForm !== null){
-                const elements = headerForm.elements;
-                if(initVal === undefined){ initVal = {}; }
-                const headers = {...initVal.headers} as any;
-                for(const input of elements){
-                    const inputT = input as HTMLInputElement;
-                    if(inputT.name){
-                        headers[inputT.name] = inputT.value;
-                    }
-                }
-                initVal.headers = headers;
-                console.log({initVal});
-            }
-        }
+        // if(headerFormSelector){
+        //     const headerForm = (proxy.getRootNode() as DocumentFragment).querySelector(headerFormSelector) as HTMLFormElement;
+        //     if(headerForm === null) throw '404';
+        //     if(!headerForm.checkValidity()) return;
+        //     if(headerForm !== null){
+        //         const elements = headerForm.elements;
+        //         if(initVal === undefined){ initVal = {}; }
+        //         const headers = {...initVal.headers} as any;
+        //         for(const input of elements){
+        //             const inputT = input as HTMLInputElement;
+        //             if(inputT.name){
+        //                 headers[inputT.name] = inputT.value;
+        //             }
+        //         }
+        //         initVal.headers = headers;
+        //         console.log({initVal});
+        //     }
+        // }
         let targetElement: null | Element = null;
         if(fetchInProgressCssClass !== undefined){
             targetElement = getTargetElement(this);

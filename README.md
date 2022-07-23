@@ -141,9 +141,9 @@ What this does:
 
 ## Trigger event on target [Untested]
 
-## Filter out input elements whose value matches default value [TODO]
+## Filter out input elements whose value matches default value [Untested]
 
-## Support for headers [TODO]
+## Support for headers [Untested]
 
 
 ```html
@@ -155,9 +155,7 @@ What this does:
 </form>
 ```
 
-### Make header form participate in autoSubmit
 
-Set "headerFormSubmitOn": "input" for example.  Can also be an array of events to monitor for.
 
 ## Support for cancelling previous calls [TODO]
 
