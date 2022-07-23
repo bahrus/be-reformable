@@ -141,7 +141,7 @@ What this does:
 
 ## Trigger event on target [Untested]
 
-## Block sending input elements whose value matches default value [TODO]
+## Filter out input elements whose value matches default value [TODO]
 
 ## Support for headers [TODO]
 

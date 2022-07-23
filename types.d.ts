@@ -38,6 +38,8 @@ export interface BeReformableEndUserProps{
     dispatchFromTarget?: string;
 
     transform?: any;
+
+    filterOutDefaultValues?: any;
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{
     fetchResult?: any,
