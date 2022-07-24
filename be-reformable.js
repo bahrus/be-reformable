@@ -6,6 +6,7 @@ export const virtualProps = [
     'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers'
 ];
 export class BeReformableController {
+    #abortController = new AbortController();
     onAutoSubmit({ proxy, autoSubmitOn }) {
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
         for (const key of on) {
@@ -32,13 +33,14 @@ export class BeReformableController {
     doFormAction = () => {
         if (!this.proxy.checkValidity())
             return;
+        let { initVal } = this.proxy;
+        if (initVal === undefined) {
+            initVal = {};
+            this.proxy.initVal = initVal;
+        }
+        initVal.signal = this.#abortController.signal;
         let headers = {};
         if (this.headers) {
-            let { initVal } = this.proxy;
-            if (initVal === undefined) {
-                initVal = {};
-                this.proxy.initVal = initVal;
-            }
             initVal.headers = headers;
             //if(initVal.headers) headers = {...initVal.headers};
         }
@@ -148,6 +150,9 @@ export class BeReformableController {
             if (targetElement !== null) {
                 targetElement.classList.add(fetchInProgressCssClass);
             }
+        }
+        if (proxy.fetchInProgress) {
+            this.#abortController.abort();
         }
         proxy.fetchInProgress = true;
         const resp = await fetch(urlVal, initVal);

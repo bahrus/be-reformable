@@ -143,7 +143,7 @@ What this does:
 
 [TODO] Example
 
-## Filter out input elements whose value matches default value [Untested]
+## Filter out input elements whose value matches default value
 
 
 ```html
@@ -158,7 +158,7 @@ What this does:
 If prop1 isn't modified from the original value, the parameter is not sent.
 
 
-## Support for headers [Untested]
+## Support for headers
 
 
 ```html
@@ -172,7 +172,7 @@ If prop1 isn't modified from the original value, the parameter is not sent.
 
 
 
-## Support for cancelling previous calls [TODO]
+## Support for cancelling previous calls [Untested]
 
 ## Support for debouncing [TODO]
 
