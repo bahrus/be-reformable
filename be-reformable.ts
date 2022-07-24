@@ -266,6 +266,7 @@ export const controllerConfig: DefineArgs<BeReformableProps & BeDecoratedProps<B
             finale: 'finale',
             proxyPropDefaults:{
                 autoSubmitOn: 'input',
+                fetchInProgressCssClass: 'fetch-in-progress',
             },
             emitEvents: ['fetchInProgress']
         },

@@ -248,6 +248,7 @@ export const controllerConfig = {
             finale: 'finale',
             proxyPropDefaults: {
                 autoSubmitOn: 'input',
+                fetchInProgressCssClass: 'fetch-in-progress',
             },
             emitEvents: ['fetchInProgress']
         },
