@@ -139,6 +139,10 @@ What this does:
     <div -innerHTML></div>
 ```
 
+## Support for xslt transform of imported HTML
+
+First do xslt, then DTR transform.
+
 ## Trigger event on target [Untested]
 
 [TODO] Example
