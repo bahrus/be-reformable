@@ -139,7 +139,31 @@ What this does:
     <div -innerHTML></div>
 ```
 
-## Support for xslt transform of imported HTML
+## Support POST with body 
+
+```html
+<form 
+    action="a.html"
+    target="[-innerHTML]"
+    method="post" be-reformable='{
+    "body": "my-body",
+    "headers": true
+}'>
+    <input type='hidden' data-header-name='Content-Type' value='application/json'>
+    <label>
+        JSON:
+        <textarea name='my-body'>{"hello": "world"}</textarea>
+    </label>
+    
+    <button type='submit'>submit</button>
+</form>
+
+<div -innerHTML>
+
+</div>
+```
+
+## Support for xslt transform of imported HTML [TODO]
 
 First do xslt, then DTR transform.
 
@@ -180,7 +204,7 @@ If prop1 isn't modified from the original value, the parameter is not sent.
 
 ## Support for debouncing [TODO]
 
-## Support POST with body [TODO]
+
 
 ## Staying Kosher
 

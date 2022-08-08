@@ -6,7 +6,7 @@ import {register} from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
 ] as (keyof BeReformableVirtualProps)[];
 export class BeReformableController implements BeReformableActions{
     #abortController = new AbortController();
@@ -38,7 +38,7 @@ export class BeReformableController implements BeReformableActions{
 
     doFormAction = () => {
         if(!this.proxy.checkValidity()) return;
-        let {initVal} = this.proxy;
+        let {initVal, bodyName} = this.proxy;
         if(initVal === undefined){ 
             initVal = {};
             this.proxy.initVal = initVal; 
@@ -78,6 +78,9 @@ export class BeReformableController implements BeReformableActions{
         for(const input of elements){
             const inputT = input as HTMLInputElement;
             const key = inputT.name;
+            if(bodyName !== undefined && key === bodyName){
+                this.proxy.initVal!.body = inputT.value;
+            }
             const val = inputT.value;
             if(this.filterOutDefaultValues){
                 if(inputT.dataset.optional==='true' && val === inputT.defaultValue) continue;
@@ -138,6 +141,7 @@ export class BeReformableController implements BeReformableActions{
                 usp.append(key, val);
             }
         }
+        
         this.proxy.urlVal = url + '?' + usp.toString();
 
 
@@ -145,7 +149,7 @@ export class BeReformableController implements BeReformableActions{
 
 
 
-    async doFetch({urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass}: this){
+    async doFetch({urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass, body}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();

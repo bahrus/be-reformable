@@ -42,6 +42,9 @@ export interface BeReformableEndUserProps{
     filterOutDefaultValues?: any;
 
     headers?: boolean;
+
+    bodyName?: string;
+
 }
 export interface BeReformableVirtualProps extends BeReformableEndUserProps{
     fetchResult?: any,

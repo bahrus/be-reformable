@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<form 
+    action="a.html"
+    target="[-innerHTML]"
+    method="post" be-reformable='{
+    "body": "my-body",
+    "headers": true
+}'>
+    <input type='hidden' data-header-name='Content-Type' value='application/json'>
+    <label>
+        JSON:
+        <textarea name='my-body'>{"hello": "world"}</textarea>
+    </label>
+    
+    <button type='submit'>submit</button>
+</form>
+
+<div -innerHTML>
+
+</div>
+
+
+<script type=importmap>
+    {
+        "imports": {
+            "trans-render/": "../node_modules/trans-render/",
+            "xtal-element/": "../node_modules/xtal-element/",
+            "be-decorated/": "../node_modules/be-decorated/",
+            "be-observant/": "../node_modules/be-observant/",
+            "be-hive/": "../node_modules/be-hive/"
+        }
+    }
+</script>
+<script type='module'>
+    import '../be-reformable.js';
+</script>
+</body>
+</html>
