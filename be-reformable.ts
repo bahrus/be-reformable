@@ -149,7 +149,7 @@ export class BeReformableController extends EventTarget implements BeReformableA
 
 
 
-    async doFetch({urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass, body}: this){
+    async doFetch({urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass}: this){
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();

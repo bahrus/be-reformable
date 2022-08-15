@@ -141,7 +141,7 @@ export class BeReformableController extends EventTarget {
         }
         this.proxy.urlVal = url + '?' + usp.toString();
     };
-    async doFetch({ urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass, body }) {
+    async doFetch({ urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass }) {
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
