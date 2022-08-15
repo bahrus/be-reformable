@@ -3,9 +3,9 @@ import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
 ];
-export class BeReformableController {
+export class BeReformableController extends EventTarget {
     #abortController = new AbortController();
     onAutoSubmit({ proxy, autoSubmitOn }) {
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
@@ -33,7 +33,7 @@ export class BeReformableController {
     doFormAction = () => {
         if (!this.proxy.checkValidity())
             return;
-        let { initVal } = this.proxy;
+        let { initVal, bodyName } = this.proxy;
         if (initVal === undefined) {
             initVal = {};
             this.proxy.initVal = initVal;
@@ -73,6 +73,9 @@ export class BeReformableController {
         for (const input of elements) {
             const inputT = input;
             const key = inputT.name;
+            if (bodyName !== undefined && key === bodyName) {
+                this.proxy.initVal.body = inputT.value;
+            }
             const val = inputT.value;
             if (this.filterOutDefaultValues) {
                 if (inputT.dataset.optional === 'true' && val === inputT.defaultValue)
@@ -138,7 +141,7 @@ export class BeReformableController {
         }
         this.proxy.urlVal = url + '?' + usp.toString();
     };
-    async doFetch({ urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass }) {
+    async doFetch({ urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass, body }) {
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();

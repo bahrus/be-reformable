@@ -8,7 +8,7 @@ export const virtualProps = [
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
     'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
 ] as (keyof BeReformableVirtualProps)[];
-export class BeReformableController implements BeReformableActions{
+export class BeReformableController extends EventTarget implements BeReformableActions{
     #abortController = new AbortController();
     onAutoSubmit({proxy, autoSubmitOn}: this){
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
