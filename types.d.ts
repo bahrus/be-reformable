@@ -1,4 +1,5 @@
 import {IObserve} from 'be-observant/types'; 
+import {MinimalProxy} from 'be-decorated/types';
 
 export interface BeReformableEndUserProps{
     baseLink?: string,
@@ -46,7 +47,7 @@ export interface BeReformableEndUserProps{
     bodyName?: string;
 
 }
-export interface BeReformableVirtualProps extends BeReformableEndUserProps{
+export interface BeReformableVirtualProps extends BeReformableEndUserProps, MinimalProxy<HTMLFormElement>{
     fetchResult?: any,
 }
 export interface BeReformableProps extends BeReformableVirtualProps{

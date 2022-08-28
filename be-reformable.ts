@@ -16,6 +16,7 @@ export class BeReformableController extends EventTarget implements BeReformableA
             proxy.addEventListener(key, this.doFormAction);
         }
         this.doFormAction();
+        proxy.resolved = true;
     }
 
     onNotAutoSubmit({proxy, autoSubmit}: this): void {
@@ -24,16 +25,17 @@ export class BeReformableController extends EventTarget implements BeReformableA
             e.preventDefault();
             this.doFormAction();
         });
+        proxy.resolved = true;
     }
 
     async onUrl({url, proxy}: this){
         const {hookUp} = await import('be-observant/hookUp.js');
-        hookUp(url, proxy, 'urlVal');
+        await hookUp(url, proxy, 'urlVal');
     }
 
     async onInit({init, proxy}: this){
         const {hookUp} = await import('be-observant/hookUp.js');
-        hookUp(init, proxy, 'initVal');
+        await hookUp(init, proxy, 'initVal');
     }
 
     doFormAction = () => {
