@@ -1,7 +1,7 @@
 import {IObserve} from 'be-observant/types'; 
 import {MinimalProxy} from 'be-decorated/types';
 
-export interface BeReformableEndUserProps{
+export interface EndUserProps{
     baseLink?: string,
     /** This part of the url derives from the form elements */
     path?: string[] | boolean,
@@ -30,9 +30,6 @@ export interface BeReformableEndUserProps{
 
     urlVal?: string,
 
-    //headerFormSelector?: string,
-
-    //headerFormSubmitOn?: string | string[],
 
     transformPlugins?: {[key: string]: boolean};
 
@@ -47,21 +44,25 @@ export interface BeReformableEndUserProps{
     bodyName?: string;
 
 }
-export interface BeReformableVirtualProps extends BeReformableEndUserProps, MinimalProxy<HTMLFormElement>{
+export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLFormElement>{
     fetchResult?: any,
 }
-export interface BeReformableProps extends BeReformableVirtualProps{
-    proxy: HTMLFormElement & BeReformableVirtualProps;
+
+export type Proxy = HTMLFormElement & VirtualProps;
+
+export interface ProxyProps extends VirtualProps {
+    proxy: Proxy;
 }
 
-export interface BeReformableActions{
+export type PP = ProxyProps
+
+export interface Actions{
     //intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement): void;
-    onAutoSubmit(self: this): void;
-    onUrl(self: this): void;
-    onInit(self: this): void;
-    doFetch(self: this): void;
-    sendFetchResultToTarget(self: this): void;
-    finale(proxy: HTMLFormElement & BeReformableVirtualProps): void;
-    //onHeaderFormSubmitOn(self: this): void;
-    onNotAutoSubmit(self: this): void;
+    onAutoSubmit(pp: PP): void;
+    onUrl(pp: PP): void;
+    onInit(pp: PP): void;
+    doFetch(pp: PP): void;
+    sendFetchResultToTarget(pp: PP): void;
+    finale(proxy: Proxy): void;
+    onNotAutoSubmit(pp: PP): void;
 }

@@ -6,21 +6,30 @@ export const virtualProps = [
     'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
 ];
 export class BeReformableController extends EventTarget {
-    #abortController = new AbortController();
-    onAutoSubmit({ proxy, autoSubmitOn }) {
+    #fetchAbortController = new AbortController();
+    #formAbortControllers = [];
+    onAutoSubmit(pp) {
+        const { proxy, autoSubmitOn, self } = pp;
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
+        this.disconnect();
+        this.#formAbortControllers = [];
         for (const key of on) {
-            proxy.addEventListener(key, this.doFormAction);
+            const ac = new AbortController();
+            this.#formAbortControllers.push(ac);
+            self.addEventListener(key, e => {
+                this.doFormAction(pp);
+            }, { signal: ac.signal });
         }
-        this.doFormAction();
+        this.doFormAction(pp);
         proxy.resolved = true;
     }
-    onNotAutoSubmit({ proxy, autoSubmit }) {
+    onNotAutoSubmit(pp) {
+        const { proxy, autoSubmit } = pp;
         if (autoSubmit)
             return;
         proxy.addEventListener('submit', e => {
             e.preventDefault();
-            this.doFormAction();
+            this.doFormAction(pp);
         });
         proxy.resolved = true;
     }
@@ -32,61 +41,60 @@ export class BeReformableController extends EventTarget {
         const { hookUp } = await import('be-observant/hookUp.js');
         await hookUp(init, proxy, 'initVal');
     }
-    doFormAction = () => {
-        if (!this.proxy.checkValidity())
+    doFormAction({ proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path }) {
+        if (!proxy.checkValidity())
             return;
-        let { initVal, bodyName } = this.proxy;
         if (initVal === undefined) {
             initVal = {};
-            this.proxy.initVal = initVal;
+            proxy.initVal = initVal;
         }
-        initVal.signal = this.#abortController.signal;
-        let headers = {};
-        if (this.headers) {
-            initVal.headers = headers;
+        initVal.signal = this.#fetchAbortController.signal;
+        let headersVal = {};
+        if (headers) {
+            initVal.headers = headersVal;
             //if(initVal.headers) headers = {...initVal.headers};
         }
-        const method = this.proxy.method;
+        const method = proxy.method;
         if (method) {
-            if (this.proxy.initVal !== undefined) {
-                this.proxy.initVal.method = method;
+            if (proxy.initVal !== undefined) {
+                proxy.initVal.method = method;
             }
             else {
-                this.proxy.initVal = {
+                proxy.initVal = {
                     method
                 };
             }
         }
-        if (this.url && !this.urlVal)
+        if (url && !urlVal)
             return;
-        let url = this.proxy.action || this.urlVal;
-        if (this.baseLink !== undefined) {
-            url = self[this.baseLink].href;
+        let liveUrl = proxy.action || urlVal;
+        if (baseLink !== undefined) {
+            liveUrl = self[baseLink].href;
         }
-        else if (url === undefined) {
-            url = this.proxy.action;
-            if (url === location.href) {
+        else if (liveUrl === undefined) {
+            liveUrl = proxy.action;
+            if (liveUrl === location.href) {
                 //just default value -- assume not intentional
                 return;
             }
         }
         const queryObj = {};
-        const elements = this.proxy.elements;
+        const elements = proxy.elements;
         for (const input of elements) {
             const inputT = input;
             const key = inputT.name;
             if (bodyName !== undefined && key === bodyName) {
-                this.proxy.initVal.body = inputT.value;
+                proxy.initVal.body = inputT.value;
             }
             const val = inputT.value;
-            if (this.filterOutDefaultValues) {
+            if (filterOutDefaultValues) {
                 if (inputT.dataset.optional === 'true' && val === inputT.defaultValue)
                     continue;
             }
-            if (headers) {
+            if (headersVal) {
                 const headerKey = inputT.dataset.headerName;
                 if (headerKey !== undefined) {
-                    headers[headerKey] = val;
+                    headersVal[headerKey] = val;
                     continue;
                 }
             }
@@ -99,32 +107,32 @@ export class BeReformableController extends EventTarget {
                 }
             }
         }
-        if (this.path !== undefined) {
+        if (path !== undefined) {
             let idx = 0;
-            switch (typeof this.path) {
+            switch (typeof path) {
                 case 'boolean':
-                    let pathElement = this.proxy.querySelector(`[data-path-idx="${idx}"]`);
+                    let pathElement = proxy.querySelector(`[data-path-idx="${idx}"]`);
                     while (pathElement !== null) {
                         const lhs = pathElement.dataset.pathLhs;
                         if (lhs !== undefined) {
-                            url += lhs;
+                            liveUrl += lhs;
                         }
-                        url += encodeURIComponent(pathElement.value); //TODO:  what about checkbox, etc
+                        liveUrl += encodeURIComponent(pathElement.value); //TODO:  what about checkbox, etc
                         const rhs = pathElement.dataset.pathRhs;
                         if (rhs !== undefined) {
-                            url += rhs;
+                            liveUrl += rhs;
                         }
                         idx++;
-                        pathElement = this.proxy.querySelector(`[data-path-idx="${idx}"]`);
+                        pathElement = proxy.querySelector(`[data-path-idx="${idx}"]`);
                     }
                     break;
                 case 'object':
-                    for (const token of this.path) {
+                    for (const token of path) {
                         if (idx % 2 === 0) {
-                            url += token;
+                            liveUrl += token;
                         }
                         else {
-                            url += encodeURIComponent(elements[token].value);
+                            liveUrl += encodeURIComponent(elements[token].value);
                             delete queryObj[token];
                         }
                         idx++;
@@ -141,9 +149,10 @@ export class BeReformableController extends EventTarget {
                 usp.append(key, val);
             }
         }
-        this.proxy.urlVal = url + '?' + usp.toString();
-    };
-    async doFetch({ urlVal, initVal, proxy, fetchResultPath, getTargetElement, fetchInProgressCssClass }) {
+        proxy.urlVal = liveUrl + '?' + usp.toString();
+    }
+    async doFetch(pp) {
+        const { urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass } = pp;
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
@@ -151,13 +160,13 @@ export class BeReformableController extends EventTarget {
         }
         let targetElement = null;
         if (fetchInProgressCssClass !== undefined) {
-            targetElement = getTargetElement(this);
+            targetElement = this.getTargetElement(pp);
             if (targetElement !== null) {
                 targetElement.classList.add(fetchInProgressCssClass);
             }
         }
         if (proxy.fetchInProgress) {
-            this.#abortController.abort();
+            this.#fetchAbortController.abort();
         }
         proxy.fetchInProgress = true;
         const resp = await fetch(urlVal, initVal);
@@ -186,10 +195,11 @@ export class BeReformableController extends EventTarget {
             return null;
         return proxy.getRootNode().querySelector(proxy.target);
     }
-    async sendFetchResultToTarget({ fetchResult, propKey, proxy, transform, transformPlugins, getTargetElement, dispatchFromTarget }) {
+    async sendFetchResultToTarget(pp) {
+        const { fetchResult, propKey, proxy, transform, transformPlugins, dispatchFromTarget } = pp;
         const target = proxy.target;
         if (target) {
-            const targetElement = getTargetElement(this);
+            const targetElement = this.getTargetElement(pp);
             if (targetElement === null)
                 throw { target, msg: '404' };
             const lastPos = target.lastIndexOf('[');
@@ -228,14 +238,15 @@ export class BeReformableController extends EventTarget {
             container[propKey] = fetchResult;
         }
     }
+    disconnect() {
+        this.#fetchAbortController.abort();
+        for (const c of this.#formAbortControllers) {
+            c.abort();
+        }
+    }
     async finale(proxy) {
         const { autoSubmitOn, headerFormSubmitOn } = proxy;
-        if (autoSubmitOn !== undefined) {
-            const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
-            for (const key of on) {
-                proxy.removeEventListener(key, this.doFormAction);
-            }
-        }
+        this.disconnect();
         const { unsubscribe } = await import('trans-render/lib/subscribe.js');
         unsubscribe(proxy);
     }
