@@ -211,6 +211,7 @@ export class BeReformable extends EventTarget {
             const { getProp } = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
         }
+        console.log({ fetchResult });
         return {
             fetchResult
         };
@@ -233,18 +234,26 @@ export class BeReformable extends EventTarget {
             const rawPath = target.substring(lastPos + 2, target.length - 1);
             const { lispToCamel } = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
-            const dp = new DOMParser();
-            const templ = dp.parseFromString(fetchResult, 'text/html', { includeShadowRoots: true }).querySelector('body')?.firstElementChild;
-            if (propPath && transform !== undefined) {
-                const { DTR } = await import('trans-render/lib/DTR.js');
-                await DTR.transform(templ, {
-                    match: transform,
-                    host: proxy,
-                    plugins: { ...transformPlugins }
-                });
+            if (typeof fetchResult === 'string' && (propPath === undefined || propPath === 'innerHTML')) {
+                const dp = new DOMParser();
+                const templ = dp.parseFromString(fetchResult, 'text/html', { includeShadowRoots: true }).querySelector('body')?.firstElementChild;
+                if (propPath && transform !== undefined) {
+                    const { DTR } = await import('trans-render/lib/DTR.js');
+                    await DTR.transform(templ, {
+                        match: transform,
+                        host: proxy,
+                        plugins: { ...transformPlugins }
+                    });
+                }
+                targetElement.innerHTML = '';
+                targetElement.appendChild(templ);
             }
-            targetElement.innerHTML = '';
-            targetElement.appendChild(templ);
+            else if (propPath !== undefined) {
+                targetElement[propPath] = fetchResult;
+            }
+            else {
+                throw 'bR.NI';
+            }
             if (dispatchFromTarget !== undefined) {
                 targetElement.dispatchEvent(new CustomEvent(dispatchFromTarget, {
                     detail: {

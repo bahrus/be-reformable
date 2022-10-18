@@ -221,6 +221,7 @@ export class BeReformable extends EventTarget implements Actions{
             const {getProp} = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
         }
+        console.log({fetchResult});
         return {
             fetchResult
         };
@@ -242,19 +243,26 @@ export class BeReformable extends EventTarget implements Actions{
             const rawPath =  target.substring(lastPos + 2, target.length - 1);
             const {lispToCamel} = await import('trans-render/lib/lispToCamel.js');
             const propPath = lispToCamel(rawPath);
-            const dp = new DOMParser() as any;
-            const templ = dp.parseFromString(fetchResult, 'text/html', {includeShadowRoots: true}).querySelector('body')?.firstElementChild as HTMLElement;
-            if(propPath && transform !== undefined){
-                const {DTR} = await import('trans-render/lib/DTR.js');
-                await DTR.transform(templ, {
-                    match: transform,
-                    host: proxy,
-                    plugins: {...transformPlugins}
-                });
-                
+            if(typeof fetchResult === 'string' && (propPath === undefined || propPath === 'innerHTML') ){
+                const dp = new DOMParser() as any;
+                const templ = dp.parseFromString(fetchResult, 'text/html', {includeShadowRoots: true}).querySelector('body')?.firstElementChild as HTMLElement;
+                if(propPath && transform !== undefined){
+                    const {DTR} = await import('trans-render/lib/DTR.js');
+                    await DTR.transform(templ, {
+                        match: transform,
+                        host: proxy,
+                        plugins: {...transformPlugins}
+                    });
+                    
+                }
+                targetElement.innerHTML = '';
+                targetElement.appendChild(templ);
+            }else if(propPath !== undefined){
+                (<any>targetElement)[propPath] = fetchResult;
+            }else{
+                throw 'bR.NI';
             }
-            targetElement.innerHTML = '';
-            targetElement.appendChild(templ);
+            
             if(dispatchFromTarget !== undefined){
                 targetElement.dispatchEvent(new CustomEvent(dispatchFromTarget, {
                     detail:{
@@ -271,6 +279,7 @@ export class BeReformable extends EventTarget implements Actions{
             if(container === undefined) throw '404';
             container[propKey] = fetchResult;
         }
+
     }
 
     disconnectFetch(){
@@ -340,7 +349,7 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
             doFetch:{
                 ifEquals: ['fetchCount', 'fetchCountEcho']
             },
-            sendFetchResultToTarget:'fetchResult',
+            sendFetchResultToTarget: 'fetchResult',
             onUrl:'url',
 
         }
