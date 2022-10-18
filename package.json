@@ -23,14 +23,14 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "trans-render": "0.0.585",
-    "be-decorated": "0.0.153",
-    "be-observant": "0.0.136",
-    "be-hive": "0.0.63",
-    "xtal-element": "0.0.517"
+    "trans-render": "0.0.628",
+    "be-decorated": "0.0.182",
+    "be-observant": "0.0.155",
+    "be-hive": "0.0.76",
+    "xtal-element": "0.0.531"
   },
   "devDependencies": {
-    "may-it-serve": "0.0.2",
+    "may-it-serve": "0.0.3",
     "@skypack/package-check": "0.2.2",
     "@custom-elements-manifest/analyzer": "0.6.3",
     "@power-elements/json-viewer": "2.1.1"

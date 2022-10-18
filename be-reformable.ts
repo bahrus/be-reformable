@@ -1,4 +1,4 @@
-import {BeDecoratedProps, define} from 'be-decorated/be-decorated.js';
+import {BeDecoratedProps, define} from 'be-decorated/DE.js';
 import {PP, Proxy, VirtualProps, Actions} from './types';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
@@ -6,12 +6,14 @@ import {register} from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as', 
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 
+    'filterOutDefaultValues', 'headers', 'bodyName', 'isVisible', 'debounceDuration', 'fetchCount', 'fetchCountEcho'
 ] as (keyof VirtualProps)[];
-export class BeReformableController extends EventTarget implements Actions{
+export class BeReformable extends EventTarget implements Actions{
     #fetchAbortController = new AbortController();
     #formAbortControllers: AbortController[] = [];
     onAutoSubmit(pp: PP){
+        console.log('onAutoSubmit');
         const {proxy, autoSubmitOn, self} = pp;
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
         this.disconnect();
@@ -48,6 +50,7 @@ export class BeReformableController extends EventTarget implements Actions{
     }
 
     doFormAction({proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path}: PP){
+        console.log('doFormAction');
         if(!proxy.checkValidity()) return;
         if(initVal === undefined){ 
             initVal = {};
@@ -157,7 +160,19 @@ export class BeReformableController extends EventTarget implements Actions{
 
 
 
+    doQueueFetch({fetchCount, proxy, debounceDuration}: PP){
+        console.log('doFetch');
+        const newFetchCount = fetchCount + 1;
+        setTimeout(() => {
+            proxy.fetchCountEcho = newFetchCount;
+        }, debounceDuration);
+        return {
+            fetchCount: newFetchCount
+        }
+    }
+
     async doFetch(pp: PP){
+        console.log('doFetch', pp.fetchCount, pp.fetchCountEcho);
         const {urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass} = pp;
         if(!proxy.target){
             proxy.action = urlVal!;
@@ -173,12 +188,24 @@ export class BeReformableController extends EventTarget implements Actions{
                 targetElement.classList.add(fetchInProgressCssClass);
             }
         }
+
         if(proxy.fetchInProgress){
-            this.#fetchAbortController.abort();
+            console.log('disconnect fetch');
+            this.disconnectFetch();
+            initVal!.signal = this.#fetchAbortController.signal; 
+            
         }
         proxy.fetchInProgress = true;
-
-        const resp = await fetch(urlVal!, initVal);
+        console.log('fetch', {urlVal, initVal});
+        let resp: Response;
+        try{
+            resp = await fetch(urlVal!, initVal);
+        }catch(e: any){
+            console.warn(e);
+            return;
+        }
+        
+        console.log('finished fetch');
         let fetchResult: any;
         const contentTypeHeader = resp.headers.get('content-type');
         if(contentTypeHeader !== null &&  contentTypeHeader.indexOf('json') > -1){
@@ -246,11 +273,26 @@ export class BeReformableController extends EventTarget implements Actions{
         }
     }
 
-    disconnect(){
-        this.#fetchAbortController.abort();
+    disconnectFetch(){
+        try{
+            this.#fetchAbortController.abort();
+        }catch{
+            console.log('iah');
+        }
+        
+        this.#fetchAbortController = new AbortController();
+    }
+
+    disconnectForm(){
         for(const c of this.#formAbortControllers){
             c.abort();
         }
+        this.#formAbortControllers = [];
+    }
+
+    disconnect(){
+        this.disconnectFetch();
+        this.disconnectForm();
     }
 
     async finale(proxy: HTMLFormElement & VirtualProps){
@@ -280,6 +322,10 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
             proxyPropDefaults:{
                 autoSubmitOn: 'input',
                 fetchInProgressCssClass: 'fetch-in-progress',
+                beOosoom: 'isVisible',
+                isVisible: true,
+                fetchCount: 0,
+                fetchCountEcho: -1,
             },
             emitEvents: ['fetchInProgress']
         },
@@ -288,8 +334,11 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
             onNotAutoSubmit: {
               ifKeyIn: ['autoSubmit']  
             },
-            doFetch:{
+            doQueueFetch:{
                 ifAllOf: ['urlVal', 'initVal'],
+            },
+            doFetch:{
+                ifEquals: ['fetchCount', 'fetchCountEcho']
             },
             sendFetchResultToTarget:'fetchResult',
             onUrl:'url',
@@ -297,7 +346,7 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
         }
     },
     complexPropDefaults:{
-        controller: BeReformableController
+        controller: BeReformable
     }
 };
 

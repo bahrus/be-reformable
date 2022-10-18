@@ -43,9 +43,15 @@ export interface EndUserProps{
 
     bodyName?: string;
 
+    debounceDuration?: number;
+
 }
 export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLFormElement>{
     fetchResult?: any,
+    beOosoom: string,
+    isVisible: boolean,
+    fetchCount: number,
+    fetchCountEcho: number,
 }
 
 export type Proxy = HTMLFormElement & VirtualProps;
@@ -61,6 +67,7 @@ export interface Actions{
     onAutoSubmit(pp: PP): void;
     onUrl(pp: PP): void;
     onInit(pp: PP): void;
+    doQueueFetch(pp: PP): void;
     doFetch(pp: PP): void;
     sendFetchResultToTarget(pp: PP): void;
     finale(proxy: Proxy): void;

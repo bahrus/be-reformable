@@ -1,14 +1,16 @@
-import { define } from 'be-decorated/be-decorated.js';
+import { define } from 'be-decorated/DE.js';
 import { register } from 'be-hive/register.js';
 export const virtualProps = [
     'autoSubmit', 'autoSubmitOn', 'baseLink', 'path', 'url', 'urlVal', 'init', 'as',
     'fetchResult', 'propKey', 'fetchResultPath', 'initVal', 'headerFormSelector', 'headerFormSubmitOn',
-    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget', 'filterOutDefaultValues', 'headers', 'bodyName'
+    'transform', 'transformPlugins', 'fetchInProgressCssClass', 'fetchInProgress', 'dispatchFromTarget',
+    'filterOutDefaultValues', 'headers', 'bodyName', 'isVisible', 'debounceDuration', 'fetchCount', 'fetchCountEcho'
 ];
-export class BeReformableController extends EventTarget {
+export class BeReformable extends EventTarget {
     #fetchAbortController = new AbortController();
     #formAbortControllers = [];
     onAutoSubmit(pp) {
+        console.log('onAutoSubmit');
         const { proxy, autoSubmitOn, self } = pp;
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn] : autoSubmitOn;
         this.disconnect();
@@ -42,6 +44,7 @@ export class BeReformableController extends EventTarget {
         await hookUp(init, proxy, 'initVal');
     }
     doFormAction({ proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path }) {
+        console.log('doFormAction');
         if (!proxy.checkValidity())
             return;
         if (initVal === undefined) {
@@ -151,7 +154,18 @@ export class BeReformableController extends EventTarget {
         }
         proxy.urlVal = liveUrl + '?' + usp.toString();
     }
+    doQueueFetch({ fetchCount, proxy, debounceDuration }) {
+        console.log('doFetch');
+        const newFetchCount = fetchCount + 1;
+        setTimeout(() => {
+            proxy.fetchCountEcho = newFetchCount;
+        }, debounceDuration);
+        return {
+            fetchCount: newFetchCount
+        };
+    }
     async doFetch(pp) {
+        console.log('doFetch', pp.fetchCount, pp.fetchCountEcho);
         const { urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass } = pp;
         if (!proxy.target) {
             proxy.action = urlVal;
@@ -166,10 +180,21 @@ export class BeReformableController extends EventTarget {
             }
         }
         if (proxy.fetchInProgress) {
-            this.#fetchAbortController.abort();
+            console.log('disconnect fetch');
+            this.disconnectFetch();
+            initVal.signal = this.#fetchAbortController.signal;
         }
         proxy.fetchInProgress = true;
-        const resp = await fetch(urlVal, initVal);
+        console.log('fetch', { urlVal, initVal });
+        let resp;
+        try {
+            resp = await fetch(urlVal, initVal);
+        }
+        catch (e) {
+            console.warn(e);
+            return;
+        }
+        console.log('finished fetch');
         let fetchResult;
         const contentTypeHeader = resp.headers.get('content-type');
         if (contentTypeHeader !== null && contentTypeHeader.indexOf('json') > -1) {
@@ -238,11 +263,24 @@ export class BeReformableController extends EventTarget {
             container[propKey] = fetchResult;
         }
     }
-    disconnect() {
-        this.#fetchAbortController.abort();
+    disconnectFetch() {
+        try {
+            this.#fetchAbortController.abort();
+        }
+        catch {
+            console.log('iah');
+        }
+        this.#fetchAbortController = new AbortController();
+    }
+    disconnectForm() {
         for (const c of this.#formAbortControllers) {
             c.abort();
         }
+        this.#formAbortControllers = [];
+    }
+    disconnect() {
+        this.disconnectFetch();
+        this.disconnectForm();
     }
     async finale(proxy) {
         const { autoSubmitOn, headerFormSubmitOn } = proxy;
@@ -265,6 +303,10 @@ export const controllerConfig = {
             proxyPropDefaults: {
                 autoSubmitOn: 'input',
                 fetchInProgressCssClass: 'fetch-in-progress',
+                beOosoom: 'isVisible',
+                isVisible: true,
+                fetchCount: 0,
+                fetchCountEcho: -1,
             },
             emitEvents: ['fetchInProgress']
         },
@@ -273,15 +315,18 @@ export const controllerConfig = {
             onNotAutoSubmit: {
                 ifKeyIn: ['autoSubmit']
             },
-            doFetch: {
+            doQueueFetch: {
                 ifAllOf: ['urlVal', 'initVal'],
+            },
+            doFetch: {
+                ifEquals: ['fetchCount', 'fetchCountEcho']
             },
             sendFetchResultToTarget: 'fetchResult',
             onUrl: 'url',
         }
     },
     complexPropDefaults: {
-        controller: BeReformableController
+        controller: BeReformable
     }
 };
 define(controllerConfig);
