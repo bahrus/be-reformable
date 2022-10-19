@@ -10,7 +10,6 @@
     "behavior",
     "directive"
   ],
-  "type": "module",
   "description": "be-reformable is a web component that progressively enhances the built-in form element",
   "main": "be-reformable.js",
   "module": "be-reformable.js",
@@ -26,17 +25,17 @@
     "trans-render": "0.0.628",
     "be-decorated": "0.0.182",
     "be-observant": "0.0.155",
-    "be-hive": "0.0.76",
-    "xtal-element": "0.0.531"
+    "be-hive": "0.0.76"
   },
   "devDependencies": {
     "may-it-serve": "0.0.3",
     "@skypack/package-check": "0.2.2",
+    "@playwright/test": "1.27.1",
     "@custom-elements-manifest/analyzer": "0.6.3",
     "@power-elements/json-viewer": "2.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "playwright test",
     "serve": "node node_modules/may-it-serve/serve.js",
     "package-check": "package-check",
     "doc": "custom-elements-manifest analyze"

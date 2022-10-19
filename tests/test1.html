@@ -22,6 +22,7 @@
     <input id=expression value="x^2">
     </form>
     <json-viewer -object></json-viewer>
+    <div id=target></div>
     <script type=importmap>
         {
             "imports": {
@@ -37,6 +38,16 @@
     <script type=module>
         import '../be-reformable.js';
         import '@power-elements/json-viewer/json-viewer.js';
+    </script>
+    <script>
+        function runScript(){
+            if(document.querySelector('json-viewer').object !== null){
+                target.setAttribute('mark', 'good');
+            }
+        }
+        setTimeout(() => {
+            runScript();
+        }, 2000);
     </script>
 </body>
 </html>

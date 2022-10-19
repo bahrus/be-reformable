@@ -2,11 +2,17 @@
 
 be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" extension.
 
+[![Playwright Tests](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml)
+
 ## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
 
 <a href="https://nodei.co/npm/be-reformable/"><img src="https://nodei.co/npm/be-reformable.png"></a>
 
+Size of package, including custom element behavior framework (be-decorated):
+
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-reformable?style=for-the-badge)](https://bundlephobia.com/result?p=be-reformable)
+
+Size of new code in this package:
 
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-reformable?compression=gzip">
 
@@ -247,5 +253,20 @@ To view this element locally:
 5.  Run npm run serve
 6.  Open http://localhost:3030/demo/dev
 
+
+## Importing in ES Modules:
+
+```JavaScript
+import 'be-reformable/be-reformable.js';
+
+```
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.run/be-reformable';
+</script>
+```
 
 
