@@ -13,7 +13,6 @@ export class BeReformable extends EventTarget implements Actions{
     #fetchAbortController = new AbortController();
     #formAbortControllers: AbortController[] = [];
     onAutoSubmit(pp: PP){
-        console.log('onAutoSubmit');
         const {proxy, autoSubmitOn, self} = pp;
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
         this.disconnect();
@@ -50,7 +49,6 @@ export class BeReformable extends EventTarget implements Actions{
     }
 
     doFormAction({proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path}: PP){
-        console.log('doFormAction');
         if(!proxy.checkValidity()) return;
         if(initVal === undefined){ 
             initVal = {};
@@ -159,11 +157,11 @@ export class BeReformable extends EventTarget implements Actions{
     }
 
 
-
-    doQueueFetch({fetchCount, proxy, debounceDuration}: PP){
-        console.log('doFetch');
+    #prevTimeout: any;
+    doQueueFetch({fetchCount, proxy,, fetchCountEcho, debounceDuration}: PP){
         const newFetchCount = fetchCount + 1;
-        setTimeout(() => {
+        clearTimeout(this.#prevTimeout);
+        this.#prevTimeout = setTimeout(() => {
             proxy.fetchCountEcho = newFetchCount;
         }, debounceDuration);
         return {
@@ -172,7 +170,6 @@ export class BeReformable extends EventTarget implements Actions{
     }
 
     async doFetch(pp: PP){
-        console.log('doFetch', pp.fetchCount, pp.fetchCountEcho);
         const {urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass} = pp;
         if(!proxy.target){
             proxy.action = urlVal!;
@@ -190,13 +187,11 @@ export class BeReformable extends EventTarget implements Actions{
         }
 
         if(proxy.fetchInProgress){
-            console.log('disconnect fetch');
             this.disconnectFetch();
             initVal!.signal = this.#fetchAbortController.signal; 
             
         }
         proxy.fetchInProgress = true;
-        console.log('fetch', {urlVal, initVal});
         let resp: Response;
         try{
             resp = await fetch(urlVal!, initVal);
@@ -205,7 +200,6 @@ export class BeReformable extends EventTarget implements Actions{
             return;
         }
         
-        console.log('finished fetch');
         let fetchResult: any;
         const contentTypeHeader = resp.headers.get('content-type');
         if(contentTypeHeader !== null &&  contentTypeHeader.indexOf('json') > -1){
@@ -221,7 +215,6 @@ export class BeReformable extends EventTarget implements Actions{
             const {getProp} = await import('trans-render/lib/getProp.js');
             fetchResult = getProp(fetchResult, fetchResultPath);
         }
-        console.log({fetchResult});
         return {
             fetchResult
         };
@@ -283,12 +276,7 @@ export class BeReformable extends EventTarget implements Actions{
     }
 
     disconnectFetch(){
-        try{
-            this.#fetchAbortController.abort();
-        }catch{
-            console.log('iah');
-        }
-        
+        this.#fetchAbortController.abort();
         this.#fetchAbortController = new AbortController();
     }
 
@@ -335,6 +323,7 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
                 isVisible: true,
                 fetchCount: 0,
                 fetchCountEcho: -1,
+                debounceDuration: 10,
             },
             emitEvents: ['fetchInProgress']
         },
