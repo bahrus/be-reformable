@@ -54,27 +54,24 @@ export class BeReformable extends EventTarget implements Actions{
 
     doFormAction({proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path}: PP){
         if(!proxy.checkValidity()) return;
+        console.log('1', {initVal});
         if(initVal === undefined){ 
             initVal = {};
             proxy.initVal = initVal; 
         }
+        console.log('2', {initVal});
         initVal.signal = this.#fetchAbortController.signal;
         let headersVal: {[key: string]: string} = {};
         if(headers){
             initVal.headers = headersVal;
             //if(initVal.headers) headers = {...initVal.headers};
         }
-                
+        console.log('3', {initVal});        
         const method = proxy.method.toUpperCase();
         if(method){
-            if(proxy.initVal !== undefined){
-                proxy.initVal.method = method;
-            }else{
-                proxy.initVal = {
-                    method
-                };
-            }
+            initVal.method = method;
         }
+        console.log('3', {initVal});
         if(url && !urlVal) return;
         let liveUrl = proxy.action || urlVal;
         if(baseLink !== undefined){
@@ -114,6 +111,7 @@ export class BeReformable extends EventTarget implements Actions{
                 }
             }
         }
+        console.log('4', {initVal});
         if(path !== undefined){
             let idx = 0;
             switch(typeof path){
@@ -148,6 +146,7 @@ export class BeReformable extends EventTarget implements Actions{
                     throw 'NI';//not implemented
             }
         }
+        console.log('5', {initVal});
         const usp = new URLSearchParams();
         for(const key in queryObj){
             const vals = queryObj[key];
@@ -177,6 +176,7 @@ export class BeReformable extends EventTarget implements Actions{
 
     async doFetch(pp: PP){
         const {urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass} = pp;
+        console.log('6', {initVal});
         if(!proxy.target){
             proxy.action = urlVal!;
             proxy.submit();
@@ -199,6 +199,7 @@ export class BeReformable extends EventTarget implements Actions{
         }
         proxy.fetchInProgress = true;
         let resp: Response;
+        console.log('7', {initVal});
         try{
             resp = await fetch(urlVal!, initVal);
         }catch(e: any){
