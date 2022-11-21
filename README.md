@@ -156,7 +156,7 @@ What this does:
     action="a.html"
     target="[-innerHTML]"
     method="post" be-reformable='{
-    "body": "my-body",
+    "bodyName": "my-body",
     "headers": true
 }'>
     <input type='hidden' data-header-name='Content-Type' value='application/json'>

@@ -22,17 +22,15 @@ export class BeReformable extends EventTarget {
             }, { signal: ac.signal });
         }
         this.doFormAction(pp);
-        proxy.resolved = true;
+        return {
+            resolved: true,
+        };
     }
     onNotAutoSubmit(pp) {
-        const { proxy, autoSubmit } = pp;
-        if (autoSubmit)
-            return;
-        proxy.addEventListener('submit', e => {
-            e.preventDefault();
-            this.doFormAction(pp);
-        });
-        proxy.resolved = true;
+        const { self } = pp;
+        return [{ resolved: true }, {
+                handleSubmit: { on: 'submit', of: self }
+            }];
     }
     async onUrl({ url, proxy }) {
         const { hookUp } = await import('be-observant/hookUp.js');
@@ -41,6 +39,10 @@ export class BeReformable extends EventTarget {
     async onInit({ init, proxy }) {
         const { hookUp } = await import('be-observant/hookUp.js');
         await hookUp(init, proxy, 'initVal');
+    }
+    handleSubmit(pp, e) {
+        e.preventDefault();
+        return this.doFormAction(pp);
     }
     doFormAction({ proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path }) {
         if (!proxy.checkValidity())
@@ -55,7 +57,7 @@ export class BeReformable extends EventTarget {
             initVal.headers = headersVal;
             //if(initVal.headers) headers = {...initVal.headers};
         }
-        const method = proxy.method;
+        const method = proxy.method.toUpperCase();
         if (method) {
             if (proxy.initVal !== undefined) {
                 proxy.initVal.method = method;
@@ -306,13 +308,14 @@ export const controllerConfig = {
                 fetchCount: 0,
                 fetchCountEcho: -1,
                 debounceDuration: 10,
+                autoSubmit: false,
             },
             emitEvents: ['fetchInProgress']
         },
         actions: {
             onAutoSubmit: 'autoSubmit',
             onNotAutoSubmit: {
-                ifKeyIn: ['autoSubmit']
+                ifNoneOf: ['autoSubmit']
             },
             doQueueFetch: {
                 ifAllOf: ['urlVal', 'initVal'],

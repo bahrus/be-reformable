@@ -1,5 +1,5 @@
 import {BeDecoratedProps, define} from 'be-decorated/DE.js';
-import {PP, Proxy, VirtualProps, Actions} from './types';
+import {PP, Proxy, VirtualProps, Actions, PA, PPE, ProxyProps} from './types';
 import {DefineArgs} from 'trans-render/lib/types';
 import {register} from 'be-hive/register.js';
 
@@ -12,7 +12,7 @@ export const virtualProps = [
 export class BeReformable extends EventTarget implements Actions{
     #fetchAbortController = new AbortController();
     #formAbortControllers: AbortController[] = [];
-    onAutoSubmit(pp: PP){
+    onAutoSubmit(pp: PP): PA{
         const {proxy, autoSubmitOn, self} = pp;
         const on = typeof autoSubmitOn === 'string' ? [autoSubmitOn!] : autoSubmitOn!;
         this.disconnect();
@@ -25,17 +25,16 @@ export class BeReformable extends EventTarget implements Actions{
             }, {signal: ac.signal});
         }
         this.doFormAction(pp);
-        proxy.resolved = true;
+        return {
+            resolved: true,
+        };
     }
 
-    onNotAutoSubmit(pp: PP): void {
-        const {proxy, autoSubmit} = pp;
-        if(autoSubmit) return;
-        proxy.addEventListener('submit', e => {
-            e.preventDefault();
-            this.doFormAction(pp);
-        });
-        proxy.resolved = true;
+    onNotAutoSubmit(pp: PP): PPE {
+        const {self} = pp;
+        return [{resolved: true}, {
+            handleSubmit: {on: 'submit', of: self}
+        }] as PPE;
     }
 
     async onUrl({url, proxy}: PP){
@@ -46,6 +45,11 @@ export class BeReformable extends EventTarget implements Actions{
     async onInit({init, proxy}: PP){
         const {hookUp} = await import('be-observant/hookUp.js');
         await hookUp(init, proxy, 'initVal');
+    }
+
+    handleSubmit(pp: PP, e: SubmitEvent): void {
+        e.preventDefault();
+        return this.doFormAction(pp);
     }
 
     doFormAction({proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path}: PP){
@@ -61,7 +65,7 @@ export class BeReformable extends EventTarget implements Actions{
             //if(initVal.headers) headers = {...initVal.headers};
         }
                 
-        const method = proxy.method;
+        const method = proxy.method.toUpperCase();
         if(method){
             if(proxy.initVal !== undefined){
                 proxy.initVal.method = method;
@@ -158,7 +162,7 @@ export class BeReformable extends EventTarget implements Actions{
 
 
     #prevTimeout: any;
-    doQueueFetch({fetchCount, proxy,, fetchCountEcho, debounceDuration}: PP){
+    doQueueFetch({fetchCount, proxy, fetchCountEcho, debounceDuration}: PP){
         const newFetchCount = fetchCount + 1;
         clearTimeout(this.#prevTimeout);
         this.#prevTimeout = setTimeout(() => {
@@ -324,13 +328,14 @@ export const controllerConfig: DefineArgs<Proxy & BeDecoratedProps<Proxy, Action
                 fetchCount: 0,
                 fetchCountEcho: -1,
                 debounceDuration: 10,
+                autoSubmit: false,
             },
             emitEvents: ['fetchInProgress']
         },
         actions:{
             onAutoSubmit:'autoSubmit',
             onNotAutoSubmit: {
-              ifKeyIn: ['autoSubmit']  
+              ifNoneOf: ['autoSubmit']  
             },
             doQueueFetch:{
                 ifAllOf: ['urlVal', 'initVal'],

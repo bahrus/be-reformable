@@ -1,5 +1,5 @@
 import {IObserve} from 'be-observant/types'; 
-import {MinimalProxy} from 'be-decorated/types';
+import {MinimalProxy, EventConfigs} from 'be-decorated/types';
 
 export interface EndUserProps{
     baseLink?: string,
@@ -10,7 +10,7 @@ export interface EndUserProps{
     /**
      * This part of the url can come from external binding, like from the host
      */
-    url?: string | string[] | IObserve,
+    url?: IObserve,
     
     init?: string | IObserve,
     
@@ -60,16 +60,21 @@ export interface ProxyProps extends VirtualProps {
     proxy: Proxy;
 }
 
-export type PP = ProxyProps
+export type PP = ProxyProps;
+
+export type PA = Partial<PP>;
+
+export type PPE = [PA | undefined, EventConfigs];
 
 export interface Actions{
     //intro(proxy: HTMLFormElement & BeReformableVirtualProps, target: HTMLFormElement): void;
-    onAutoSubmit(pp: PP): void;
+    onAutoSubmit(pp: PP): PA;
     onUrl(pp: PP): void;
     onInit(pp: PP): void;
     doQueueFetch(pp: PP): void;
     doFetch(pp: PP): void;
     sendFetchResultToTarget(pp: PP): void;
     finale(proxy: Proxy): void;
-    onNotAutoSubmit(pp: PP): void;
+    onNotAutoSubmit(pp: PP): PPE;
+    handleSubmit(pp: PP, e: SubmitEvent): void;
 }
