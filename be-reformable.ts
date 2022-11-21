@@ -48,6 +48,7 @@ export class BeReformable extends EventTarget implements Actions{
     }
 
     handleSubmit(pp: PP, e: SubmitEvent): void {
+        pp.urlVal = '';
         e.preventDefault();
         return this.doFormAction(pp);
     }

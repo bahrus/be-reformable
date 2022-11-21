@@ -41,6 +41,7 @@ export class BeReformable extends EventTarget {
         await hookUp(init, proxy, 'initVal');
     }
     handleSubmit(pp, e) {
+        pp.urlVal = '';
         e.preventDefault();
         return this.doFormAction(pp);
     }
