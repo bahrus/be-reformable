@@ -153,7 +153,10 @@ export class BeReformable extends EventTarget {
                 usp.append(key, val);
             }
         }
-        proxy.urlVal = liveUrl + '?' + usp.toString();
+        let qryString = usp.toString();
+        if (qryString)
+            qryString = '?' + qryString;
+        proxy.urlVal = liveUrl + qryString;
     }
     #prevTimeout;
     doQueueFetch({ fetchCount, proxy, fetchCountEcho, debounceDuration }) {

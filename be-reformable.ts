@@ -155,8 +155,9 @@ export class BeReformable extends EventTarget implements Actions{
                 usp.append(key, val);
             }
         }
-        
-        proxy.urlVal = liveUrl + '?' + usp.toString();
+        let qryString = usp.toString();
+        if(qryString) qryString = '?' + qryString;
+        proxy.urlVal = liveUrl + qryString;
 
 
     }
