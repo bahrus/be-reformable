@@ -93,6 +93,7 @@ export class BeReformable extends EventTarget implements Actions{
             const key = inputT.name;
             if(bodyName !== undefined && key === bodyName){
                 proxy.initVal!.body = inputT.value;
+                continue;
             }
             const val = inputT.value;
             if(filterOutDefaultValues){
