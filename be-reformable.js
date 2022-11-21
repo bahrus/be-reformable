@@ -47,24 +47,24 @@ export class BeReformable extends EventTarget {
     doFormAction({ proxy, initVal, bodyName, headers, url, urlVal, baseLink, filterOutDefaultValues, path }) {
         if (!proxy.checkValidity())
             return;
-        console.log('1', { initVal });
+        console.log('1', { initVal: structuredClone(initVal) });
         if (initVal === undefined) {
             initVal = {};
             proxy.initVal = initVal;
         }
-        console.log('2', { initVal });
+        console.log('2', { initVal: structuredClone(initVal) });
         initVal.signal = this.#fetchAbortController.signal;
         let headersVal = {};
         if (headers) {
             initVal.headers = headersVal;
             //if(initVal.headers) headers = {...initVal.headers};
         }
-        console.log('3', { initVal });
+        console.log('3', { initVal: structuredClone(initVal) });
         const method = proxy.method.toUpperCase();
         if (method) {
             initVal.method = method;
         }
-        console.log('3', { initVal });
+        console.log('3', { initVal: structuredClone(initVal) });
         if (url && !urlVal)
             return;
         let liveUrl = proxy.action || urlVal;
@@ -108,7 +108,7 @@ export class BeReformable extends EventTarget {
                 }
             }
         }
-        console.log('4', { initVal });
+        console.log('4', { initVal: structuredClone(initVal) });
         if (path !== undefined) {
             let idx = 0;
             switch (typeof path) {
@@ -144,7 +144,7 @@ export class BeReformable extends EventTarget {
                     throw 'NI'; //not implemented
             }
         }
-        console.log('5', { initVal });
+        console.log('5', { initVal: structuredClone(initVal) });
         const usp = new URLSearchParams();
         for (const key in queryObj) {
             const vals = queryObj[key];
@@ -170,7 +170,7 @@ export class BeReformable extends EventTarget {
     }
     async doFetch(pp) {
         const { urlVal, initVal, proxy, fetchResultPath, fetchInProgressCssClass } = pp;
-        console.log('6', { initVal });
+        console.log('6', { initVal: structuredClone(initVal) });
         if (!proxy.target) {
             proxy.action = urlVal;
             proxy.submit();
@@ -189,7 +189,7 @@ export class BeReformable extends EventTarget {
         }
         proxy.fetchInProgress = true;
         let resp;
-        console.log('7', { initVal });
+        console.log('7', { initVal: structuredClone(initVal) });
         try {
             resp = await fetch(urlVal, initVal);
         }
