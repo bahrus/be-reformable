@@ -1,31 +1,32 @@
 # be-reformable
 
-be-reformable is a web component that progressively enhances the built-in form element. It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
+be-reformable is a web component that progressively enhances the built-in form element, making attributes/properties like action, target dynamic. 
+
+It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
 
 [![Playwright Tests](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml)
 [![NPM version](https://badge.fury.io/js/be-reformable.png)](http://badge.fury.io/js/be-reformable)
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-reformable?style=for-the-badge)](https://bundlephobia.com/result?p=be-reformable)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-reformable?compression=gzip">
 
-## [Demo](https://codepen.io/bahrus/pen/eYEZOXm
+## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
 
 
-
-## Example 1:  Path binding "from a distance"
+## Example 1:  Making the action property dynamic
 
 Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
 
 ```html
-<link id=newton-microservice rel=preconnect href=https://newton.now.sh >
+<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
 
 <form
     be-reformable='{
-        "action": ":@base/api/v2/:@operation/:@expression",
+        "baseLink": "newton-microservice",
+        "path": "api/v2/:@operation/:@expression",
         "target": "-object"
+        
     }'
-    target="json-viewer[-object]"
 >
-    <input type=hidden name=base >
     <label for=operation>
         Operation:
         <input name=operation value=integrate>
@@ -56,7 +57,7 @@ be-reformable examines the content-type header of the response, and parses to js
 
 Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
 
-## Example 2:  Path binding with explicit markup support
+## Example 2:  Action binding with explicit markup support
 
 Sometimes it is useful to allow form elements to "add themselves" to the path, just as form elements can add themselves to the query string.  This allows for dynamic form elements to be added.
 
