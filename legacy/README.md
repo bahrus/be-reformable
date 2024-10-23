@@ -1,44 +1,39 @@
 # be-reformable
 
-be-reformable is a web component that progressively enhances the built-in form element. It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
+be-reformable is a web component that progressively enhances the built-in form element. It uses [be-decorated](https://github.com/bahrus/be-decorated) as the underpinning approach, as opposed to the controversial "is" extension.
 
 [![Playwright Tests](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml)
 [![NPM version](https://badge.fury.io/js/be-reformable.png)](http://badge.fury.io/js/be-reformable)
+
+## [Demo](https://codepen.io/bahrus/pen/eYEZOXm)
+
+
+
+Size of package, including custom element behavior framework (be-decorated):
+
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-reformable?style=for-the-badge)](https://bundlephobia.com/result?p=be-reformable)
+
+Size of new code in this package:
+
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-reformable?compression=gzip">
-
-## [Demo](https://codepen.io/bahrus/pen/eYEZOXm
-
-
 
 ## Example 1:  Path binding "from a distance"
 
 Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
 
 ```html
-<link id=newton-microservice rel=preconnect href=https://newton.now.sh >
-
-<form
-    be-reformable='{
-        "action": ":@base/api/v2/:@operation/:@expression",
-        "target": "-object"
-    }'
+<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+<form be-reformable='{
+    "base-link": "newton-microservice",
+    "path": ["api/v2/", "operation", "/", "expression"],
+    "autoSubmit": true,
+}'
     target="json-viewer[-object]"
 >
-    <input type=hidden name=base >
-    <label for=operation>
-        Operation:
-        <input name=operation value=integrate>
-    </label>
-    
-    <label for=expression>
-        Expression:
-        <input name=expression value="x^2">
-    </label>
-    
-    <noscript>
-        <button type=submit>Submit</button>
-    </noscript>
+    <label for=operation>Operation:</label>
+    <input id=operation value=integrate>
+    <label for=expression>Expression:</label>
+    <input id=expression value="x^2">
 </form>
 <json-viewer -object></json-viewer>
 <noscript>
