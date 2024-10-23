@@ -1,6 +1,6 @@
 # be-reformable
 
-be-reformable is a web component that progressively enhances the built-in form element, making attributes/properties like action, target dynamic. 
+*be-reformable* is a custom enhancement that progressively enhances the built-in form element, making attributes/properties like action and target dynamic.  It does not do anything fetch related, leaving that for other components / enhancements.
 
 It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
 
