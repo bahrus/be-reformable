@@ -46,7 +46,7 @@ Let's see how we can use be-reformable to work with the [newton advanced math mi
 
 If target isn't found, or isn't specified, the form will apply the underlying submit mechanism.
 
-The "path" value is an "interpolation from a distance" expression -- it alternates between hardcoded strings, and names of input elements it expects to find in oForm.elements.
+The "path" value follows the [URL Pattern syntax](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API).
 
 be-reformable examines the content-type header of the response, and parses to json when "json" is found in that string.
 
@@ -68,7 +68,7 @@ Another optional parameter not shown above is "init" which allows for binding to
     <input type='hidden' data-header-name='Content-Type' value='application/json'>
     <label>
         JSON:
-        <textarea name='my-body'>{"hello": "world"}</textarea>
+        <textarea hidden name='my-body'>{"hello": "world"}</textarea>
     </label>
     
     <button type='submit'>submit</button>
@@ -78,31 +78,6 @@ Another optional parameter not shown above is "init" which allows for binding to
 
 </div>
 ```
-
-## Support for xslt transform of imported HTML [TODO]
-
-First do xslt, then DTR transform.
-
-## Trigger event on target [Untested]
-
-[TODO] Example
-
-## Filter out input elements whose value matches default value
-
-
-```html
-<form be-reformable='{
-    "filterOutDefaultValues": true,
-}'>
-    <input data-optional=true name=prop1 value=defaultValue1>
-    <input name=prop2 value=differentValue>
-</form>
-```
-
-If prop1 isn't modified from the original value, the parameter is not sent.
-
-
-## Support for headers
 
 
 ```html
@@ -116,37 +91,12 @@ If prop1 isn't modified from the original value, the parameter is not sent.
 
 
 
-## Support for cancelling previous calls [Untested]
-
-## Support for debouncing [TODO]
-
-
-
-## Staying Kosher
-
-The attribute be-reformable can be replaced with data-be-reformable.
-
 ## Editing JSON-in-HTML
 
 A web-friendly [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.
 
 ## Import Maps
 
-The following import map is needed for non-bundling environments:
-
-```html
-<script type=importmap>
-    {
-        "imports": {
-            "trans-render/": "../node_modules/trans-render/",
-            "xtal-element/": "../node_modules/xtal-element/",
-            "be-decorated/": "../node_modules/be-decorated/",
-            "be-observant/": "../node_modules/be-observant/",
-            "be-hive/": "../node_modules/be-hive/"
-        }
-    }
-</script>
-```
 
 ## Viewing Locally
 

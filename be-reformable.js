@@ -23,10 +23,10 @@ class BeReformable extends BE {
         propInfo:{
             baseLink: {},
             path: {},
-            target: {},
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
+            when_path_changes_invoke_parsePath: 0,
         },
         actions:{
             updateAction:{
@@ -40,7 +40,21 @@ class BeReformable extends BE {
      * 
      * @param {BAP} self 
      */
+    async parsePath(self){
+        const {URLBuilder} = await import('./URLBuilder.js');
+        const {path} = self;
+        const urlBuilder = new URLBuilder(path);
+        return /** @type {PAP} */({
+            urlBuilder
+        });
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
     async updateAction(self){
+
         return /** @type {PAP} */({
         });
     }
