@@ -27,7 +27,22 @@ class BeReformable extends BE {
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
+        },
+        actions:{
+            updateAction:{
+                ifAllOf: ['updateCnt', 'path'],
+                ifKeyIn: ['baseLink']
+            }
         }
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    async updateAction(self){
+        return /** @type {PAP} */({
+        });
     }
 
     /**

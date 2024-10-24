@@ -14,7 +14,7 @@ It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning
 
 ## Example 1:  Making the action property dynamic
 
-Let's see how we can use be-reformable, to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.
+Let's see how we can use be-reformable to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) touch fetch or anything
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
@@ -23,8 +23,6 @@ Let's see how we can use be-reformable, to work with the [newton advanced math m
     be-reformable='{
         "baseLink": "newton-microservice",
         "path": "api/v2/:@operation/:@expression",
-        "target": "-object"
-        
     }'
 >
     <label for=operation>
@@ -41,7 +39,6 @@ Let's see how we can use be-reformable, to work with the [newton advanced math m
         <button type=submit>Submit</button>
     </noscript>
 </form>
-<json-viewer -object></json-viewer>
 <noscript>
 <iframe name="json-viewer[-object]"></iframe>
 </noscript>
@@ -57,105 +54,8 @@ be-reformable examines the content-type header of the response, and parses to js
 
 Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
 
-## Example 2:  Action binding with explicit markup support
 
-Sometimes it is useful to allow form elements to "add themselves" to the path, just as form elements can add themselves to the query string.  This allows for dynamic form elements to be added.
-
-```html
-<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
-<form be-reformable='{
-    "base-link": "newton-microservice",
-    "path": true,
-}'
-    target="json-viewer[-object]"
->
-    <label for=operation>Operation:</label>
-    <input data-path-idx=0 data-path-lhs="api/v2/" id=operation value=integrate>
-    <label for=expression>Expression:</label>
-    <input data-path-idx=1 data-path-lhs="/" id=expression value="x^2">
-</form>
-<json-viewer -object></json-viewer>
-<noscript>
-<iframe name="json-viewer[-object]"></iframe>
-</noscript>
-```
-
-## Another example
-
-The following markup scores 100% from Lighthouse:
-
-```html
-<form>
-    <label for='url'>URL:</label>
-    <input id='url' type='url' required>
-</form>
-<template be-switched='{
-    "if": {
-        "observe": "form",
-        "on": "input",
-        "vft": "querySelector|input.checkValidity|"
-    }
-}'>
-    <form be-reformable='{
-        "autoSubmit": true,
-        "url": {
-            "observe": "form",
-            "on": "input",
-            "vft": "querySelector|input.value"
-        },
-        "as": "json"
-    }'
-    target='xtal-editor[-input-obj]'></form>
-    <xtal-editor -input-obj></xtal-editor>
-    <script type='module' crossorigin='anonymous'>
-        import 'https://esm.run/xtal-editor@0.0.162';
-        import 'https://esm.run/be-reformable@0.0.39';
-    </script>
-</template>
-<script type=module crossorigin='anonymous'>
-    import 'https://esm.run/be-switched@0.0.68';
-</script>
-```
-
-What this does:  
-
-1.  Until a url is entered, the only JS loaded is for be-switched.  Be-switched enables the template to not load until the input is valid.
-2.  Once the input is valid, the template is instantiated, and the be-reformable library is loaded.  The form auto submits the url entered by the user.
-3.  The result of the fetch is parsed as JSON, and the JSON is passed to the xtal-editor component.
-
-## Support for HTML output, with optional trans-render based transforms
-
-```html
-    <form
-        class='main-form'
-        action="https://o2h-cw.bahrus.workers.dev/"
-        target="[-innerHTML]" 
-        be-reformable='{
-            "autoSubmit": false,
-            "path": ["", "proxy-to"],
-            "transform": {
-                "input": [{},{},{"a": ["b"]}]
-            }
-        }'
-        be-valued
-    >
-        <label>
-            <span>Proxy to:</span> 
-            <input autofocus be-focused required name='proxy-to' type='url'>
-        </label>
-        <label>
-            <span>Output config:</span>
-            <input name="x38d47cd9-8a95-4037-9e71-d63f6416a6d5" value="https://unpkg.com/o2h-cw/src/o2hConfig.json">
-        </label>
-        <label be-typed='{
-            "beReformable": true
-        }' be-clonable be-delible><span>[Set name of first parameter]</span></label>
-        <button type='submit'>Submit</button>
-    </form> 
-    <div -innerHTML></div>
-```
-
-## Support POST with body 
+## Support for headers and body [TODO]
 
 ```html
 <form 
