@@ -66,7 +66,6 @@ Sometimes it is useful to allow form elements to "add themselves" to the path, j
 <form be-reformable='{
     "base-link": "newton-microservice",
     "path": true,
-    "autoSubmit": true,
 }'
     target="json-viewer[-object]"
 >
