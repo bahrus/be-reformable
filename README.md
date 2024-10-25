@@ -44,15 +44,18 @@ Let's see how we can use be-reformable to work with the [newton advanced math mi
 </noscript>
 ```
 
-If target isn't found, or isn't specified, the form will apply the underlying submit mechanism.
-
 The "path" value follows the [URL Pattern syntax](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API).
-
-be-reformable examines the content-type header of the response, and parses to json when "json" is found in that string.
 
 "base-link" is optional, but allows for easy management of common base API URL's across the application.  The link tag should probably go in the head tag of index.html (typically).
 
-Another optional parameter not shown above is "init" which allows for binding to an object that specifies the second parameter (init / reqInit) of the fetch request.  To hardcode this parameter, use initVal.
+What *be-reformable* does is:
+
+1. Be default, adds "input" event to the adorned form element.
+2. The path parameters use DSS syntax, and as such can specify individual events to attach directly to the specified element within the form.
+3. Whenever any of these events are triggered, the action property/attribute of the form is updated according to the base link and pat.
+
+Another optional parameter not shown above is "fetchOptions" which allows for binding to an object that specifies the second parameter (init / reqInit/ options) of the fetch request.  To hardcode this parameter, use initVal.
+
 
 
 ## Support for headers and body [TODO]

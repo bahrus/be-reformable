@@ -31,4 +31,4 @@ export class URLBuilder{
     }
 }
 
-const reg = /:(@)\w+/g;
+const reg = /:(@|#|\.)\w+/g;
