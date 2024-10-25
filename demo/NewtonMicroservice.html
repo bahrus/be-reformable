@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton Microservice</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+    <form     be-reformable='{
+        "baseLink": "newton-microservice",
+        "path": "api/v2/:@operation/:@expression"
+    }'
+    >
+    <label for=operation>Operation:</label>
+    <input id=operation value=integrate>
+    <label for=expression>Expression:</label>
+    <input id=expression value="x^2">
+    </form>
+
+</body>
+</html>

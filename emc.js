@@ -10,8 +10,12 @@ import { BeHive, seed, MountObserver } from 'be-hive/be-hive.js';
 export const emc = {
     hostInstanceOf: [HTMLFormElement],
     base: 'be-reformable',
+    enhPropKey: 'beReformable',
     map: {
-
+        '0.0': {
+            instanceOf: 'Object',
+            mapsTo: '.',
+        },
     },
     importEnh:  async () => {
         const { BeReformable } = 
@@ -21,3 +25,6 @@ export const emc = {
         return BeReformable;
     },
 };
+
+const mose = seed(emc);
+MountObserver.synthesize(document, BeHive, mose);

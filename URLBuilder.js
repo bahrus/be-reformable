@@ -29,4 +29,4 @@ export class URLBuilder {
         return tokens.join('');
     }
 }
-const reg = /:\w+/g;
+const reg = /:(@)\w+/g;

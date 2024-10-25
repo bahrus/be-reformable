@@ -23,6 +23,9 @@ class BeReformable extends BE {
         propInfo:{
             baseLink: {},
             path: {},
+            urlBuilder:{
+                ro: true
+            }
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
@@ -30,7 +33,7 @@ class BeReformable extends BE {
         },
         actions:{
             updateAction:{
-                ifAllOf: ['updateCnt', 'path'],
+                ifAllOf: ['updateCnt', 'urlBuilder'],
                 ifKeyIn: ['baseLink']
             }
         }
@@ -44,6 +47,7 @@ class BeReformable extends BE {
         const {URLBuilder} = await import('./URLBuilder.js');
         const {path} = self;
         const urlBuilder = new URLBuilder(path);
+        console.log({urlBuilder});
         return /** @type {PAP} */({
             urlBuilder
         });
