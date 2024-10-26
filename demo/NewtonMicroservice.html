@@ -11,13 +11,19 @@
     <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
     <form be-reformable='{
         "baseLink": "newton-microservice",
-        "path": "api/v2/:@operation/:@expression"
+        "path": "api/v2/:operation/:expression"
     }'
     >
-    <label for=operation>Operation:</label>
-    <input id=operation value=integrate>
-    <label for=expression>Expression:</label>
-    <input id=expression value="x^2">
+    <label>
+        Operation:
+        <input :operation value=integrate>
+    </label>
+    
+    <label>
+        Expression:
+        <input :expression value="x^2">
+    </label>
+    
     </form>
 
 </body>
