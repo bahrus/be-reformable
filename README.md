@@ -72,13 +72,21 @@ What *be-reformable* does is:
 
 ## Support for headers and body [TODO]
 
+Hardcoded:
+
 ```html
 <form 
-    action="a.html"
-    target="[-innerHTML]"
-    method="post" be-reformable='{
-    "bodyName": "my-body",
-    "headers": true
+    method="post" 
+    be-reformable='{
+        "body": {
+            
+        },
+        "headers": {
+            "Accept": "application/json",
+            "Authorization": "session://bearerTokenKey",
+            "Content-Type": "idb://store/key",
+            "User-Agent": "globalThis://navigator.userAgent"
+        }
 }'>
     <input type='hidden' data-header-name='Content-Type' value='application/json'>
     <label>
