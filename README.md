@@ -123,11 +123,7 @@ Hardcoded:
 </form>
 ```
 
-
-
-
-
-## Import Maps
+## [Import Maps](https://github.com/bahrus/be-reformable/blob/baseline/imports.html)
 
 
 ## Viewing Locally
@@ -137,9 +133,10 @@ To view this element locally:
 1.  Install git, npm
 2.  Clone or fork this git repo.
 3.  Open a terminal from the folder created in step 2.
-4.  Run npm install
-5.  Run npm run serve
-6.  Open http://localhost:8000/demo/dev
+4.  Install Python v3 or later
+5.  Run npm install
+6.  Run npm run serve
+7.  Open http://localhost:8000/demo/dev
 
 
 ## Importing in ES Modules:
