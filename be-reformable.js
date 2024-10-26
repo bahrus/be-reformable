@@ -1,6 +1,7 @@
 // @ts-check
 import { BE } from 'be-enhanced/BE.js';
-import { propInfo, resolved } from 'be-enhanced/cc.js';
+import { propInfo, resolved, rejected } from 'be-enhanced/cc.js';
+import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
 
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP,  AP, BAP} from './ts-refs/be-reformable/types' */;
@@ -32,6 +33,7 @@ class BeReformable extends BE {
             when_updateOn_changes_invoke_hydrate: 0,
             when_path_changes_invoke_parsePath: 0,
         },
+        positractions: [resolved, rejected],
         actions:{
             updateAction:{
                 ifAllOf: ['updateCnt', 'urlBuilder'],
@@ -39,6 +41,8 @@ class BeReformable extends BE {
             }
         }
     }
+
+    de = de;
 
     /**
      * 
