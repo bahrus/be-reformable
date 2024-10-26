@@ -27,7 +27,8 @@ class BeReformable extends BE {
             path: {},
             urlBuilder:{
                 ro: true
-            }
+            },
+            url: {ro: true}
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
@@ -63,7 +64,7 @@ class BeReformable extends BE {
      */
     async updateAction(self){
         const {enhancedElement, urlBuilder, baseLink} = self;
-        if(!enhancedElement.checkValidity()) return;
+        if(!enhancedElement.checkValidity()) return {};
         const pathBuilder = [baseLink !== undefined ? window[baseLink].href : ''];
         const {tokens} = urlBuilder;
 
@@ -90,8 +91,9 @@ class BeReformable extends BE {
         
         
         enhancedElement.dispatchEvent(new BeFetchingEvent(url))
-        // return /** @type {PAP} */({
-        // });
+        return /** @type {PAP} */({
+            url
+        });
     }
 
     /**

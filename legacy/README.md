@@ -252,7 +252,7 @@ To view this element locally:
 3.  Open a terminal from the folder created in step 2.
 4.  Run npm install
 5.  Run npm run serve
-6.  Open http://localhost:3030/demo/dev
+6.  Open http://localhost:8000/demo/dev
 
 
 ## Importing in ES Modules:
