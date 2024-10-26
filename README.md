@@ -22,7 +22,7 @@ Let's see how we can use be-reformable to work with the [newton advanced math mi
 <form
     be-reformable='{
         "baseLink": "newton-microservice",
-        "path": "api/v2/:@operation/:@expression",
+        "path": "api/v2/:operation/:expression",
     }'
 >
     <label for=operation>
