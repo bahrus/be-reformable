@@ -52,7 +52,7 @@ What *be-reformable* does is:
 2. When the event occurs, it uses the baseLink + path to set the action value of the form element.
    1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the pat.
    2.  If any of the referenced elements in the path don't pass checkValidity()
-3. Triggers event [TODO tbd]
+3. Triggers event "be-fetching" which provides the recommended url and options parameters.
 
 ## Editing JSON-in-HTML
 
