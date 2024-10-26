@@ -69,8 +69,9 @@ class BeReformable extends BE {
             if(inp === null) throw 404;
             pathBuilder.push(inp.value);
         }
-        enhancedElement.action = pathBuilder.join('');
-        enhancedElement.dispatchEvent(new Event('fetch-object'))
+        const url = pathBuilder.join('');
+        enhancedElement.action = url;
+        enhancedElement.dispatchEvent(new BeFetchingEvent(url))
         // return /** @type {PAP} */({
         // });
     }
@@ -112,3 +113,23 @@ class BeReformable extends BE {
 
 await BeReformable.bootUp();
 export {BeReformable};
+
+export class BeFetchingEvent extends Event {
+    static eventName = 'be-fetching';
+
+    /**
+     * @type {string}
+     */
+    url;
+
+    /**
+     * @type {RequestInit}
+     */
+    options;
+
+    constructor(url, options){
+        super(BeFetchingEvent.eventName);
+        this.url = url;
+        this.options = options;
+    }
+} 
