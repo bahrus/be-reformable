@@ -10,12 +10,29 @@ import { BeHive, seed, MountObserver } from 'be-hive/be-hive.js';
 export const emc = {
     hostInstanceOf: [HTMLFormElement],
     base: 'be-reformable',
+    branches: ['', 'base-link', 'path', 'update-on', 'nudge'],
     enhPropKey: 'beReformable',
     map: {
         '0.0': {
             instanceOf: 'Object',
             mapsTo: '.',
         },
+        '1.0': {
+            instanceOf: 'String',
+            mapsTo: 'baseLink'
+        },
+        '2.0': {
+            instanceOf: 'String',
+            mapsTo: 'path'
+        },
+        '3.0': {
+            instanceOf: 'String',
+            mapsTo: 'updateOn',
+        },
+        '4.0': {
+            instanceOf: 'Boolean',
+            mapsTo: 'nudge'
+        }
     },
     importEnh:  async () => {
         const { BeReformable } = 
