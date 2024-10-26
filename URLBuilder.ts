@@ -1,11 +1,13 @@
-type BeforeToken = string;
-type TokenKey = string | undefined
-export class URLBuilder{
-    #tokenStream: Array<[BeforeToken, TokenKey]> = [];
+import { BeforeToken, TokenKey, IURLBuilder } from './ts-refs/be-reformable/types';
+export class URLBuilder implements IURLBuilder{
+    #tokens: Array<[BeforeToken, TokenKey]> = [];
+    get tokens(){
+        return this.#tokens;
+    }
     constructor(public pattern: string){
         let result;
         let i = 0;
-        const positions = this.#tokenStream;
+        const positions = this.#tokens;
         while ((result = reg.exec(pattern)) !== null) {
             const beforeToken = pattern.substring(i, result.index);
             const r = result[0]
@@ -20,7 +22,7 @@ export class URLBuilder{
 
     build(obj: any){
         const tokens: Array<string> = [];
-        for(const tokenItem of this.#tokenStream){
+        for(const tokenItem of this.#tokens){
             const [beforeToken, key] = tokenItem;
             tokens.push(beforeToken);
             if(key !== undefined && key in obj){

@@ -47,7 +47,6 @@ class BeReformable extends BE {
         const {URLBuilder} = await import('./URLBuilder.js');
         const {path} = self;
         const urlBuilder = new URLBuilder(path);
-        console.log({urlBuilder});
         return /** @type {PAP} */({
             urlBuilder
         });
@@ -58,7 +57,9 @@ class BeReformable extends BE {
      * @param {BAP} self 
      */
     async updateAction(self){
-
+        const {enhancedElement, urlBuilder} = self;
+        console.log({urlBuilder});
+        urlBuilder.
         return /** @type {PAP} */({
         });
     }

@@ -27,12 +27,12 @@ Let's see how we can use be-reformable to work with the [newton advanced math mi
 >
     <label for=operation>
         Operation:
-        <input name=operation value=integrate>
+        <input :operation value=integrate>
     </label>
     
     <label for=expression>
         Expression:
-        <input name=expression value="x^2">
+        <input :expression value="x^2">
     </label>
     
     <noscript>
