@@ -54,6 +54,11 @@ What *be-reformable* does is:
 2. When the event occurs, it uses the baseLink + path to set the target value of the form element.
 3. Triggers event "target-changed"
 
+## Editing JSON-in-HTML
+
+> [!NOTE]
+> A [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.  This extension works with the web interface of vscode.
+
 
 
 ## Support for headers and body [TODO]
@@ -92,9 +97,7 @@ What *be-reformable* does is:
 
 
 
-## Editing JSON-in-HTML
 
-A web-friendly [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.
 
 ## Import Maps
 
