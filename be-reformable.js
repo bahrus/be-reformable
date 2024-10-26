@@ -19,6 +19,7 @@ class BeReformable extends BE {
         propDefaults: {
             updateOn: 'input',
             updateCnt: 0,
+            nudge: false,
         },
         propInfo:{
             baseLink: {},
@@ -114,7 +115,19 @@ class BeReformable extends BE {
         this.#abortController = new AbortController();
         const {updateOn, enhancedElement} = self;
         enhancedElement.addEventListener(updateOn, this, {signal: this.#abortController.signal});
-        this.handleEvent();
+        if(updateOn === 'submit'){
+            const {nudge} = self;
+            if(nudge){
+                const submitButtons = Array.from(enhancedElement.querySelectorAll('button[type="submit"]'));
+                for(const sb of submitButtons){
+                    (await import('trans-render/lib/nudge.js')).nudge(sb);
+                }
+                
+            }
+        }else{
+            this.handleEvent();
+        }
+        
         return /** @type {PAP} */({
             resolved: true
         });
