@@ -28,7 +28,7 @@
     <div id=target></div>
     <script>
         function runScript(){
-            if(form.action === 'https://newton.now.sh/api/v2/integrate/x%5E2'){
+            if(form.getAttribute('action') === 'https://newton.now.sh/api/v2/integrate/x^2'){
                 target.setAttribute('mark', 'good');
             }
         }
