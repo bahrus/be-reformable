@@ -102,6 +102,8 @@ Hardcoded:
 </div>
 ```
 
+because this could cause security issues, maybe should require be-hashing-out?
+
 
 ```html
 <form be-reformable='{
