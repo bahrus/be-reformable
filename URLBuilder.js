@@ -1,11 +1,14 @@
 export class URLBuilder {
     pattern;
-    #tokenStream = [];
+    #tokens = [];
+    get tokens() {
+        return this.#tokens;
+    }
     constructor(pattern) {
         this.pattern = pattern;
         let result;
         let i = 0;
-        const positions = this.#tokenStream;
+        const positions = this.#tokens;
         while ((result = reg.exec(pattern)) !== null) {
             const beforeToken = pattern.substring(i, result.index);
             const r = result[0];
@@ -19,7 +22,7 @@ export class URLBuilder {
     }
     build(obj) {
         const tokens = [];
-        for (const tokenItem of this.#tokenStream) {
+        for (const tokenItem of this.#tokens) {
             const [beforeToken, key] = tokenItem;
             tokens.push(beforeToken);
             if (key !== undefined && key in obj) {
@@ -29,4 +32,4 @@ export class URLBuilder {
         return tokens.join('');
     }
 }
-const reg = /:(\@|\#|\.)\w+/g;
+const reg = /\:\w+/g;

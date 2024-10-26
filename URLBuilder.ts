@@ -33,4 +33,4 @@ export class URLBuilder implements IURLBuilder{
     }
 }
 
-const reg = /:(@|#|\.)\w+/g;
+const reg = /\:\w+/g;

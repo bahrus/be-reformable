@@ -59,7 +59,6 @@ class BeReformable extends BE {
     async updateAction(self){
         const {enhancedElement, urlBuilder} = self;
         console.log({urlBuilder});
-        urlBuilder.
         return /** @type {PAP} */({
         });
     }
