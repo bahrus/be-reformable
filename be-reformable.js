@@ -114,7 +114,6 @@ class BeReformable extends BE {
         this.#disconnect();
         this.#abortController = new AbortController();
         const {updateOn, enhancedElement} = self;
-        enhancedElement.addEventListener(updateOn, this, {signal: this.#abortController.signal});
         if(updateOn === 'submit'){
             const {nudge} = self;
             if(nudge){
@@ -127,6 +126,7 @@ class BeReformable extends BE {
         }else{
             this.handleEvent();
         }
+        enhancedElement.addEventListener(updateOn, this, {signal: this.#abortController.signal});
         
         return /** @type {PAP} */({
             resolved: true
