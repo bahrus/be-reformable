@@ -69,8 +69,21 @@ class BeReformable extends BE {
             if(inp === null) throw 404;
             pathBuilder.push(inp.value);
         }
-        const url = pathBuilder.join('');
+        let url = pathBuilder.join('');
         enhancedElement.action = url;
+        const {method} = enhancedElement;
+        switch(method.toLowerCase()){
+            case '':
+            case 'get':
+                if(enhancedElement.method.toLowerCase() === 'get'){
+                    const formData = new FormData(enhancedElement);
+                    const queryString = new URLSearchParams(formData).toString();
+                    url += '?' + queryString
+                }
+                break;
+        }
+        
+        
         enhancedElement.dispatchEvent(new BeFetchingEvent(url))
         // return /** @type {PAP} */({
         // });
@@ -78,10 +91,13 @@ class BeReformable extends BE {
 
     /**
      * 
-     * 
+     * @param {Event=} e
      */
-    handleEvent(){
+    handleEvent(e){
         const self = /** @type {BAP} *//** @type {any} */(this);
+        if(e?.type === 'submit'){
+            e.preventDefault();
+        }
         self.updateCnt++;
     }
 

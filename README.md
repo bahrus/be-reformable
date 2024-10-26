@@ -78,20 +78,17 @@ Hardcoded:
 <form 
     method="post" 
     be-reformable='{
-        "body": {
-            
-        },
         "headers": {
             "Accept": "application/json",
             "Authorization": "session://bearerTokenKey",
             "Content-Type": "idb://store/key",
-            "User-Agent": "globalThis://navigator.userAgent"
+            "User-Agent": "globalThis://navigator.userAgent",
+            ":": ":warning"
         }
 }'>
-    <input type='hidden' data-header-name='Content-Type' value='application/json'>
+    <input :warning value='199 Miscellaneous warning'>
     <label>
-        JSON:
-        <textarea hidden name='my-body'>{"hello": "world"}</textarea>
+        <textarea name=hello></textarea>
     </label>
     
     <button type='submit'>submit</button>
