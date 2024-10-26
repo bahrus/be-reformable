@@ -51,10 +51,8 @@ The "path" value follows the [URL Pattern syntax](https://developer.mozilla.org/
 What *be-reformable* does is:
 
 1. Be default, adds "input" event to the adorned form element.
-2. The path parameters use DSS syntax, and as such can specify individual events to attach directly to the specified element within the form.
-3. Whenever any of these events are triggered, the action property/attribute of the form is updated according to the base link and pat.
-
-Another optional parameter not shown above is "fetchOptions" which allows for binding to an object that specifies the second parameter (init / reqInit/ options) of the fetch request.  To hardcode this parameter, use initVal.
+2. When the event occurs, it uses the baseLink + path to set the target value of the form element.
+3. Triggers event "target-changed"
 
 
 

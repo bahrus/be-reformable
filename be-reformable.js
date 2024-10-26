@@ -71,6 +71,7 @@ class BeReformable extends BE {
             pathBuilder.push(inp.value);
         }
         enhancedElement.target = pathBuilder.join('');
+        enhancedElement.dispatchEvent(new Event('target-changed'))
         return /** @type {PAP} */({
         });
     }
