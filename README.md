@@ -102,7 +102,8 @@ Hardcoded:
 </div>
 ```
 
-because this could cause security issues, maybe should require be-hashing-out?
+> [!NOTE]
+> Other components / enhancements that leverage this enhancement, and actually perform the fetch should require use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism.
 
 
 ```html
