@@ -57,8 +57,20 @@ class BeReformable extends BE {
      * @param {BAP} self 
      */
     async updateAction(self){
-        const {enhancedElement, urlBuilder} = self;
+        const {enhancedElement, urlBuilder, baseLink} = self;
+        const pathBuilder = [baseLink !== undefined ? window[baseLink].href : ''];
+        console.log({pathBuilder});
         console.log({urlBuilder});
+        const {tokens} = urlBuilder;
+
+        for(const token of tokens){
+            const [lhs, rhs] = token;
+            pathBuilder.push(lhs);
+            const inp = enhancedElement.querySelector(`[\\:${rhs}]`);
+            if(inp === null) throw 404;
+            pathBuilder.push(inp.value);
+        }
+        enhancedElement.target = pathBuilder.join('');
         return /** @type {PAP} */({
         });
     }
