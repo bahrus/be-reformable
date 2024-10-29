@@ -91,13 +91,14 @@ Hardcoded:
     be-reformable='{
         "headers": {
             "Accept": "application/json",
-            "Authorization": "session://bearerTokenKey",
-            "Content-Type": "idb://store/key",
-            "User-Agent": "globalThis://navigator.userAgent",
-            ":": ":warning"
+            "Authorization": "sessionStorage://auth?.bearerTokenKey",
+            "Content-Type": "idb://db?.store?.key",
+            "User-Agent": "globalThis://navigator?.userAgent",
+            ":": ":warning,:accept-language"
         }
 }'>
-    <input :warning value='199 Miscellaneous warning'>
+    <input :warning value="199 Miscellaneous warning">
+    <input :accept-language value="de; q=1.0, en; q=0.5">
     <label>
         <textarea name=hello></textarea>
     </label>
