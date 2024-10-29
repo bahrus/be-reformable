@@ -50,7 +50,7 @@ What *be-reformable* does is:
 1. Be default, adds "input" event to the adorned form element.
 2. If the form's checkValidity() is false, ignores the event.
 2. When the event occurs, it uses the baseLink + path to set the action value of the form element.
-   1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the pat.
+   1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the path proprty.
    2.  If any of the referenced elements in the path don't pass checkValidity()
 3. Triggers event "be-fetching" which provides the recommended url and options parameters.
 
