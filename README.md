@@ -91,7 +91,7 @@ Hardcoded:
     be-reformable='{
         "headers": {
             "Accept": "application/json",
-            "Authorization": "sessionStorage://auth?.bearerTokenKey",
+            "Authorization": "sessionStorage://auth?.bearerToken",
             "Content-Type": "indexedDB://db/store?.key",
             "User-Agent": "globalThis://navigator?.userAgent",
             ":": ":warning,:accept-language"
@@ -110,6 +110,17 @@ Hardcoded:
 
 </div>
 ```
+
+The authorization, content-type and user-agent settings above make use of [Uniform Source Protocol](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Source-Protocol) syntax.
+
+These are asynchronous and may not be already set when the rest of the form is ready for submitting.  *be-reformable*, by default, won't issue the "fetch-ready" event until all the values have been retrieved (and are truthy).
+
+To indicate that a header is optional, add a question mark at the end of the key:
+
+```JavaScript
+"Content-Type?": "indexedDB://db/store?.key",
+```
+
 
 > [!NOTE]
 > Other components / enhancements that leverage this enhancement, and actually perform the fetch should consider use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism if there's any sense of danger that justifies adding that security check.
