@@ -126,7 +126,7 @@ To indicate that a header is optional, add a question mark at the end of the key
 > Other components / enhancements that leverage this enhancement, and actually perform the fetch should consider use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism if there's any sense of danger that justifies adding that security check.
 
 
-## Support for emitting fetch-ready event only after a button click [TODO]:
+## Support for emitting "fetch-ready" event only after a button click [TODO]:
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
@@ -138,7 +138,7 @@ To indicate that a header is optional, add a question mark at the end of the key
         "submitOptions":{
             "onlyAfter": "@submit::click",
             "nudges": true,
-            "disa
+            "disableIfNotAllConditionsAreMet": true
         }
         
     }'
