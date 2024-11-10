@@ -52,7 +52,7 @@ What *be-reformable* does is:
 2. When the event occurs, and checkValidity() is true, it uses the baseLink + path to set the action value of the form element.
    1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the path property.
    2.  Forms the compound string and sets the action property/attribute.
-3. Triggers event "be-fetching" which provides the recommended url and options parameters.
+3. Triggers event "fetch-ready" which provides the recommended url and options parameters.
 
 ## Editing JSON-in-HTML
 
@@ -112,15 +112,36 @@ Hardcoded:
 ```
 
 > [!NOTE]
-> Other components / enhancements that leverage this enhancement, and actually perform the fetch should counsider use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism if there's any sense of danger that justifies that additional security check.
+> Other components / enhancements that leverage this enhancement, and actually perform the fetch should consider use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism if there's any sense of danger that justifies adding that security check.
 
+
+## Support for emitting fetch-ready event only after a button click [TODO]:
 
 ```html
-<form be-reformable='{
-    "headers": true,
-}'>
-    <input data-header-name=header1>
-    <input data-header-name=header2>
+<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+
+<form
+    be-reformable='{
+        "baseLink": "newton-microservice",
+        "path": "api/v2/:operation/:expression",
+        "onlyAfter": "@submit::click",
+        "nudges": true
+    }'
+>
+    <label for=operation>
+        Operation:
+        <input :operation value=integrate>
+    </label>
+    
+    <label for=expression>
+        Expression:
+        <input :expression value="x^2">
+    </label>
+    
+    <noscript>
+        <button type=submit>Submit</button>
+    </noscript>
+    <button disabled type=button name=submit>Submit</button>
 </form>
 ```
 

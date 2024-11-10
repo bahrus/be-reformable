@@ -150,7 +150,7 @@ await BeReformable.bootUp();
 export {BeReformable};
 
 export class BeFetchingEvent extends Event {
-    static eventName = 'be-fetching';
+    static eventName = 'fetch-ready';
 
     /**
      * @type {string}
