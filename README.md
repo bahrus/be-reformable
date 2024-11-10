@@ -14,7 +14,7 @@ It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning
 
 ## Example 1:  Making the action property dynamic
 
-Let's see how we can use *be-reformable* to work with the [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) touch fetch or anything
+Let's see how we can use *be-reformable* to work with the input elements which don't user the name attribute, but rather a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) touch fetch or anything
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
@@ -49,9 +49,9 @@ What *be-reformable* does is:
 
 1. Be default, adds "input" event to the adorned form element.
 2. If the form's checkValidity() is false, ignores the event.
-2. When the event occurs, it uses the baseLink + path to set the action value of the form element.
-   1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the path proprty.
-   2.  If any of the referenced elements in the path don't pass checkValidity()
+2. When the event occurs, and checkValidity() is true, it uses the baseLink + path to set the action value of the form element.
+   1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the path property.
+   2.  Forms the compound string and sets the action property/attribute.
 3. Triggers event "be-fetching" which provides the recommended url and options parameters.
 
 ## Editing JSON-in-HTML
@@ -92,7 +92,7 @@ Hardcoded:
         "headers": {
             "Accept": "application/json",
             "Authorization": "sessionStorage://auth?.bearerTokenKey",
-            "Content-Type": "idb://db?.store?.key",
+            "Content-Type": "indexedDB://db/store?.key",
             "User-Agent": "globalThis://navigator?.userAgent",
             ":": ":warning,:accept-language"
         }
@@ -112,7 +112,7 @@ Hardcoded:
 ```
 
 > [!NOTE]
-> Other components / enhancements that leverage this enhancement, and actually perform the fetch should require use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism.
+> Other components / enhancements that leverage this enhancement, and actually perform the fetch should counsider use of [be-hashing-out](https://github.com/bahrus/be-hashing-out) or some other security mechanism if there's any sense of danger that justifies that additional security check.
 
 
 ```html
