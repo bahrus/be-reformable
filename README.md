@@ -86,14 +86,21 @@ This is also supported:
 Hardcoded:
 
 ```html
+<script type=module>
+    (await import('trans-render/yield.js')).yield({
+        "Authorization": "sessionStorage://auth?.bearerToken",
+        "Content-Type": "indexedDB://db/store?.key",
+        "User-Agent": "globalThis://navigator?.userAgent",
+    }).to('rPpwNLcYsUOjFcg+N8lmOA')
+</script>
+
 <form 
     method="post" 
     be-reformable='{
+        "headerImport": "rPpwNLcYsUOjFcg+N8lmOA",
         "headers": {
             "Accept": "application/json",
-            "Authorization": "sessionStorage://auth?.bearerToken",
-            "Content-Type": "indexedDB://db/store?.key",
-            "User-Agent": "globalThis://navigator?.userAgent",
+            
             ":": ":warning,:accept-language"
         }
 }'>
