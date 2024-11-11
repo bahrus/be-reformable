@@ -14,7 +14,7 @@ It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning
 
 ## Example 1:  Making the action property dynamic
 
-Let's see how we can use *be-reformable* to work with the input elements which don't user the name attribute, but rather a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) touch fetch or anything
+Let's see how we can use *be-reformable* to work bind input elements to the action property.  These input elements should not have a name attribute, as we don't want them to affect the query string.  Instead we use a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) do a fetch or anything.
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
