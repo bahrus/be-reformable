@@ -14,7 +14,7 @@ It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning
 
 ## Example 1:  Making the action property dynamic
 
-Let's see how we can use *be-reformable* to work with the input elements which don't user the name attribute, but rather a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) touch fetch or anything
+Let's see how we can use *be-reformable* to work bind input elements to the action property.  These input elements should not have a name attribute, as we don't want them to affect the query string.  Instead we use a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) do a fetch or anything.
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
@@ -59,7 +59,7 @@ What *be-reformable* does is:
 > [!NOTE]
 > A [VSCode plug-in](https://marketplace.visualstudio.com/items?itemName=andersonbruceb.json-in-html) is available to make editing json-in-html more pleasant.  This extension works with the web interface of vscode.
 
-*be-reformable* is a rather lengthy name, and if it appears frequently within an application, could get tiresome to have to type.  It is the canonical name, but developers can easily define alternative names.  This package provides one suc alternative:
+*be-reformable* is a rather lengthy name, and if it appears frequently within an application, could get tiresome to have to type.  It is the canonical name, but developers can easily define alternative names.  This package provides one such alternative:
 
 ```html
 <form
