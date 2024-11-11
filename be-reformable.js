@@ -20,7 +20,6 @@ class BeReformable extends BE {
         propDefaults: {
             updateOn: 'input',
             updateCnt: 0,
-            nudge: false,
         },
         propInfo:{
             baseLink: {},
