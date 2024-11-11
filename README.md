@@ -97,7 +97,7 @@ Hardcoded:
 <form 
     method="post" 
     be-reformable='{
-        "headerImport": "rPpwNLcYsUOjFcg+N8lmOA",
+        "headerYields": "rPpwNLcYsUOjFcg+N8lmOA",
         "headers": {
             "Accept": "application/json",
             
