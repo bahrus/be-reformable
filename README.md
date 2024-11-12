@@ -91,7 +91,7 @@ Hardcoded:
         "Authorization": "sessionStorage://auth?.bearerToken",
         "Content-Type": "indexedDB://db/store?.key",
         "User-Agent": "globalThis://navigator?.userAgent",
-    }).to('rPpwNLcYsUOjFcg+N8lmOA')
+    }).to('rPpwNLcYsUOjFcg+N8lmOA');
 </script>
 
 <form 
@@ -100,7 +100,6 @@ Hardcoded:
         "headerYields": "rPpwNLcYsUOjFcg+N8lmOA",
         "headers": {
             "Accept": "application/json",
-            
             ":": ":warning,:accept-language"
         }
 }'>
