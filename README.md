@@ -87,20 +87,21 @@ Hardcoded:
 
 ```html
 <script type=module>
-    (await import('trans-render/yield.js')).yield({
+    (await import('trans-render/yield.js')).y({
         "Authorization": "sessionStorage://auth?.bearerToken",
         "Content-Type": "indexedDB://db/store?.key",
-        "User-Agent": "globalThis://navigator?.userAgent",
+        "User-Agent": "globalThis://navigator?.userAgent"
     }).to('rPpwNLcYsUOjFcg+N8lmOA');
 </script>
 
 <form 
     method="post" 
     be-reformable='{
-        "headerYields": "rPpwNLcYsUOjFcg+N8lmOA",
+        "baseUSL": "globalThis://myBaseURL",
         "headers": {
+            "...": "rPpwNLcYsUOjFcg+N8lmOA",
             "Accept": "application/json",
-            ":": ":warning,:accept-language"
+            ":": ":warning :accept-language"
         }
 }'>
     <input :warning value="199 Miscellaneous warning">
