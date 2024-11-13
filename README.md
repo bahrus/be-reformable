@@ -87,18 +87,18 @@ Hardcoded:
 
 ```html
 <script type=module>
-    (await import('trans-render/yield.js'))
-        .y({
+    (await import('trans-render/lib/weave.js'))
+        .weave({
             Authorization: "sessionStorage://auth?.bearerToken",
             "Content-Type": "indexedDB://db/store?.key",
             "User-Agent": "globalThis://navigator?.userAgent",
             Accept: "application/json"
         })
-        .to('rPpwNLcYsUOjFcg+N8lmOA')
-        .y({
+        .into('rPpwNLcYsUOjFcg+N8lmOA')
+        .andWeave({
             baseURL:  "globalThis://myBaseURL"
         })
-        .to('qmywdO1vr0SwyuIe4fvzxQ');
+        .into('qmywdO1vr0SwyuIe4fvzxQ');
 </script>
 
 <form 
