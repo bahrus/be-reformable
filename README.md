@@ -87,20 +87,26 @@ Hardcoded:
 
 ```html
 <script type=module>
-    (await import('trans-render/yield.js')).y({
-        "Authorization": "sessionStorage://auth?.bearerToken",
-        "Content-Type": "indexedDB://db/store?.key",
-        "User-Agent": "globalThis://navigator?.userAgent"
-    }).to('rPpwNLcYsUOjFcg+N8lmOA');
+    (await import('trans-render/yield.js'))
+        .y({
+            Authorization: "sessionStorage://auth?.bearerToken",
+            "Content-Type": "indexedDB://db/store?.key",
+            "User-Agent": "globalThis://navigator?.userAgent",
+            Accept: "application/json"
+        })
+        .to('rPpwNLcYsUOjFcg+N8lmOA')
+        .y({
+            baseURL:  "globalThis://myBaseURL"
+        })
+        .to('qmywdO1vr0SwyuIe4fvzxQ');
 </script>
 
 <form 
     method="post" 
     be-reformable='{
-        "baseUSL": "globalThis://myBaseURL",
+        "...": "qmywdO1vr0SwyuIe4fvzxQ",
         "headers": {
             "...": "rPpwNLcYsUOjFcg+N8lmOA",
-            "Accept": "application/json",
             ":": ":warning :accept-language"
         }
 }'>
