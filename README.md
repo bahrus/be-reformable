@@ -124,6 +124,8 @@ Hardcoded:
 </div>
 ```
 
+[TODO]: Build support for "..." into Object.assignGingerly
+
 The authorization, content-type and user-agent settings above make use of [Uniform Source Protocol](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Source-Protocol) syntax.
 
 These are asynchronous and may not already be set when the rest of the form is ready for submitting.  *be-reformable*, by default, won't issue the "fetch-ready" event until all the values have been retrieved (and are truthy).
