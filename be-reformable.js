@@ -91,9 +91,9 @@ class BeReformable extends BE {
      * @param {BAP} self 
      */
     async updateAction(self){
-        const {enhancedElement, urlBuilder, baseLink} = self;
+        const {enhancedElement, urlBuilder, baseURL} = self;
         if(!enhancedElement.checkValidity()) return {};
-        const pathBuilder = [baseLink !== undefined ? window[baseLink].href : ''];
+        const pathBuilder = [baseURL];
         const {tokens} = urlBuilder;
 
         for(const token of tokens){
