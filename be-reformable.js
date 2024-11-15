@@ -23,26 +23,55 @@ class BeReformable extends BE {
         },
         propInfo:{
             baseLink: {},
+            baseURL: {},
             path: {},
             urlBuilder:{
                 ro: true
             },
-            url: {ro: true}
+            url: {ro: true},
+            resolvedBaseURL:  {ro: true}
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
             when_path_changes_invoke_parsePath: 0,
+            when_baseLink_changes_invoke_resolveBaseLink: 0,
         },
         positractions: [resolved, rejected],
         actions:{
+            specifyDefaultBaseURL:{
+                ifNoneOf: ['baseLink', 'baseURL']
+            },
             updateAction:{
                 ifAllOf: ['updateCnt', 'urlBuilder'],
-                ifKeyIn: ['baseLink']
+                ifAtLeastOneOf: ['baseURL', 'resolvedBaseURL']
             }
         }
     }
 
     de = de;
+
+    /**
+     * This makes a lot of sense to override in subclasses
+     * @param {BAP} self 
+     */
+    specifyDefaultBaseURL(self){
+        return /** @type {PAP} */({
+            baseURL: '',
+            resolvedBaseURL: true,
+        });
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    resolveBaseLink(self){
+        const {baseLink} = self;
+        return /** @type {PAP} */({
+            baseURL: window[baseLink].href,
+            resolvedBaseURL: true,
+        });
+    }
 
     /**
      * 
@@ -120,7 +149,7 @@ class BeReformable extends BE {
         this.#abortController = new AbortController();
         const {updateOn, enhancedElement} = self;
         if(updateOn === 'submit'){
-            const {nudge} = self;
+            const {nudges} = self;
             if(nudge){
                 const submitButtons = Array.from(enhancedElement.querySelectorAll('button[type="submit"]'));
                 for(const sb of submitButtons){

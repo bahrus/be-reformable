@@ -22,10 +22,10 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "be-enhanced": "0.0.147",
-    "be-hive": "0.0.227",
+    "be-enhanced": "0.0.148",
+    "be-hive": "0.0.228",
     "mount-observer": "0.0.39",
-    "trans-render": "0.0.852"
+    "trans-render": "0.0.854"
   },
   "devDependencies": {
     "ssi-server": "0.0.1",

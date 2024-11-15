@@ -96,7 +96,7 @@ Hardcoded:
         })
         .into('rPpwNLcYsUOjFcg+N8lmOA')
         .andWeave({
-            baseURL:  "globalThis://myBaseURL"
+            baseURL:  "globalThis://newton-microservice/href"
         })
         .into('qmywdO1vr0SwyuIe4fvzxQ');
 </script>
