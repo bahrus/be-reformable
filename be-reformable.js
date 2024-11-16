@@ -124,12 +124,14 @@ class BeReformable extends BE {
          */
         const fetchOptions = {
             method,
-            headers: {
-                ...(headers || {}),
-
-            }
-            
+            headers
         };
+
+        if(headerFields !== undefined){
+            const {getHeaderFieldVals} = await import('./getHeaderFieldVals.js');
+            const headers = await getHeaderFieldVals(self);
+            Object.assign(fetchOptions.headers || {}, headers);
+        }
         
         enhancedElement.dispatchEvent(new BeFetchingEvent(url));
         return /** @type {PAP} */({

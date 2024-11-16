@@ -7,7 +7,7 @@
      */
     export async function getHeaderFieldVals(self){
         /**
-         * @type {{[key: string]: string}}
+         * @type {HeadersInit}
          */
         const headerFieldVals = {};
         const {headerFields, enhancedElement} = self;
