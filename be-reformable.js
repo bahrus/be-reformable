@@ -109,14 +109,24 @@ class BeReformable extends BE {
         let url = pathBuilder.join('');
         enhancedElement.action = url;
         const {method} = enhancedElement;
+        const formData = new FormData(enhancedElement);
+        /**
+         * @type {BodyInit | undefined}
+         */
+        let body;
         switch(method.toLowerCase()){
             case '':
             case 'get':
+            case 'delete':
                 if(enhancedElement.method.toLowerCase() === 'get'){
-                    const formData = new FormData(enhancedElement);
+                    
                     const queryString = new URLSearchParams(formData).toString();
                     url += '?' + queryString
                 }
+                break;
+            case 'put':
+            case 'post':
+                body = formData;
                 break;
         }
         /**
@@ -124,7 +134,8 @@ class BeReformable extends BE {
          */
         const fetchOptions = {
             method,
-            headers
+            headers,
+            body
         };
 
         if(headerFields !== undefined){
