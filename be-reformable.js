@@ -93,7 +93,7 @@ class BeReformable extends BE {
      * @param {BAP} self 
      */
     async updateAction(self){
-        const {enhancedElement, urlBuilder, baseURL} = self;
+        const {enhancedElement, urlBuilder, baseURL, headerFields} = self;
         if(!enhancedElement.checkValidity()) return {};
         const pathBuilder = [baseURL];
         const {tokens} = urlBuilder;
@@ -120,9 +120,9 @@ class BeReformable extends BE {
         }
         
         
-        enhancedElement.dispatchEvent(new BeFetchingEvent(url))
+        enhancedElement.dispatchEvent(new BeFetchingEvent(url));
         return /** @type {PAP} */({
-            url
+            
         });
     }
 
@@ -174,6 +174,16 @@ class BeReformable extends BE {
         });
     }
 
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    suggestFetch(self){
+        const {enhancedElement} = self;
+        const {action} = enhancedElement;
+        enhancedElement.dispatchEvent(new BeFetchingEvent(action));
+    }
 
 
     #disconnect(){
