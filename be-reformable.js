@@ -18,7 +18,7 @@ class BeReformable extends BE {
      */
     static config = {
         propDefaults: {
-            //updateOn: 'input',
+            updateOn: 'input',
             updateCnt: 0,
         },
         propInfo:{
@@ -31,7 +31,6 @@ class BeReformable extends BE {
             resolvedBaseURL:  {ro: true},
             headerFields: {},
             fetchOptions: {},
-            updateOn: {def: 'input'}
             //headerFieldValues: {ro: true}
         },
         compacts:{
@@ -131,7 +130,12 @@ class BeReformable extends BE {
         if(headerFields !== undefined){
             const {getHeaderFieldVals} = await import('./getHeaderFieldVals.js');
             const headers = await getHeaderFieldVals(self);
-            Object.assign(fetchOptions.headers || {}, headers);
+            if(fetchOptions.headers === undefined) {
+                fetchOptions.headers = headers;
+            }else{
+                Object.assign(fetchOptions.headers, headers);
+            }
+            
         }
         
         return /** @type {PAP} */({
