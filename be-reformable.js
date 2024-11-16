@@ -28,9 +28,9 @@ class BeReformable extends BE {
             urlBuilder:{
                 ro: true
             },
-            url: {ro: true},
             resolvedBaseURL:  {ro: true},
             headerFields: {},
+            fetchOptions: {}
             //headerFieldValues: {ro: true}
         },
         compacts:{
@@ -133,7 +133,6 @@ class BeReformable extends BE {
             Object.assign(fetchOptions.headers || {}, headers);
         }
         
-        enhancedElement.dispatchEvent(new BeFetchingEvent(url));
         return /** @type {PAP} */({
             fetchOptions
         });

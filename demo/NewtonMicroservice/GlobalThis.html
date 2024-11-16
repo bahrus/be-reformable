@@ -16,11 +16,16 @@
         })
         .into('qmywdO1vr0SwyuIe4fvzxQ');
     </script>
-    <form be-reformable='{
+    <form id=testForm be-reformable='{
         "...": "qmywdO1vr0SwyuIe4fvzxQ",
-        "path": "api/v2/:operation/:expression"
+        "path": "api/v2/:operation/:expression",
+        "headerFields": ["myHeader"]
     }'
     >
+    <label>
+        header:
+        <input id=myHeader value=hello>
+    </label>
     <label>
         Operation:
         <input :operation value=integrate>
@@ -32,6 +37,10 @@
     </label>
         <input name="hello" value=test>
     </form>
-
+    <script>
+        testForm.addEventListener('fetch-ready', e => {
+            console.log({e});
+        })
+    </script>
 </body>
 </html>
