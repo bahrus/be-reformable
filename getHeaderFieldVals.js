@@ -22,6 +22,7 @@
             if(prop == undefined) throw 400;
             const domEl = /** @type {HTMLInputElement} */ (await find(enhancedElement, specifier, enhancedElement));
             if(domEl === null) throw 404;
+            //TODO:  use ASMR?
             headerFieldVals[prop] = domEl.value;
         }
         return headerFieldVals;
