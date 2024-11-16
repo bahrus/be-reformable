@@ -18,7 +18,7 @@ class BeReformable extends BE {
      */
     static config = {
         propDefaults: {
-            updateOn: 'input',
+            //updateOn: 'input',
             updateCnt: 0,
         },
         propInfo:{
@@ -30,7 +30,8 @@ class BeReformable extends BE {
             },
             resolvedBaseURL:  {ro: true},
             headerFields: {},
-            fetchOptions: {}
+            fetchOptions: {},
+            updateOn: {def: 'input'}
             //headerFieldValues: {ro: true}
         },
         compacts:{
