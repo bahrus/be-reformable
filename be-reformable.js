@@ -29,7 +29,9 @@ class BeReformable extends BE {
                 ro: true
             },
             url: {ro: true},
-            resolvedBaseURL:  {ro: true}
+            resolvedBaseURL:  {ro: true},
+            headerFields: {},
+            //headerFieldValues: {ro: true}
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
@@ -148,15 +150,20 @@ class BeReformable extends BE {
         this.#disconnect();
         this.#abortController = new AbortController();
         const {updateOn, enhancedElement} = self;
+
         if(updateOn === 'submit'){
-            const {nudges} = self;
-            if(nudge){
-                const submitButtons = Array.from(enhancedElement.querySelectorAll('button[type="submit"]'));
-                for(const sb of submitButtons){
-                    (await import('trans-render/lib/nudge.js')).nudge(sb);
+            const {submitOptions} = self;
+            if(submitOptions !== undefined){
+                const {nudges, disableIfNotAllConditionsAreMet, onlyAfter} = submitOptions;
+                if(disableIfNotAllConditionsAreMet || onlyAfter) throw 'NI';
+                if(nudges){
+                    const submitButtons = Array.from(enhancedElement.querySelectorAll('button[type="submit"]'));
+                    for(const sb of submitButtons){
+                        (await import('trans-render/lib/nudge.js')).nudge(sb);
+                    }
                 }
-                
             }
+
         }else{
             this.handleEvent();
         }
@@ -167,11 +174,15 @@ class BeReformable extends BE {
         });
     }
 
+
+
     #disconnect(){
         if(this.#abortController !== undefined){
             this.#abortController.abort();
         }
     }
+
+    
 }
 
 await BeReformable.bootUp();

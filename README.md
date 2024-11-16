@@ -81,7 +81,7 @@ This is also supported:
 ```
 
 
-## Support for headers and body [TODO]
+## Support for headers and body [WIP]
 
 Hardcoded:
 
@@ -105,13 +105,13 @@ Hardcoded:
     method="post" 
     be-reformable='{
         "...": "qmywdO1vr0SwyuIe4fvzxQ",
+        "headerFields":["#warning", "%accept-language"],
         "headers": {
             "...": "rPpwNLcYsUOjFcg+N8lmOA",
-            ":": ":warning :accept-language"
         }
 }'>
-    <input :warning value="199 Miscellaneous warning">
-    <input :accept-language value="de; q=1.0, en; q=0.5">
+    <input id=warning value="199 Miscellaneous warning">
+    <input part=accept-language value="de; q=1.0, en; q=0.5">
     <label>
         <textarea name=hello></textarea>
     </label>
@@ -124,9 +124,8 @@ Hardcoded:
 </div>
 ```
 
-[TODO]: Build support for "..." into Object.assignGingerly
 
-The authorization, content-type and user-agent settings above make use of [Uniform Source Protocol](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Source-Protocol) syntax.
+The baseURL and headers settings that are weaved in above make use of [Uniform Source Path](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Source-Path) syntax.
 
 These are asynchronous and may not already be set when the rest of the form is ready for submitting.  *be-reformable*, by default, won't issue the "fetch-ready" event until all the values have been retrieved (and are truthy).
 
