@@ -31,7 +31,7 @@ class BeReformable extends BE {
             resolvedBaseURL:  {ro: true},
             headerFields: {},
             fetchOptions: {},
-            //headerFieldValues: {ro: true}
+            isFetchReady: {ro: true},
         },
         compacts:{
             when_updateOn_changes_invoke_hydrate: 0,
@@ -200,6 +200,9 @@ class BeReformable extends BE {
         const {enhancedElement, fetchOptions} = self;
         const {action} = enhancedElement;
         enhancedElement.dispatchEvent(new BeFetchingEvent(action, fetchOptions));
+        return /** @type {PAP} */({
+            isFetchReady: true
+        });
     }
 
 
