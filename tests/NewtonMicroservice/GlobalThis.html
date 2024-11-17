@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseLink</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+    <script type=module>
+        (await import('trans-render/lib/weave.js'))
+        .weave({
+            baseURL:  "globalThis://newton-microservice/href"
+        })
+        .into('qmywdO1vr0SwyuIe4fvzxQ')
+        .andWeave({
+            myCustomHeader: 'goodbye'
+        })
+        .into('rPpwNLcYsUOjFcg+N8lmOA');
+    </script>
+    <form id=testForm be-reformable='{
+        "...": "qmywdO1vr0SwyuIe4fvzxQ",
+        "path": "api/v2/:operation/:expression",
+        "headerFields": ["#myHeader"],
+        "headers": {
+            "...": "rPpwNLcYsUOjFcg+N8lmOA"
+        }
+    }'
+    >
+    <label>
+        header:
+        <input id=myHeader value=hello>
+    </label>
+    <label>
+        Operation:
+        <input :operation value=integrate>
+    </label>
+    
+    <label>
+        Expression:
+        <input :expression value="x^2">
+    </label>
+        <input name="hello" value=test>
+    </form>
+    <div id=target></div>
+    <script>
+        testForm.addEventListener('fetch-ready', e => {
+            console.log({e});
+            if(e.options.headers.myCustomHeader === 'goodbye' && e.options.headers.myHeader === 'hello'){
+                target.setAttribute('mark', 'good')
+            }
+        })
+    </script>
+</body>
+</html>
