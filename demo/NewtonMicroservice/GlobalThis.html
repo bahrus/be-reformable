@@ -14,12 +14,19 @@
         .weave({
             baseURL:  "globalThis://newton-microservice/href"
         })
-        .into('qmywdO1vr0SwyuIe4fvzxQ');
+        .into('qmywdO1vr0SwyuIe4fvzxQ')
+        .andWeave({
+            myCustomHeader: 'goodbye'
+        })
+        .into('rPpwNLcYsUOjFcg+N8lmOA');
     </script>
     <form id=testForm be-reformable='{
         "...": "qmywdO1vr0SwyuIe4fvzxQ",
         "path": "api/v2/:operation/:expression",
-        "headerFields": ["#myHeader"]
+        "headerFields": ["#myHeader"],
+        "headers": {
+            "...": "rPpwNLcYsUOjFcg+N8lmOA"
+        }
     }'
     >
     <label>

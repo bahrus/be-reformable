@@ -29,6 +29,7 @@ class BeReformable extends BE {
                 ro: true
             },
             resolvedBaseURL:  {ro: true},
+            headers: {},
             headerFields: {},
             fetchOptions: {},
             isFetchReady: {ro: true},
@@ -114,18 +115,18 @@ class BeReformable extends BE {
          * @type {BodyInit | undefined}
          */
         let body;
-        switch(method.toLowerCase()){
+        switch(method.toUpperCase()){
             case '':
-            case 'get':
-            case 'delete':
+            case 'GET':
+            case 'DELETE':
                 if(enhancedElement.method.toLowerCase() === 'get'){
                     
                     const queryString = new URLSearchParams(formData).toString();
                     url += '?' + queryString
                 }
                 break;
-            case 'put':
-            case 'post':
+            case 'PUT':
+            case 'POST':
                 body = formData;
                 break;
         }
@@ -137,10 +138,12 @@ class BeReformable extends BE {
             headers,
             body
         };
+        console.log({fetchOptions});
 
         if(headerFields !== undefined){
             const {getHeaderFieldVals} = await import('./getHeaderFieldVals.js');
             const headers = await getHeaderFieldVals(self);
+            console.log({headers});
             if(fetchOptions.headers === undefined) {
                 fetchOptions.headers = headers;
             }else{
