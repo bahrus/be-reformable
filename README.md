@@ -174,6 +174,9 @@ To indicate that a header is optional, add a question mark at the end of the key
 </form>
 ```
 
+<!-- ## Support for in-place editing
+
+To enable a dialog box to appear, that allows for editing form -->
 
 
 ## [Import Maps](https://github.com/bahrus/be-reformable/blob/baseline/imports.html)
