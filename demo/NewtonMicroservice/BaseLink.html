@@ -9,7 +9,7 @@
 </head>
 <body>
     <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
-    <form be-reformable='{
+    <form id=form be-reformable='{
         "baseLink": "newton-microservice",
         "path": "api/v2/:operation/:expression"
     }'
@@ -25,6 +25,10 @@
     </label>
         <input name="hello" value=test>
     </form>
-
+    <script>
+        form.addEventListener('fetch-ready', e => {
+            console.log({e});
+        });
+    </script>
 </body>
 </html>

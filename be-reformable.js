@@ -138,7 +138,6 @@ class BeReformable extends BE {
             headers,
             body
         };
-        console.log({fetchOptions});
 
         if(headerFields !== undefined){
             const {getHeaderFieldVals} = await import('./getHeaderFieldVals.js');
@@ -245,6 +244,11 @@ export class BeFetchingEvent extends Event {
      */
     options;
 
+    /**
+     * 
+     * @param {string} url 
+     * @param {RequestInit} options 
+     */
     constructor(url, options){
         super(BeFetchingEvent.eventName);
         this.url = url;
