@@ -22,18 +22,18 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "be-enhanced": "0.0.156",
-    "be-hive": "0.0.236",
-    "mount-observer": "0.0.39",
-    "trans-render": "0.0.864"
+    "be-enhanced": "0.0.187",
+    "be-hive": "0.0.265",
+    "mount-observer": "0.0.102",
+    "trans-render": "0.0.957"
   },
   "devDependencies": {
-    "ssi-server": "0.0.1",
-    "@playwright/test": "1.49.0"
+    "spa-ssi": "0.0.9",
+    "@playwright/test": "1.55.0"
   },
   "scripts": {
     "test": "playwright test",
-    "serve": "python3 ./node_modules/ssi-server/ssi_server.py",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
     "safari": "npx playwright wk http://localhost:8000",
     "update": "ncu -u && npm install"
   },
