@@ -1,6 +1,6 @@
 # be-reformable (🍺)
 
-*be-reformable* is a custom enhancement that progressively enhances the built-in form element, making attributes/properties like action dynamic.  It does not do anything fetch related, leaving that for other components / enhancements.  It provides the mechanics of specifying what the fetch parameters should be, and quietly suggests the appropriate time to perform said fetch.
+*be-reformable* is a custom enhancement that (progressively) enhances the built-in form element, making attributes/properties like action dynamic.  It does not do anything fetch related, leaving that for other components / enhancements.  It provides the mechanics of specifying what the fetch parameters should be, and quietly suggests the appropriate time to perform said fetch.
 
 It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
 
@@ -14,7 +14,7 @@ It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning
 
 ## Example 1:  Making the action property dynamic
 
-Let's see how we can use *be-reformable* to work bind input elements to the action property.  These input elements should not have a name attribute, as we don't want them to affect the query string.  Instead we use a custom attribute starting with ":".  We bind to th e  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't) do a fetch or anything.
+Let's see how we can use *be-reformable* to bind input elements to the action property.  These input elements should not have a name attribute, as we don't want them to affect the query string.  Instead we use a custom attribute starting with ":".  We bind to the  [newton advanced math micro service](https://newton.vercel.app/), declaratively.  By itself, this enhancement will not make the form fully functional for this service (as it doesn't do a fetch or anything).
 
 ```html
 <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >

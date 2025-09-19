@@ -35,10 +35,10 @@ class BeReformable extends BE {
             isFetchReady: {ro: true},
         },
         compacts:{
-            when_updateOn_changes_invoke_hydrate: 0,
-            when_path_changes_invoke_parsePath: 0,
-            when_baseLink_changes_invoke_resolveBaseLink: 0,
-            when_fetchOptions_changes_invoke_suggestFetch: 0,
+            when_updateOn_changes_call_hydrate: 0,
+            when_path_changes_call_parsePath: 0,
+            when_baseLink_changes_call_resolveBaseLink: 0,
+            when_fetchOptions_changes_call_suggestFetch: 0,
         },
         positractions: [resolved, rejected],
         actions:{
