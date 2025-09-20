@@ -184,15 +184,15 @@ To enable a dialog box to appear, that allows for editing form -->
 
 ## Viewing Locally
 
-To view this element locally:
+Any web server that serves static files with server-side includes will do but...
 
-1.  Install git, npm
-2.  Clone or fork this git repo.
-3.  Open a terminal from the folder created in step 2.
-4.  Install Python v3 or later
-5.  Run npm install
-6.  Run npm run serve
-7.  Open http://localhost:8000/demo/dev
+1.  Install git.
+2.  Fork/clone this repo.
+3.  Install node.
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:8000/ in a modern browser.
 
 
 ## Importing in ES Modules:
