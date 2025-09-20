@@ -18,10 +18,9 @@
         const {parse} = await import('trans-render/dss/parse.js');
         for(const headerField of headerFields){
             const specifier = await parse(headerField);
-            const {prop} = specifier;
-            if(prop == undefined) throw 400;
-            const domEl = /** @type {HTMLInputElement} */ (await find(enhancedElement, specifier, enhancedElement));
+            const domEl = /** @type {HTMLInputElement} */ (await find(enhancedElement, specifier));
             if(domEl === null) throw 404;
+            const prop = domEl.dataset.id || domEl.id;
             //TODO:  use ASMR?
             headerFieldVals[prop] = domEl.value;
         }
