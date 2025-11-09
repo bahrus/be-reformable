@@ -2,6 +2,7 @@
 import { BE } from 'be-enhanced/BE.js';
 import { propInfo, resolved, rejected } from 'be-enhanced/cc.js';
 import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
+import {FetchReadyEvent} from 'fetch-ready/FetchReadyEvent.js';
 
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP,  AP, BAP} from './ts-refs/be-reformable/types' */;
@@ -97,7 +98,6 @@ class BeReformable extends BE {
     async updateAction(self){
         const {enhancedElement, urlBuilder, baseURL, headerFields, headers} = self;
         if(!enhancedElement.checkValidity()){
-            enhancedElement.classList.remove(BeFetchingEvent.eventName);
             return {
                 fetchOptions: undefined,
             };
@@ -147,7 +147,6 @@ class BeReformable extends BE {
         if(headerFields !== undefined){
             const {getHeaderFieldVals} = await import('./getHeaderFieldVals.js');
             const headers = await getHeaderFieldVals(self);
-            console.log({headers});
             if(fetchOptions.headers === undefined) {
                 fetchOptions.headers = headers;
             }else{
@@ -217,14 +216,12 @@ class BeReformable extends BE {
     suggestFetch(self){
         const {enhancedElement, fetchOptions} = self;
         if(!enhancedElement.checkValidity()){
-            enhancedElement.classList.remove(BeFetchingEvent.eventName);
             return /** @type {PAP} */({
                 isFetchReady: false
             });
         }
         const {action} = enhancedElement;
-        this.channelEvent(new BeFetchingEvent(action, fetchOptions));
-        enhancedElement.classList.add(BeFetchingEvent.eventName)
+        this.channelEvent(new FetchReadyEvent(action, fetchOptions));
         return /** @type {PAP} */({
             isFetchReady: true
         });
@@ -243,27 +240,27 @@ class BeReformable extends BE {
 await BeReformable.bootUp();
 export {BeReformable};
 
-export class BeFetchingEvent extends Event {
-    static eventName = 'fetch-ready';
+// export class BeFetchingEvent extends Event {
+//     static eventName = 'fetch-ready';
 
-    /**
-     * @type {string}
-     */
-    url;
+//     /**
+//      * @type {string}
+//      */
+//     url;
 
-    /**
-     * @type {RequestInit}
-     */
-    options;
+//     /**
+//      * @type {RequestInit}
+//      */
+//     options;
 
-    /**
-     * 
-     * @param {string} url 
-     * @param {RequestInit} options 
-     */
-    constructor(url, options){
-        super(BeFetchingEvent.eventName);
-        this.url = url;
-        this.options = options;
-    }
-} 
+//     /**
+//      * 
+//      * @param {string} url 
+//      * @param {RequestInit} options 
+//      */
+//     constructor(url, options){
+//         super(BeFetchingEvent.eventName);
+//         this.url = url;
+//         this.options = options;
+//     }
+// } 
