@@ -96,7 +96,12 @@ class BeReformable extends BE {
      */
     async updateAction(self){
         const {enhancedElement, urlBuilder, baseURL, headerFields, headers} = self;
-        if(!enhancedElement.checkValidity()) return {};
+        if(!enhancedElement.checkValidity()){
+            enhancedElement.classList.remove(BeFetchingEvent.eventName);
+            return {
+                fetchOptions: undefined,
+            };
+        } 
         const pathBuilder = [baseURL];
         const {tokens} = urlBuilder;
 
@@ -211,6 +216,12 @@ class BeReformable extends BE {
      */
     suggestFetch(self){
         const {enhancedElement, fetchOptions} = self;
+        if(!enhancedElement.checkValidity()){
+            enhancedElement.classList.remove(BeFetchingEvent.eventName);
+            return /** @type {PAP} */({
+                isFetchReady: false
+            });
+        }
         const {action} = enhancedElement;
         this.channelEvent(new BeFetchingEvent(action, fetchOptions));
         enhancedElement.classList.add(BeFetchingEvent.eventName)
