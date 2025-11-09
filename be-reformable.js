@@ -174,7 +174,7 @@ class BeReformable extends BE {
     }
 
     /**
-     * @type {AbortController | undefined;}
+     * @type {AbortController | undefined}
      */
     #abortController;
     /**
