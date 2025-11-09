@@ -49,12 +49,13 @@ The "path" value follows the [URL Pattern syntax](https://developer.mozilla.org/
 
 What *be-reformable* does is:
 
-1. Be default, adds "input" event to the adorned form element.
+1. By default, adds "input" event to the adorned form element.
 2. If the form's checkValidity() is false, ignores the event.
 2. When the event occurs, and checkValidity() is true, it uses the baseLink + path to set the action value of the form element.
    1.  It pulls in all the form associated custom elements and/or built-in input elements referenced by the path property.
    2.  Forms the compound string and sets the action property/attribute.
-3. Triggers event "fetch-ready" which provides the recommended url and options parameters.
+3. Triggers event "fetch-ready" which provides the recommended url and options parameters.  Event is dispatched both from the form element as well as the enhancement.
+4. Adds class be-reformable-fetch-ready to the form element being enhanced (and removes when not fetch ready)
 
 ## Editing JSON-in-HTML
 
