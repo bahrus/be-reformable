@@ -22,14 +22,14 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "be-enhanced": "0.0.187",
-    "be-hive": "0.0.265",
-    "mount-observer": "0.0.102",
-    "trans-render": "0.0.957"
+    "be-enhanced": "0.0.189",
+    "be-hive": "0.0.267",
+    "mount-observer": "0.0.105",
+    "trans-render": "0.0.960"
   },
   "devDependencies": {
-    "spa-ssi": "0.0.9",
-    "@playwright/test": "1.55.0"
+    "spa-ssi": "0.0.23",
+    "@playwright/test": "1.56.1"
   },
   "scripts": {
     "test": "playwright test",
