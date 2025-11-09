@@ -212,7 +212,8 @@ class BeReformable extends BE {
     suggestFetch(self){
         const {enhancedElement, fetchOptions} = self;
         const {action} = enhancedElement;
-        enhancedElement.dispatchEvent(new BeFetchingEvent(action, fetchOptions));
+        this.channelEvent(new BeFetchingEvent(action, fetchOptions));
+        enhancedElement.classList.add(BeFetchingEvent.eventName)
         return /** @type {PAP} */({
             isFetchReady: true
         });
