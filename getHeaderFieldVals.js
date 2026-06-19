@@ -1,28 +1,30 @@
-    // @ts-check
-    /** @import {Actions, PAP,  AP, BAP} from './ts-refs/be-reformable/types' */;
-    
+// @ts-check
+/** @import {AllProps, AP} from './types/be-reformable/types' */;
+
+/**
+ * @param {AP} self 
+ */
+export async function getHeaderFieldVals(self){
     /**
-     * 
-     * @param {BAP} self 
+     * @type {HeadersInit}
      */
-    export async function getHeaderFieldVals(self){
-        /**
-         * @type {HeadersInit}
-         */
-        const headerFieldVals = {};
-        const {headerFields, enhancedElement} = self;
-        if(headerFields === undefined){
-            return headerFieldVals;
-        }
-        const {find} = await import('trans-render/dss/find.js');
-        const {parse} = await import('trans-render/dss/parse.js');
-        for(const headerField of headerFields){
-            const specifier = await parse(headerField);
-            const domEl = /** @type {HTMLInputElement} */ (await find(enhancedElement, specifier));
-            if(domEl === null) throw 404;
-            const prop = domEl.dataset.id || domEl.id;
-            //TODO:  use ASMR?
-            headerFieldVals[prop] = domEl.value;
-        }
+    const headerFieldVals = {};
+    const {headerFields, enhancedElement} = self;
+    if(headerFields === undefined){
         return headerFieldVals;
     }
+    for(const headerField of headerFields){
+        // headerField is a selector like "#myHeader" or "%part-name"
+        let domEl;
+        if(headerField.startsWith('%')){
+            const partName = headerField.substring(1);
+            domEl = /** @type {HTMLInputElement | null} */ (enhancedElement.querySelector(`[part~="${partName}"]`));
+        }else{
+            domEl = /** @type {HTMLInputElement | null} */ (enhancedElement.querySelector(headerField));
+        }
+        if(domEl === null) throw 404;
+        const prop = domEl.dataset.id || domEl.id;
+        headerFieldVals[prop] = domEl.value;
+    }
+    return headerFieldVals;
+}

@@ -8,11 +8,12 @@
 		"strict": true,
 		"skipLibCheck": true,
 	},
-	"files":[
-		"URLBuilder.ts"
+	"include": [
+		"*.js",
+		"types/**/*.d.ts"
 	],
 	"exclude":[
-		"node_modules"
+		"node_modules",
+		"legacy"
 	]
-
 }
