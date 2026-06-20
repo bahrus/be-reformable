@@ -2,7 +2,7 @@
 
 *be-reformable* is a custom element enhancement that (progressively) enhances the built-in form element, making attributes/properties like action dynamic.  It does not do anything fetch related, leaving that for other components / enhancements.  It provides the mechanics of specifying what the fetch parameters should be, and quietly suggests the appropriate time to perform said fetch.
 
-It uses [be-enhanced](https://github.com/bahrus/be-enhanced) as the underpinning approach, as opposed to the controversial "is" extension.
+It uses [assign-gingerly](https://github.com/bahrus/assign-gingerly) as the underpinning approach, as opposed to the controversial "is" extension.
 
 [![Playwright Tests](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/be-reformable/actions/workflows/CI.yml)
 [![NPM version](https://badge.fury.io/js/be-reformable.png)](http://badge.fury.io/js/be-reformable)
