@@ -38,6 +38,7 @@ export const emc = {
                 ifNoneOf: ['baseLink', 'baseURL']
             },
             updateAction: {
+                ifKeyIn: ['updateCnt'],
                 ifAllOf: ['updateCnt', 'urlBuilder', 'enhancedElement'],
                 ifAtLeastOneOf: ['baseURL', 'resolvedBaseURL']
             }
