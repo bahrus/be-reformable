@@ -461,3 +461,9 @@ With the `"..."` RHS always using an explicit `globalThis://` prefix, the protoc
 - Allows future enhancements to opt into protocol support by simply passing `protocols`
 
 The remaining work in `assign-gingerly` (recursive nested resolution in `resolveValues` + recursive `"..."` spread in `assignFrom`) is required regardless of which approach is chosen, and is a natural extension of the existing implementation.
+
+---
+
+## Human response II
+
+I've read through the options.  I agree Approach D is the strongest.  Please implement.
