@@ -85,57 +85,77 @@ This is also supported:
 
 ## Support for headers and body
 
-Hardcoded:
+be-reformable supports protocol-prefixed values for resolving configuration from external sources. This is powered by [assign-gingerly](https://github.com/bahrus/assign-gingerly)'s protocol resolution and `"..."` spread key support.
+
+### Protocol syntax
+
+Values in the attribute JSON can use protocol prefixes to reference external data:
+
+```
+protocolName://key?.optionalPath
+```
+
+- `protocolName` — the registered protocol handler (e.g., `globalThis`, `localStorage`, `sessionStorage`)
+- `key` — passed to the protocol handler to retrieve the source object
+- `?.optionalPath` — optional path resolved against the retrieved object using `?.`-delimited navigation
+
+### The `"..."` spread key
+
+When a key is `"..."`, its resolved value is spread (merged) into the parent object. This works at any nesting level.
+
+### Example: GlobalThis protocol
 
 ```html
-<script type=module>
-    (await import('trans-render/lib/weave.js'))
-        .weave({
-            Authorization: "sessionStorage://auth?.bearerToken",
-            "Content-Type": "indexedDB://db/store?.key",
-            "User-Agent": "globalThis://navigator?.userAgent",
-            Accept: "application/json"
-        })
-        .into('rPpwNLcYsUOjFcg+N8lmOA')
-        .andWeave({
-            baseURL:  "globalThis://newton-microservice/href"
-        })
-        .into('qmywdO1vr0SwyuIe4fvzxQ');
+<link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+<script>
+    globalThis['rPpwNLcYsUOjFcg+N8lmOA'] = {
+        myCustomHeader: 'goodbye'
+    }
 </script>
-
-<form 
-    method="post" 
-    be-reformable='{
-        "...": "qmywdO1vr0SwyuIe4fvzxQ",
-        "headerFields":["#warning", "%accept-language"],
-        "headers": {
-            "...": "rPpwNLcYsUOjFcg+N8lmOA",
-        }
+<form be-reformable='{
+    "baseURL": "globalThis://newton-microservice?.href",
+    "path": "api/v2/:operation/:expression",
+    "headerFields": ["#myHeader"],
+    "headers": {
+        "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"
+    }
 }'>
-    <input id=warning value="199 Miscellaneous warning">
-    <input part=accept-language value="de; q=1.0, en; q=0.5">
     <label>
-        <textarea name=hello></textarea>
+        header:
+        <input id=myHeader value=hello>
     </label>
-    
-    <button type='submit'>submit</button>
+    <label>
+        Operation:
+        <input :operation value=integrate>
+    </label>
+    <label>
+        Expression:
+        <input :expression value="x^2">
+    </label>
 </form>
-
-<div -innerHTML>
-
-</div>
 ```
 
+In this example:
 
-The baseURL and headers settings that are weaved in above make use of [Uniform Source Path](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Source-Path) syntax.
+- `"baseURL": "globalThis://newton-microservice?.href"` resolves by:
+  1. Looking up `globalThis['newton-microservice']` — the `<link>` element (elements with an `id` are accessible on `globalThis`)
+  2. Navigating `?.href` on the result — yielding `"https://newton.now.sh/"`
+- `"headers": { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }` resolves by:
+  1. Looking up `globalThis['rPpwNLcYsUOjFcg+N8lmOA']` — the object `{ myCustomHeader: 'goodbye' }`
+  2. Spreading that object into `headers`, so `headers` becomes `{ myCustomHeader: 'goodbye' }`
 
-These are asynchronous and may not already be set when the rest of the form is ready for submitting.  *be-reformable*, by default, won't issue the "fetch-ready" event until all the values have been retrieved (and are truthy).
+### Built-in protocol: globalThis
 
-To indicate that a header is optional, add a question mark at the end of the key:
+The `globalThis` protocol is registered by default in be-reformable. It resolves keys via `globalThis[key]`, which covers:
 
-```JavaScript
-"Content-Type?": "indexedDB://db/store?.key",
-```
+- Elements with an `id` attribute (accessible as `globalThis['elementId']`)
+- Any value explicitly set on `globalThis` (e.g., `globalThis['myKey'] = { ... }`)
+
+### headerFields
+
+The `headerFields` property accepts CSS selectors for input elements whose values become headers:
+
+- `"#myHeader"` — selects by id, uses the element's `value` as the header value, with the id as the header name
 
 
 > [!NOTE]
