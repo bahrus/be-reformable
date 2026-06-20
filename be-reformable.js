@@ -39,6 +39,9 @@ class BeReformable {
                 enhancedElement,
                 ...customData?.defaultPropVals,
                 ...initVals
+            },
+            protocols: {
+                globalThis: (key) => globalThis[key]
             }
         };
         await (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
@@ -84,6 +87,7 @@ class BeReformable {
     async updateAction(self){
         const {enhancedElement, urlBuilder, baseURL, headerFields, headers} = self;
         const formEl = /** @type {HTMLFormElement} */ (enhancedElement);
+        
         if(!formEl.checkValidity()){
             return {
                 fetchOptions: undefined,
@@ -169,7 +173,7 @@ class BeReformable {
         this.#abortController = new AbortController();
         const {updateOn, enhancedElement} = self;
         const formEl = /** @type {HTMLFormElement} */ (enhancedElement);
-
+        console.log({formEl});
         if(updateOn === 'submit'){
             const {submitOptions} = self;
             if(submitOptions !== undefined){

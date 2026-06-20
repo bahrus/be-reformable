@@ -15,23 +15,17 @@
 </head>
 <body>
     <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
-    <script type=module>
-        (await import('trans-render/lib/weave.js'))
-        .weave({
-            baseURL:  "globalThis://newton-microservice/href"
-        })
-        .into('qmywdO1vr0SwyuIe4fvzxQ')
-        .andWeave({
+    <script>
+        globalThis['rPpwNLcYsUOjFcg+N8lmOA'] = {
             myCustomHeader: 'goodbye'
-        })
-        .into('rPpwNLcYsUOjFcg+N8lmOA');
+        }
     </script>
     <form id=testForm be-reformable='{
-        "...": "qmywdO1vr0SwyuIe4fvzxQ",
+        "baseURL": "globalThis://newton-microservice?.href",
         "path": "api/v2/:operation/:expression",
         "headerFields": ["#myHeader"],
         "headers": {
-            "...": "rPpwNLcYsUOjFcg+N8lmOA"
+            "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"
         }
     }'
     >
