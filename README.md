@@ -85,7 +85,7 @@ This is also supported:
 
 ## Support for headers and body
 
-be-reformable supports protocol-prefixed values for resolving configuration from external sources. This is powered by [assign-gingerly](https://github.com/bahrus/assign-gingerly)'s protocol resolution and `"..."` spread key support.
+be-reformable supports protocol-prefixed values for resolving configuration from external sources. This is powered by [assign-gingerly](https://github.com/bahrus/assign-gingerly#protocol-resolution-in-resolvevalues-and-assignfrom)'s protocol resolution and `"..."` spread key support.
 
 ### Protocol syntax
 
