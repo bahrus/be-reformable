@@ -49,8 +49,9 @@ export const emc = {
             when_fetchOptions_changes_call_suggestFetch: 0,
         },
         defaultPropVals: {
-            updateOn: 'input',
             updateCnt: 0,
+            updateOn: 'input',
+            
         }
     }
 };
