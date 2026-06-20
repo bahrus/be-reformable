@@ -24,7 +24,7 @@ So in particular, I would like the example demo/NewtonMicroservice/GlobalThis.ht
     "path": "api/v2/:operation/:expression",
     "headerFields": ["#myHeader"],
     "headers": {
-        "...": "rPpwNLcYsUOjFcg+N8lmOA"
+        "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"
     }
 }'
 >
@@ -66,7 +66,7 @@ Please do a deep dive into the food chain that starts from assign-gingerly parsi
      baseURL: "globalThis://newton-microservice?.href",
      path: "api/v2/:operation/:expression",
      headerFields: ["#myHeader"],
-     headers: { "...": "rPpwNLcYsUOjFcg+N8lmOA" }
+     headers: { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }
    }
    ```
 
@@ -110,13 +110,10 @@ For `baseURL: "globalThis://newton-microservice?.href"` to work:
 - This extracts `globalThis` → protocol, `newton-microservice` → key, `?.href` → remaining path
 - Handler: `globalThis['newton-microservice']` → the `<link>` element → then `resolveValue('?.href', linkElement)` → the href string
 
-For `headers: { "...": "rPpwNLcYsUOjFcg+N8lmOA" }` to work:
+For `headers: { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }` to work:
 - The `"..."` key must be detected
-- Its value `"rPpwNLcYsUOjFcg+N8lmOA"` must be treated as a `globalThis://` reference (but it doesn't have the prefix!)
-- OR the convention is that `"..."` values are always `globalThis` keys (spread from `globalThis[value]`)
-- After resolution, the spread object `{ myCustomHeader: 'goodbye' }` replaces the `"..."` entry
-
-**Important note**: In the desired markup, the `"..."` value in `headers` is just `"rPpwNLcYsUOjFcg+N8lmOA"` — no `globalThis://` prefix. This implies a convention that bare `"..."` values (without a protocol) default to `globalThis` lookups. This differs from `baseURL` which explicitly uses `globalThis://`.
+- Its value `"globalThis://rPpwNLcYsUOjFcg+N8lmOA"` is resolved via `resolveProtocolValue` → calls `globalThis['rPpwNLcYsUOjFcg+N8lmOA']` → returns `{ myCustomHeader: 'goodbye' }`
+- The spread object replaces the `"..."` entry, so `headers` becomes `{ myCustomHeader: 'goodbye' }`
 
 ---
 
@@ -181,17 +178,13 @@ async init(self, enhancedElement, ctx, initVals) {
 }
 ```
 
-**4. Handle the `"..."` convention for bare keys in `headers`**
+**4. Handle the `"..."` spread in nested objects**
 
-The `"..."` value `"rPpwNLcYsUOjFcg+N8lmOA"` has no protocol prefix. Two sub-options:
-
-- **A1**: `assignFrom` already handles `"..."` — if the RHS is not a path (no `?.` prefix) and not a protocol reference (no `://`), treat it as a globalThis key by default. This requires adding a `defaultProtocol` option to `ResolveValuesOptions`.
-
-- **A2**: The user adds the explicit prefix in the markup: `"...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"`. This keeps `assignFrom` simple.
+The `"..."` value uses an explicit `globalThis://` prefix, so it flows through the same `resolveProtocolValue` mechanism as `baseURL`. The only requirement is that `resolveValues` walks nested objects recursively.
 
 #### Recursive `"..."` Resolution
 
-Currently `assignFrom` only handles `"..."` at the top level of the pattern. For nested objects like `headers: { "...": "..." }`, `resolveValues` would need to walk nested objects too. Right now `resolveValues` only processes top-level entries. This needs a recursive walk enhancement.
+Currently `assignFrom` only handles `"..."` at the top level of the pattern. For nested objects like `headers: { "...": "globalThis://..." }`, `resolveValues` would need to walk nested objects too. Right now `resolveValues` only processes top-level entries. This needs a recursive walk enhancement.
 
 #### Pros
 - Minimal architectural change (one function swap in roundabout)
@@ -220,37 +213,13 @@ async init(self, enhancedElement, ctx, initVals) {
     
     // Resolve protocol references and "..." spread keys before roundabout
     if (initVals) {
-        const { resolveValues } = await import('assign-gingerly/resolveValues.js');
+        const { assignFrom } = await import('assign-gingerly/assignFrom.js');
         const protocols = {
             globalThis: (key) => globalThis[key]
         };
         
-        // Resolve top-level protocol values
-        initVals = await resolveValues(initVals, enhancedElement, { protocols });
-        
-        // Handle top-level "..." spread
-        if ('...' in initVals) {
-            const spreadVal = initVals['...'];
-            if (spreadVal && typeof spreadVal === 'object') {
-                Object.assign(initVals, spreadVal);
-            }
-            delete initVals['...'];
-        }
-        
-        // Resolve nested objects (e.g., headers)
-        for (const [key, val] of Object.entries(initVals)) {
-            if (val && typeof val === 'object' && !Array.isArray(val)) {
-                const resolved = await resolveValues(val, enhancedElement, { protocols });
-                if ('...' in resolved) {
-                    const nested = resolved['...'];
-                    if (nested && typeof nested === 'object') {
-                        Object.assign(resolved, nested);
-                    }
-                    delete resolved['...'];
-                }
-                initVals[key] = resolved;
-            }
-        }
+        // Use assignFrom on a fresh object to resolve protocols + "..." spreads
+        initVals = await assignFrom({}, initVals, { from: enhancedElement, protocols });
     }
     
     const raOptions = {
@@ -265,10 +234,6 @@ async init(self, enhancedElement, ctx, initVals) {
     await (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
 }
 ```
-
-#### Handling the bare `"..."` key (no protocol prefix)
-
-The value `"rPpwNLcYsUOjFcg+N8lmOA"` doesn't start with `?.` and doesn't contain `://`, so `resolveValues` would pass it through unchanged. You'd need special handling: if a `"..."` key's value doesn't match any resolve pattern, default to `globalThis[value]`.
 
 #### Pros
 - No changes to roundabout-lib at all
@@ -428,11 +393,7 @@ async init(self, enhancedElement, ctx, initVals) {
 }
 ```
 
-**4. Enhance `resolveValues` for recursive nested objects** — so `headers: { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }` is resolved.
-
-**5. Convention for bare `"..."` keys** — either:
-- Require explicit `"...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"` in markup (clearest)
-- Or add a `defaultSpreadProtocol` option: when a `"..."` value has no `://`, prepend this protocol
+**4. Enhance `resolveValues` for recursive nested objects** — so `headers: { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }` is resolved recursively (not just top-level).
 
 #### Pros
 - Zero cost for enhancements that don't use protocols (fast path unchanged)
@@ -446,11 +407,11 @@ async init(self, enhancedElement, ctx, initVals) {
 
 ---
 
-## Key Sub-Problem: Nested Object Resolution and Bare `"..."` Keys
+## Key Sub-Problem: Recursive Nested Object Resolution
 
-Regardless of approach, two things need addressing in `assign-gingerly`:
+Regardless of approach, one thing needs addressing in `assign-gingerly`:
 
-### 1. Recursive `resolveValues` for Nested Objects
+### Recursive `resolveValues` for Nested Objects
 
 Currently `resolveValues` iterates top-level entries only. For `headers: { "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA" }`, it would see `headers` has an object value and pass it through unchanged.
 
@@ -487,28 +448,7 @@ function handleSpreads(obj: Record<string, any>): Record<string, any> {
 }
 ```
 
-### 2. The Bare `"..."` Value Convention
-
-In the desired markup:
-```json
-"headers": {
-    "...": "rPpwNLcYsUOjFcg+N8lmOA"
-}
-```
-
-The value `"rPpwNLcYsUOjFcg+N8lmOA"` has no protocol prefix. It's a bare globalThis key. Options:
-
-- **Option 1**: Require `"globalThis://rPpwNLcYsUOjFcg+N8lmOA"` in markup. Explicit, no ambiguity, consistent with `baseURL`.
-- **Option 2**: Add a convention to `resolveValues` — when a `"..."` key's value doesn't start with `?.` and doesn't contain `://`, and `protocols.globalThis` exists, implicitly treat it as `globalThis://value`. This is ergonomic but adds a hidden convention.
-- **Option 3**: Add a `defaultSpreadProtocol: 'globalThis'` option to `ResolveValuesOptions`. When set, bare `"..."` values get that protocol prepended.
-
-**Recommendation**: Go with **Option 1** (explicit `globalThis://` in the markup) for the first cut. It's consistent, debuggable, and the markup in the ask can be adjusted to:
-
-```html
-"headers": {
-    "...": "globalThis://rPpwNLcYsUOjFcg+N8lmOA"
-}
-```
+With the `"..."` RHS always using an explicit `globalThis://` prefix, the protocol resolution machinery handles it naturally — no special-case conventions needed.
 
 ---
 
@@ -521,19 +461,3 @@ The value `"rPpwNLcYsUOjFcg+N8lmOA"` has no protocol prefix. It's a bare globalT
 - Allows future enhancements to opt into protocol support by simply passing `protocols`
 
 The remaining work in `assign-gingerly` (recursive nested resolution in `resolveValues` + recursive `"..."` spread in `assignFrom`) is required regardless of which approach is chosen, and is a natural extension of the existing implementation.
-
----
-
-## Human Response I
-
-First, my bad on this observation:
-
-> **Important note**: In the desired markup, the `"..."` value in `headers` is just `"rPpwNLcYsUOjFcg+N8lmOA"` — no `globalThis://` prefix. This implies a convention that bare `"..."` values (without a protocol) default to `globalThis` lookups. This differs from `baseURL` which explicitly uses `globalThis://`.
-
-I totally agree.  The rhs should have started with globalThis://
-
-All the special exceptions outlined based on the assumption that that was intentional should be null and void.
-
-As far as I can tell, that major oversight on my part doesn't impact which of the approaches seems the most effective, but if it does, please take the opportunity to honestly change course and recommend another option.
-
-Actually, can you please update your excellent discussion above with that in mind, so there's less to go through, first, before I complete my feedback?
