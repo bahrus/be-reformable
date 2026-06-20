@@ -22,11 +22,11 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "assign-gingerly": "0.0.52",
+    "assign-gingerly": "0.0.53",
     "be-hive": "0.1.15",
     "fetch-ready": "0.0.1",
     "mount-observer": "0.1.41",
-    "roundabout-lib": "0.0.22"
+    "roundabout-lib": "0.0.23"
   },
   "devDependencies": {
     "spa-ssi": "0.0.27",
