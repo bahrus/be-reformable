@@ -521,3 +521,19 @@ The value `"rPpwNLcYsUOjFcg+N8lmOA"` has no protocol prefix. It's a bare globalT
 - Allows future enhancements to opt into protocol support by simply passing `protocols`
 
 The remaining work in `assign-gingerly` (recursive nested resolution in `resolveValues` + recursive `"..."` spread in `assignFrom`) is required regardless of which approach is chosen, and is a natural extension of the existing implementation.
+
+---
+
+## Human Response I
+
+First, my bad on this observation:
+
+> **Important note**: In the desired markup, the `"..."` value in `headers` is just `"rPpwNLcYsUOjFcg+N8lmOA"` — no `globalThis://` prefix. This implies a convention that bare `"..."` values (without a protocol) default to `globalThis` lookups. This differs from `baseURL` which explicitly uses `globalThis://`.
+
+I totally agree.  The rhs should have started with globalThis://
+
+All the special exceptions outlined based on the assumption that that was intentional should be null and void.
+
+As far as I can tell, that major oversight on my part doesn't impact which of the approaches seems the most effective, but if it does, please take the opportunity to honestly change course and recommend another option.
+
+Actually, can you please update your excellent discussion above with that in mind, so there's less to go through, first, before I complete my feedback?
