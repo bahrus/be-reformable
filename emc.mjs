@@ -38,7 +38,10 @@ export const emc = {
                 ifNoneOf: ['baseLink', 'baseURL']
             },
             updateAction: {
-                ifKeyIn: ['updateCnt'],
+                // updateCnt is bumped by hydrate before parsePath (async) has
+                // produced urlBuilder, so urlBuilder and baseURL arriving must
+                // also be able to trigger updateAction
+                ifKeyIn: ['updateCnt', 'urlBuilder', 'baseURL'],
                 ifAllOf: ['updateCnt', 'urlBuilder', 'enhancedElement'],
                 ifAtLeastOneOf: ['baseURL', 'resolvedBaseURL']
             }

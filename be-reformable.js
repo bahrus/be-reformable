@@ -182,7 +182,7 @@ class BeReformable {
                 if(nudges){
                     const submitButtons = Array.from(formEl.querySelectorAll('button[type="submit"]'));
                     for(const sb of submitButtons){
-                        (await import('mount-observer/nudge.js')).nudge(sb);
+                        (await import('assign-gingerly/handlers/nudge.js')).nudge(sb);
                     }
                 }
             }

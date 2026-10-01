@@ -22,15 +22,15 @@
   ],
   "types": "types.d.ts",
   "dependencies": {
-    "assign-gingerly": "0.0.53",
-    "be-hive": "0.1.15",
+    "assign-gingerly": "0.0.97",
+    "be-hive": "0.1.18",
     "fetch-ready": "0.0.1",
-    "mount-observer": "0.1.41",
-    "roundabout-lib": "0.0.23"
+    "mount-observer": "0.1.53",
+    "roundabout-lib": "0.0.38"
   },
   "devDependencies": {
-    "spa-ssi": "0.0.27",
-    "@playwright/test": "1.61.0"
+    "spa-ssi": "0.0.28",
+    "@playwright/test": "1.63.0"
   },
   "scripts": {
     "build": "node emc.mjs > emc.json && node 🍺.mjs > 🍺.json",

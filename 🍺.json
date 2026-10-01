@@ -35,7 +35,9 @@
             },
             "updateAction": {
                 "ifKeyIn": [
-                    "updateCnt"
+                    "updateCnt",
+                    "urlBuilder",
+                    "baseURL"
                 ],
                 "ifAllOf": [
                     "updateCnt",
