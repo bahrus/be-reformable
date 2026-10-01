@@ -28,7 +28,9 @@ class BeReformable {
      * @param {PAP} initVals 
      */
     async init(self, enhancedElement, ctx, initVals){
-        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
+        // ctx.emc is populated by the attribute (mount-observer) spawn path;
+        // programmatic spawns (enh.get()/enh.set) only supply ctx.config
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc || ctx.config);
         /**
          * @type {RoundaboutOptions}
          */
@@ -45,6 +47,7 @@ class BeReformable {
             }
         };
         await (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+        self.initialized = true;
     }
 
     /**
@@ -62,10 +65,56 @@ class BeReformable {
      * @param {AP} self 
      */
     resolveBaseLink(self){
-        const {baseLink} = self;
+        const {enhancedElement} = self;
+        const baseLink = /** @type {string | Element | WeakRef<Element> | undefined} */ (self.baseLink);
+        /** @type {PAP} */
+        const weakened = {};
+        /** @type {Element | undefined} */
+        let linkEl;
+        if(baseLink instanceof Element){
+            // An element passed by reference must only ever be held weakly --
+            // including in the value stored on this enhancement.  roundabout's
+            // getter derefs a stored WeakRef, so reading baseLink yields the
+            // element again; #baseLinkRef remembers it was already weakened.
+            linkEl = baseLink;
+            if(this.#baseLinkRef?.deref() !== baseLink){
+                this.#baseLinkRef = new WeakRef(baseLink);
+                /** @type {any} */ (weakened).baseLink = this.#baseLinkRef;
+            }
+        }else if(baseLink instanceof WeakRef){
+            linkEl = baseLink.deref();
+        }else if(baseLink){
+            const rn = /** @type {Document | ShadowRoot} */ (enhancedElement.getRootNode());
+            linkEl = rn.getElementById(baseLink) ?? /** @type {any} */ (globalThis)[baseLink];
+        }
+        // a collected link element is a no-op, not an error
+        if(linkEl === undefined || linkEl === null) return weakened;
         return /** @type {PAP} */({
-            baseURL: window[baseLink].href,
+            ...weakened,
+            baseURL: /** @type {HTMLLinkElement} */ (linkEl).href,
             resolvedBaseURL: true,
+        });
+    }
+
+    /**
+     * The link element this enhancement has already replaced (in baseLink) with a WeakRef
+     * @type {WeakRef<Element> | undefined}
+     */
+    #baseLinkRef;
+
+    /**
+     * headerFields entries may be elements (or WeakRefs to them) passed by
+     * reference.  Store back a copy with each element replaced by a WeakRef,
+     * never mutating the caller's array.  WeakRefs nested in an array are not
+     * dereferenced by roundabout's getter, so there's nothing left to weaken
+     * on the next pass.
+     * @param {AP} self
+     */
+    weakenHeaderFields(self){
+        const {headerFields} = self;
+        if(!Array.isArray(headerFields) || !headerFields.some(f => f instanceof Element)) return;
+        return /** @type {PAP} */ ({
+            headerFields: headerFields.map(f => f instanceof Element ? new WeakRef(f) : f)
         });
     }
 
@@ -137,11 +186,8 @@ class BeReformable {
         if(headerFields !== undefined){
             const {getHeaderFieldVals} = await import('be-reformable/getHeaderFieldVals.js');
             const hdrs = await getHeaderFieldVals(self);
-            if(fetchOptions.headers === undefined) {
-                fetchOptions.headers = hdrs;
-            }else{
-                Object.assign(fetchOptions.headers, hdrs);
-            }
+            // copy, rather than mutate the (possibly caller-supplied) headers object
+            fetchOptions.headers = {...headers, ...hdrs};
         }
         
         return /** @type {PAP} */({

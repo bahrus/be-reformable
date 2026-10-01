@@ -1,6 +1,6 @@
 {
     "enhConfig": {
-        "enhKey": "BeReformable",
+        "enhKey": "beReformable",
         "spawn": "be-reformable/be-reformable.js",
         "withAttrs": {
             "base": "be-reformable",
@@ -28,16 +28,52 @@
         },
         "actions": {
             "specifyDefaultBaseURL": {
+                "ifAllOf": [
+                    "initialized"
+                ],
                 "ifNoneOf": [
                     "baseLink",
                     "baseURL"
+                ]
+            },
+            "hydrate": {
+                "ifKeyIn": [
+                    "updateOn",
+                    "initialized"
+                ],
+                "ifAllOf": [
+                    "updateOn",
+                    "enhancedElement",
+                    "initialized"
+                ]
+            },
+            "parsePath": {
+                "ifKeyIn": [
+                    "path",
+                    "initialized"
+                ],
+                "ifAllOf": [
+                    "path",
+                    "initialized"
+                ]
+            },
+            "resolveBaseLink": {
+                "ifKeyIn": [
+                    "baseLink",
+                    "initialized"
+                ],
+                "ifAllOf": [
+                    "baseLink",
+                    "initialized"
                 ]
             },
             "updateAction": {
                 "ifKeyIn": [
                     "updateCnt",
                     "urlBuilder",
-                    "baseURL"
+                    "baseURL",
+                    "headers",
+                    "headerFields"
                 ],
                 "ifAllOf": [
                     "updateCnt",
@@ -48,12 +84,14 @@
                     "baseURL",
                     "resolvedBaseURL"
                 ]
+            },
+            "weakenHeaderFields": {
+                "ifAllOf": [
+                    "headerFields"
+                ]
             }
         },
         "compacts": {
-            "when_updateOn_changes_call_hydrate": 0,
-            "when_path_changes_call_parsePath": 0,
-            "when_baseLink_changes_call_resolveBaseLink": 0,
             "when_fetchOptions_changes_call_suggestFetch": 0
         },
         "defaultPropVals": {

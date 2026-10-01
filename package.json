@@ -15,7 +15,10 @@
   "module": "be-reformable.js",
   "exports": {
     ".": "./be-reformable.js",
-    "./be-reformable.js": "./be-reformable.js"
+    "./be-reformable.js": "./be-reformable.js",
+    "./def.js": "./def.js",
+    "./emc.json": "./emc.json",
+    "./🍺.json": "./🍺.json"
   },
   "files": [
     "*.*"

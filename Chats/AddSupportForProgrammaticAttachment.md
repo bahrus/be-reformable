@@ -2,67 +2,57 @@
 
 ## Bruce's Ask
 
-Can you please follow the example of [be-persistent](https://github.com/bahrus/be-persistent) and [the addendum](../types/ImportantEnhancementAddendum.md) to add demos and adjust be-bound.js as needed and add def.js to support programmatic attachment of this enhancement?
+Can you please follow the example of [be-persistent](https://github.com/bahrus/be-persistent) and [the addendum](../types/ImportantEnhancementAddendum.md) to add demos and adjust be-reformable.js as needed and add def.js to support programmatic attachment of this enhancement?
 
 Please add your implementation notes below.
 
-## Implementation Notes
+## Claude's Implementation Notes
 
-I followed the addendum's checklist, with be-persistent as the model.
+Done. be-reformable now supports programmatic attachment, following be-persistent and the addendum (steps 1 to 7). All 8 Playwright tests pass: the 2 existing attribute tests and 6 new programmatic ones. Nothing is committed yet.
 
-### Programmatic-friendly property: `bindings`
+### What changed
 
-`hydrate` used to read `bindingRules` directly. `bindingRules` is the
-`StatementsResult` that `parse-grouped-capture-statements` produces
-(`{success, statements: [{value}]}`), which is awkward to build by hand.
-be-persistent uses a `persistenceRules` → `store` compact for the same problem,
-so I did the same here:
+- **[def.js](../def.js)** exports `defBeReformable(ref)`, using the addendum's template. It's added to `package.json`'s `exports`, along with `emc.json` and `🍺.json`.
+- **`init`** reads `ctx.emc || ctx.config` and sets `self.initialized = true` after `await roundabout(...)`.
+- **`enhKey` is now `beReformable`, not `BeReformable`.** The legacy `enhPropKey` was `beReformable`, and the conversion guide says to keep it. It's now part of the public API (`form.enh.set.beReformable`), so it was worth fixing before anyone depends on it. Nothing in the repo used the PascalCase key. **This is a breaking change** for anyone reading `form.enh.BeReformable` from an attribute-attached form.
+- **Compacts became actions gated on `initialized`.** This was the main obstacle. With `enh.get()`, the caller assigns `path`, `baseLink` and so on synchronously, before `roundabout` has made them reactive. Those assignments raise no change events, so the compacts `when_path_changes_call_parsePath`, `when_baseLink_changes_call_resolveBaseLink` and `when_updateOn_changes_call_hydrate` never fired, and the form never got its action. They're now actions with `initialized` in both `ifKeyIn` and `ifAllOf` (the three-peat / be-persistent pattern). `specifyDefaultBaseURL` waits for `initialized` too. `when_fetchOptions_changes_call_suggestFetch` stays a compact, because `fetchOptions` is only ever produced by `updateAction`.
+- **`updateAction`** now also triggers on `headers` and `headerFields`, so reassigning either one programmatically refreshes the fetch options.
+- **`headers` is no longer mutated.** `updateAction` used to `Object.assign` the header-field values into the `headers` object itself, which would now be the caller's object. It builds a copy instead.
 
-- There is a new property, `bindings: Array<Partial<BindingRule>>`, and it is
-  now the only thing `hydrate` reads.
-- A compact, `when_bindingRules_changes_call_onBindingRulesChange`, runs the
-  new `onBindingRulesChange` method, which converts the attribute-parsed
-  `bindingRules` into `bindings`. It still throws 400 when `success` is false,
-  as before.
-- Programmatic callers skip `bindingRules` and set `bindings` directly, e.g.
-  `[{remoteId: 'search'}]`.
-- An empty `bindings` array means a single fully inferred rule. This is the
-  same as a bare `be-bound` attribute and replaces the old code that pushed
-  `{value: {}}` into the parsed statements.
-- `hydrate`'s action config is now
-  `ifKeyIn: ['bindings', 'initialized'], ifAllOf: ['bindings', 'enhancedElement', 'initialized']`.
+### Elements wherever an id is accepted (step 7)
 
-### Addendum steps
+| Property | Id-based (unchanged) | New: element or `WeakRef` |
+|----------|----------------------|---------------------------|
+| `baseLink` | id of a `<link>` | the link element |
+| `headerFields` | selectors (`#myHeader`, `%part`) | entries may be input elements / `WeakRef`s, mixed with selectors |
 
-1. **`init()` awaits `roundabout(...)` and then sets `self.initialized = true`.**
-   `hydrate` now gates on `initialized`.
-2. **`ctx.emc || ctx.config`.** `init` now falls back to `ctx.config`.
-3. **`def.js`** exports `defBeBound(ref)`. It is the same formula as
-   `defBePersistent` and returns the registry item for `enh.get(emc)`.
-   `package.json` `exports` now includes `./def.js`, `./emc.json` and
-   `./🪢.json`. I also fixed `"."`, which pointed at a nonexistent
-   `./index.js`, and removed `./emc.js`, which also doesn't exist.
-4. **Reserved names.** None of be-bound's properties collide with `nudge`,
-   `rock`, `awake` or `covertAssignment`, so `propagate` isn't needed.
-   `bindings` is referenced by the `hydrate` action, so roundabout monitors it.
-5. **Tests.** All three patterns are covered, using the "peer element with
-   #search" scenario (`<span contenteditable 🪢="with #search">`):
-   - `demo/Programmatic/DeclarativeInSequence.html`,
-     `DeclarativeOutOfSequence.html`, `Imperative.html`
-   - `tests/Programmatic/*.html` + `*.spec.mjs`: these type into the span and
-     check that `#search` picks up the value.
+Elements are only ever held weakly:
 
-   All 8 Playwright tests pass: the 5 existing attribute-based tests and the
-   3 new ones.
+- `resolveBaseLink` stores an element back as a `WeakRef`. Because roundabout's getter derefs it, a private `#baseLinkRef` remembers which element was already weakened, so it isn't weakened again on every pass.
+- A new `weakenHeaderFields` action stores back a *copy* of the array with each element replaced by a `WeakRef`, without touching the caller's array. Nested `WeakRef`s aren't dereferenced by the getter, so there's nothing left to weaken on the next pass.
+- A collected element is skipped: a collected header field contributes no header. It never throws.
+- An element passed by reference may have no id, so a header field is named by `data-id`, then `id`, then the `name` attribute, then its position in the array.
 
-### Other changes
+`baseLink` by id now looks up the element in the form's own root node first (`getRootNode().getElementById`), so it works inside shadow DOM. It falls back to `globalThis[id]`, which is what it used before.
 
-- `types/be-bound/types.d.ts` (in the `types` git submodule): added
-  `bindings` and `initialized` to the props, `remoteEvent` to `BindingRule`
-  (the code already read it), and `onBindingRulesChange` to `Actions`.
-  `reconcileValues` now takes `Partial<BindingRule>`. **These edits need to be
-  committed and pushed in the `types` submodule separately.**
-- `emc.json` / `🪢.json` were regenerated with `npm run build`.
-- The README has a new "Programmatic attachment (no attribute)" section, with
-  a table mapping attribute statements to `bindings` objects.
+### Tests and demos
 
+| Test | What it checks |
+|------|----------------|
+| `tests/Programmatic/DeclarativeInSequence` | `enh.set` after `defBeReformable`: the action is set, `fetch-ready` carries the headers, and typing refreshes the action |
+| `tests/Programmatic/DeclarativeOutOfSequence` | The same, with `enh.set` *before* `defBeReformable` |
+| `tests/Programmatic/Imperative` | The same via `Object.assign(form.enh.get(emc), {...})`, plus: the caller's `headers` object is not mutated |
+| `tests/Programmatic/TargetElement` | `baseLink` as an id-less element, and `headerFields` as an element plus a `WeakRef`. The stored array holds `WeakRef`s, and the caller's array is untouched. |
+| `tests/Programmatic/TargetElementGC` | A real garbage collection. A removed header input *and* the removed link are both collected. Afterwards, typing still updates the action, and the collected field contributes no header, with no errors. |
+
+Negative controls: I ran the GC test against a broken version that skips the `headerFields` weakening, and again against one that skips the `baseLink` weakening. Each failed as it should.
+
+[demo/Programmatic/](../demo/Programmatic/) has four pages based on the fixtures. Each shows the live action and the `fetch-ready` options as you edit the inputs. A smoke test confirmed all four run without errors.
+
+The README has a new "Programmatic attachment (no attribute)" section, laid out as in addendum step 6. Its third point, about less overhead, holds: nothing `def.js` imports, directly or dynamically, pulls in mount-observer.
+
+### Still open (not changed)
+
+- `submitOptions` only takes effect in `hydrate`, which runs once `updateOn` and `initialized` are set. Setting `submitOptions` programmatically *after* that won't nudge the submit buttons. Its `onlyAfter` and `disableIfNotAllConditionsAreMet` options still throw `'NI'` (not implemented), as before, even though the README's "fetch-ready only after a button click" example uses both.
+- `hydrate` still has the debugging `console.log({formEl})`.
+- The `types/be-reformable/types.d.ts` changes are in the `types` submodule and need committing there.

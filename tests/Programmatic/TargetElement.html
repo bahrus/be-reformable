@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic be-reformable targetElement</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- baseLink and headerFields can be elements, or WeakRefs to them -- none of these have an id -->
+    <link class=newton rel=preconnect href=https://newton.now.sh/ >
+    <form id=form>
+        <label>header: <input name=kitchenHeader value=hello></label>
+        <label>header: <input data-id=porchHeader value=world></label>
+        <label>Operation: <input :operation value=integrate></label>
+        <label>Expression: <input :expression value="x^2"></label>
+    </form>
+    <script type=module>
+        import {defBeReformable} from '/def.js';
+        form.addEventListener('fetch-ready', e => { globalThis.__fetchReady = e.options; });
+        const emc = await defBeReformable(document.body);
+        // kept, so the test can check the enhancement never mutates the caller's array
+        globalThis.__headerFields = [
+            document.querySelector('[name=kitchenHeader]'),            // an element...
+            new WeakRef(document.querySelector('[data-id=porchHeader]')), // ...or a WeakRef to one
+        ];
+        Object.assign(form.enh.get(emc), {
+            baseLink: document.querySelector('link.newton'),
+            path: 'api/v2/:operation/:expression',
+            headerFields: globalThis.__headerFields,
+        });
+    </script>
+</body>
+</html>

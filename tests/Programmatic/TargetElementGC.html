@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic be-reformable targetElement GC</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <link id=newton rel=preconnect href=https://newton.now.sh/ >
+    <form id=form>
+        <label>header: <input id=kitchen value=hello></label>
+        <label>header: <input id=porch value=world></label>
+        <label>Operation: <input :operation value=integrate></label>
+        <label>Expression: <input id=expression :expression value="x^2"></label>
+    </form>
+    <script type=module>
+        import {defBeReformable} from '/def.js';
+        form.addEventListener('fetch-ready', e => { globalThis.__fetchReady = e.options; });
+        const emc = await defBeReformable(document.body);
+        // Set up inside a function scope, so this page keeps no reference of its own
+        // to #kitchen or #newton -- only the DOM (until the test removes them) and the enhancement.
+        (() => {
+            Object.assign(document.querySelector('#form').enh.get(emc), {
+                baseLink: document.querySelector('#newton'),
+                path: 'api/v2/:operation/:expression',
+                headerFields: [
+                    document.querySelector('#kitchen'),
+                    new WeakRef(document.querySelector('#porch')),
+                ],
+            });
+        })();
+    </script>
+</body>
+</html>

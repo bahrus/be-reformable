@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic be-reformable targetElement</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- baseLink and headerFields can be elements, or WeakRefs to them -- none of these have an id -->
+    <link class=newton rel=preconnect href=https://newton.now.sh/ >
+    <form id=form>
+        <label>header: <input name=kitchenHeader value=hello></label>
+        <label>header: <input data-id=porchHeader value=world></label>
+        <label>Operation: <input :operation value=integrate></label>
+        <label>Expression: <input :expression value="x^2"></label>
+    </form>
+    <p>Edit the inputs -- the form's action and the fetch-ready options update:</p>
+    <pre id=output></pre>
+    <script type=module>
+        import {defBeReformable} from 'be-reformable/def.js';
+        form.addEventListener('fetch-ready', e => {
+            output.textContent = JSON.stringify({action: form.action, options: e.options}, null, 2);
+        });
+        const emc = await defBeReformable(document.body);
+        const headerFields = [
+            document.querySelector('[name=kitchenHeader]'),            // an element...
+            new WeakRef(document.querySelector('[data-id=porchHeader]')), // ...or a WeakRef to one
+        ];
+        Object.assign(form.enh.get(emc), {
+            baseLink: document.querySelector('link.newton'),
+            path: 'api/v2/:operation/:expression',
+            headerFields,
+        });
+    </script>
+</body>
+</html>

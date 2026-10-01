@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic Imperative</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- Fully imperative attachment: no attribute, no `.set` proxy -- just
+         `enh.get(emc)` plus a direct property assignment. -->
+    <link id=newton-microservice rel=preconnect href=https://newton.now.sh/ >
+    <form id=form>
+        <label>header: <input id=myHeader value=hello></label>
+        <label>Operation: <input :operation value=integrate></label>
+        <label>Expression: <input :expression value="x^2"></label>
+    </form>
+    <p>Edit the inputs -- the form's action and the fetch-ready options update:</p>
+    <pre id=output></pre>
+    <script type=module>
+        import {defBeReformable} from 'be-reformable/def.js';
+        form.addEventListener('fetch-ready', e => {
+            output.textContent = JSON.stringify({action: form.action, options: e.options}, null, 2);
+        });
+        const emc = await defBeReformable(document.body);
+        Object.assign(form.enh.get(emc), {
+            baseLink: 'newton-microservice',
+            path: 'api/v2/:operation/:expression',
+            headers: {myCustomHeader: 'goodbye'},
+            headerFields: ['#myHeader'],
+        });
+    </script>
+</body>
+</html>

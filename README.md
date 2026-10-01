@@ -196,6 +196,68 @@ The `headerFields` property accepts CSS selectors for input elements whose value
 </form>
 ```
 
+## Programmatic attachment (no attribute)
+
+The attribute syntax shown above shines for server-rendered HTML and progressive enhancement:  the markup alone says how the form's action is assembled.  But most web development today renders on the client, with a framework (Lit, React, Vue, Svelte, etc.) that already has a JavaScript reference to each element it creates.  In that setting, attaching be-reformable programmatically is the better fit:
+
+1. **A less clunky API.**  Frameworks are awkward about setting arbitrary attributes, and a JSON object squeezed into one (`be-reformable='{"baseLink": "newton-microservice", "path": "api/v2/:operation/:expression"}'`) is awkward anywhere.  Programmatically, it's a plain object.  More importantly, properties can take things an attribute can't hold:  `headers` can be any object your code already has, with no need to park it on `globalThis` and reference it via the `globalThis://` protocol, as the "Support for headers and body" example does.  And `baseLink` and `headerFields` can take the elements themselves (or `WeakRef`s to them), id or no id.
+2. **Less stringifying and parsing.**  The framework serializes the settings to JSON, and be-reformable parses them back and resolves any protocol references.  Programmatically, the values are simply assigned.
+3. **Less overhead monitoring attributes.**  The attribute approach relies on be-hive / mount-observer watching the DOM for forms that carry (or gain) a be-reformable attribute.  `def.js` just registers the config, and the enhancement is attached exactly when, and to exactly the forms, your code says.
+
+Either way, it is the **same enhancement**, with the same defaults (update on `input`, `fetch-ready` events), and the two can be mixed in one app:  attributes for server-rendered islands, programmatic attachment inside client-rendered components.
+
+### Registration
+
+```JS
+import { defBeReformable } from 'be-reformable/def.js';
+const emc = await defBeReformable(document.body); // or a shadow root's host, for a scoped registry
+```
+
+### Attribute → property mapping
+
+Each key of the `be-reformable` JSON attribute is a property of the same name.  The separate attributes map as follows:
+
+| Attribute                                              | Property        | Notes |
+|--------------------------------------------------------|-----------------|-------|
+| `be-reformable-base-link` / `"baseLink"`               | `baseLink`      | The id of a `<link>` whose `href` is the base URL.  Programmatically, may also be the link element itself, or a `WeakRef` to it. |
+| `"baseURL"`                                            | `baseURL`       | Alternative to `baseLink`. |
+| `be-reformable-path` / `"path"`                        | `path`          | e.g. `'api/v2/:operation/:expression'` |
+| `be-reformable-headers` / `"headers"`                  | `headers`       | Any object -- no `globalThis://` indirection needed.  Never mutated. |
+| `"headerFields"`                                       | `headerFields`  | Array of selectors (`'#myHeader'`).  Programmatically, entries may also be input elements, or `WeakRef`s to them, mixed with selectors. |
+| `"updateOn"`                                           | `updateOn`      | `'input'` (default), `'change'` or `'submit'` |
+| `be-reformable-submit-options` / `"submitOptions"`     | `submitOptions` | |
+
+### Declarative -- via enh.set
+
+```JS
+// equivalent to the BaseLink example in "Example 1" above
+form.enh.set.beReformable.baseLink = 'newton-microservice';
+form.enh.beReformable.path = 'api/v2/:operation/:expression';
+```
+
+Only the first property needs to go through `.set`, which triggers attachment.  This works whether it runs before or after `defBeReformable` is called.
+
+### Imperative -- via enh.get()
+
+```JS
+Object.assign(form.enh.get(emc), {
+    baseLink: linkElement,              // the element itself -- no id needed
+    path: 'api/v2/:operation/:expression',
+    headers: {myCustomHeader: 'goodbye'},
+    headerFields: [headerInput],        // an element, a WeakRef to one, or a selector
+});
+```
+
+### Passing elements directly
+
+Elements passed in `baseLink` or `headerFields` are only ever held **weakly**.  If one is removed from the DOM and garbage collected, it is skipped (a collected header field contributes no header) -- never an error.  A header field element is named by its `data-id`, then its `id`, then its `name` attribute, and failing all of those, by its position in the array.
+
+### Gotchas that differ from the attribute path
+
+The enhancement key is `beReformable` when attached programmatically (`form.enh.beReformable`), rather than `🍺` when attached via the emoji attributes.
+
+See [demo/Programmatic](demo/Programmatic/) for runnable examples.
+
 <!-- ## Support for in-place editing
 
 To enable a dialog box to appear, that allows for editing form -->
